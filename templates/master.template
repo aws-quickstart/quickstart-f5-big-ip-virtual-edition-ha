@@ -1,0 +1,782 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "This template creates a VPC infrastructure for a multi-AZ, multi-tier deployment of a Linux based Application infrastructure. It will deploy a bastion and managed NAT gateways or NAT instances into the public subnet for each Availability Zone. **WARNING** This template creates Amazon EC2 instance and related resources. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Metadata": {
+        "AWS::CloudFormation::Interface": {
+            "ParameterGroups": [
+                {
+                    "Label": {
+                        "default": "DEPLOYMNENT"
+                    },
+                    "Parameters": [
+                        "DeploymentName",
+                        "DeployDemoApp"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "AWS QUICK START CONFIGURATION"
+                    },
+                    "Parameters": [
+                        "QSS3BucketName",
+                        "QSS3KeyPrefix"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "NETWORK CONFIGURATION"
+                    },
+                    "Parameters": [
+                        "AvailabilityZones",
+                        "VPCCIDR",
+                        "PublicSubnet1CIDR",
+                        "PublicSubnet2CIDR",
+                        "PrivateSubnet1CIDR",
+                        "PrivateSubnet2CIDR"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "AMAZON EC2 CONFIGURATION"
+                    },
+                    "Parameters": [
+                        "KeyPairName",
+                        "RemoteAccessCIDR"
+                    ]
+                },
+                {                                                                             
+                    "Label": {                                                                
+                        "default": "BIG-IP AND AUTO SCALING CONFIGURATION"                               
+                    },                                                                        
+                    "Parameters": [                                                           
+                        "BIGIPThroughput",                                                    
+                        "BIGIPInstanceType",                                                  
+                        "BIGIPManagementGuiPort",                                             
+                        "BIGIPScalingMinSize",                                                
+                        "BIGIPScalingMaxSize"                                                
+                    ]                                                                         
+                },
+                {
+                    "Label": {
+                        "default": "APPLICATION CONFIGURATION"
+                    },
+                    "Parameters": [
+                        "Application",
+                        "Application1PoolTagValue",
+                        "Application2PoolTagValue"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "TEMPLATE ANALYTICS"
+                    },
+                    "Parameters": [
+                        "NotificationEmail",                                             
+                        "AllowUsageAnalytics"
+                    ]
+                }
+            ],
+            "ParameterLabels": {
+                "DeploymentName" : {                                                         
+                    "default": "Deployment Name"                                             
+                },
+                "DeployDemoApp" : {                                                         
+                    "default": "Deploy Demo WebApp"                                             
+                },
+                "AvailabilityZones": {
+                    "default": "Availability Zones"
+                },
+                "KeyPairName": {
+                    "default": "Key Pair Name"
+                },
+                "RemoteAccessCIDR": {
+                    "default": "Allowed Bastion External Access CIDR"
+                },
+                "PublicSubnet1CIDR": {
+                    "default": "Public Subnet 1 CIDR"
+                },
+                "PublicSubnet2CIDR": {
+                    "default": "Public Subnet 2 CIDR"
+                },
+                "PrivateSubnet1CIDR": {
+                    "default": "Private Subnet 1 CIDR"
+                },
+                "PrivateSubnet2CIDR": {
+                    "default": "Private Subnet 2 CIDR"
+                },
+                "QSS3BucketName": {
+                    "default": "Quick Start S3 Bucket Name"
+                },
+                "QSS3KeyPrefix": {
+                    "default": "Quick Start S3 Key Prefix"
+                },
+                "VPCCIDR": {
+                    "default": "VPC CIDR"
+                },
+                "BIGIPInstanceType": {                                                    
+                    "default": "AWS Instance Size"                                        
+                },                                                                        
+                "BIGIPThroughput": {                                                      
+                    "default": "Maximum Throughput"                                       
+                },                                                                        
+                "BIGIPManagementGuiPort": {                                               
+                    "default": "Management Port"                                          
+                },                                                                        
+                "BIGIPScalingMinSize": {                                                  
+                    "default": "Minimum Instances"                                        
+                },                                                                        
+                "BIGIPScalingMaxSize": {                                                  
+                    "default": "Maximum Instances"                                        
+                },                                                                        
+                "Application": {                                                  
+                    "default": "Application"                                        
+                },                                                                        
+                "Application1PoolTagValue": {                                                  
+                    "default": "Application1 Pool Tag Value"                                        
+                },                                                                        
+                "Application2PoolTagValue": {                                                  
+                    "default": "Application2 Pool Tag Value"                                        
+                },                                                                        
+                "NotificationEmail": {                                               
+                    "default": "Notification Email"                                       
+                },                                                                        
+                "AllowUsageAnalytics": {
+                    "default": "Send Anonymous Statistics to F5"
+                }
+            }
+        }
+    },
+    "Parameters": {
+        "DeploymentName" : {                                                              
+            "Description" : "Name is used as a prefix for object names",              
+            "Type" : "String",                                                            
+            "MaxLength": 25,                                                              
+            "Default": "f5quickstart"                                                          
+        },
+        "DeployDemoApp": {
+            "AllowedValues": [
+                "Yes",
+                "No"
+            ],
+            "Default": "Yes",
+            "Description": "This is used to deploy the demo WebApps.",
+            "Type": "String"
+        },
+        "AvailabilityZones": {
+            "Description": "List of Availability Zones to use for the subnets in the VPC. Note: The logical order is preserved and only 2 AZs are used for this deployment.",
+            "Type": "List<AWS::EC2::AvailabilityZone::Name>"
+        },
+        "KeyPairName": {
+            "Description": "Public/private key pairs allow you to securely connect to your instance after it launches",
+            "Type": "AWS::EC2::KeyPair::KeyName"
+        },
+        "RemoteAccessCIDR": {
+            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([0-9]|[1-2][0-9]|3[0-2]))$",
+            "ConstraintDescription": "CIDR block parameter must be in the form x.x.x.x/x",
+            "Default": "0.0.0.0/0",
+            "Description": "Allowed CIDR block for external SSH access to the bastions",
+            "Type": "String"
+        },
+        "PublicSubnet1CIDR": {
+            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/(1[6-9]|2[0-8]))$",
+            "ConstraintDescription": "CIDR block parameter must be in the form x.x.x.x/16-28",
+            "Default": "10.0.128.0/20",
+            "Description": "CIDR Block for the public DMZ subnet 1 located in Availability Zone 1",
+            "Type": "String"
+        },
+        "PublicSubnet2CIDR": {
+            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/(1[6-9]|2[0-8]))$",
+            "ConstraintDescription": "CIDR block parameter must be in the form x.x.x.x/16-28",
+            "Default": "10.0.144.0/20",
+            "Description": "CIDR Block for the public DMZ subnet 2 located in Availability Zone 2",
+            "Type": "String"
+        },
+        "PrivateSubnet1CIDR": {
+            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/(1[6-9]|2[0-8]))$",
+            "ConstraintDescription": "CIDR block parameter must be in the form x.x.x.x/16-28",
+            "Default": "10.0.0.0/19",
+            "Description": "CIDR block for private subnet 1 located in Availability Zone 1.",
+            "Type": "String"
+        },
+        "PrivateSubnet2CIDR": {
+            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/(1[6-9]|2[0-8]))$",
+            "ConstraintDescription": "CIDR block parameter must be in the form x.x.x.x/16-28",
+            "Default": "10.0.32.0/19",
+            "Description": "CIDR block for private subnet 2 located in Availability Zone 2.",
+            "Type": "String"
+        },
+        "QSS3BucketName": {
+            "AllowedPattern": "^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$",
+            "ConstraintDescription": "Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+            "Default": "f5-quickstart",
+            "Description": "S3 bucket name for the Quick Start assets. Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+            "Type": "String"
+        },
+        "QSS3KeyPrefix": {
+            "AllowedPattern": "^[0-9a-zA-Z-/]*$",
+            "ConstraintDescription": "Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).",
+            "Default": "latest/",
+            "Description": "S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).",
+            "Type": "String"
+        },
+        "VPCCIDR": {
+            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/(1[6-9]|2[0-8]))$",
+            "ConstraintDescription": "CIDR block parameter must be in the form x.x.x.x/16-28",
+            "Default": "10.0.0.0/16",
+            "Description": "CIDR Block for the VPC",
+            "Type": "String"
+        },
+        "BIGIPInstanceType": {                                                            
+            "Description": "AWS Instance Size",                                           
+            "Type": "String",                                                             
+            "Default": "m4.large",                                                       
+            "AllowedValues": [
+                "t2.medium",
+                "t2.large",                                                                           
+                "t2.xlarge",                                                                          
+                "m3.large",                                                                           
+                "m3.xlarge",                                                                          
+                "m3.2xlarge",                                                                         
+                "m4.large",                                                                           
+                "m4.xlarge",                                                                          
+                "m4.2xlarge",                                                                         
+                "m4.4xlarge",                                                                         
+                "m4.10xlarge",                                                                        
+                "c3.xlarge",                                                                          
+                "c3.2xlarge",                                                                         
+                "c3.4xlarge",                                                                         
+                "c3.8xlarge",                                                                         
+                "c4.xlarge",                                                                          
+                "c4.2xlarge",                                                                         
+                "c4.4xlarge",                                                                         
+                "c4.8xlarge"
+            ],                                                                            
+            "ConstraintDescription": "Must be a valid BIG-IP BEST virtual EC2 instance type."
+        },                                                                                
+        "BIGIPThroughput": {                                                              
+            "Description": "Maximum amount of throughput for BIG-IP VE",                  
+            "Type": "String",                                                             
+            "Default": "25Mbps",                                                        
+            "AllowedValues": [                                                            
+                "25Mbps",                                                                 
+                "200Mbps",                                                                
+                "1000Mbps",                                                               
+                "5000Mbps"                                                                
+            ],                                                                            
+            "ConstraintDescription": "Select the BIG-IP throughput you want to use"       
+        },                                                                                
+        "BIGIPManagementGuiPort": {                                                       
+            "Description": "Port for the BIG-IP management Configuration utility",        
+            "Type": "Number",                                                             
+            "Default": 8443,                                                              
+            "ConstraintDescription": "Must be a valid, unused port on the BIG-IP."        
+        },                                                                                
+        "BIGIPScalingMinSize": {                                                          
+            "Description": "Minimum number of BIG-IP instances (1-8) you want available in the Auto Scale Group",
+            "Default": "1",                                                               
+            "ConstraintDescription": "Must be a number between 1-8",                      
+            "Type": "Number",                                                             
+            "MaxValue": "8",                                                              
+            "MinValue": "1"                                                               
+        },
+        "BIGIPScalingMaxSize": {                                                          
+            "Description": "Maximum number of BIG-IP instances (1-8) that can be created in the Auto Scale Group", 
+            "Default": "1",                                                               
+            "ConstraintDescription": "Must be a number between 1-8.",                     
+            "Type": "Number",                                                             
+            "MaxValue": "8",                                                              
+            "MinValue": "1"                                                               
+        },                                                                                
+        "Application" : {                                                              
+            "Description" : "An appropriate name that describes the use of this deployment",              
+            "Type" : "String",                                                            
+            "MaxLength": 20,                                                              
+            "Default": "f5demoapp"                                                          
+        },
+        "Application1PoolTagValue" : {                                                              
+            "Description" : "Application1 pool tag value",              
+            "Type" : "String",                                                            
+            "MaxLength": 20,                                                              
+            "Default": "f5-demo-app-0.0.1"                                                          
+        },
+        "Application2PoolTagValue" : {                                                              
+            "Description" : "Application2 pool tag value",              
+            "Type" : "String",                                                            
+            "MaxLength": 20,                                                              
+            "Default": "f5-demo-app-0.0.2"                                                          
+        },
+        "NotificationEmail": {                                                       
+            "Description": "\"VALID EMAIL ADDRESS TO SEND AUTO SCALING EVENT NOTIFICATIONS\"",
+            "ConstraintDescription": "Must be a valid email address.",                    
+            "AllowedPattern": ".+@.+",                                                    
+            "Type": "String"                                                              
+        },                                                                                
+        "AllowUsageAnalytics": {
+            "AllowedValues": [
+                "Yes",
+                "No"
+            ],
+            "Default": "Yes",
+            "Description": "This deployment can send anonymous statistics to F5 to help us determine how to improve our solutionsi.If you select **No** statistics are not sent.",
+            "Type": "String"
+        }
+    },
+    "Conditions": {
+        "GovCloudCondition": {
+            "Fn::Equals": [
+                {
+                    "Ref": "AWS::Region"
+                },
+                "us-gov-west-1"
+            ]
+        },
+        "DemoCondition": {
+            "Fn::Equals": [
+                "Yes",
+                {
+                    "Ref": "DeployDemoApp"
+                }
+            ]
+        }
+    },
+    "Resources": {
+        "VPCStack": {
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+                "TemplateURL": {
+                    "Fn::Sub": [
+                        "https://${S3Region}.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}templates/aws/aws-vpc.template",
+                        {
+                            "S3Region": {
+                                "Fn::If": [
+                                    "GovCloudCondition",
+                                    "s3-us-gov-west-1",
+                                    "s3"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "Parameters": {
+                    "AvailabilityZones": {
+                        "Fn::Join": [
+                            ",",
+                            {
+                                "Ref": "AvailabilityZones"
+                            }
+                        ]
+                    },
+                    "KeyPairName": {
+                        "Ref": "KeyPairName"
+                    },
+                    "NumberOfAZs": "2",
+                    "PrivateSubnet1ACIDR": {
+                        "Ref": "PrivateSubnet1CIDR"
+                    },
+                    "PrivateSubnet2ACIDR": {
+                        "Ref": "PrivateSubnet2CIDR"
+                    },
+                    "PublicSubnet1CIDR": {
+                        "Ref": "PublicSubnet1CIDR"
+                    },
+                    "PublicSubnet2CIDR": {
+                        "Ref": "PublicSubnet2CIDR"
+                    },
+                    "VPCCIDR": {
+                        "Ref": "VPCCIDR"
+                    }
+                }
+            }
+        },
+        "BastionStack": {
+            "DependsOn": "VPCStack",
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+                "TemplateURL": {
+                    "Fn::Sub": [
+                        "https://${S3Region}.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}templates/bastion/linux-bastion.template",
+                        {
+                            "S3Region": {
+                                "Fn::If": [
+                                    "GovCloudCondition",
+                                    "s3-us-gov-west-1",
+                                    "s3"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "Parameters": {
+                    "BastionAMIOS": "Ubuntu-Server-16.04-LTS-HVM",
+                    "BastionBanner": "",
+                    "BastionInstanceType": "t2.micro",
+                    "EnableBanner": "false", 
+                    "EnableTCPForwarding": "true",
+                    "EnableX11Forwarding": "true",
+                    "KeyPairName": {
+                        "Ref": "KeyPairName"
+                    },
+                    "NumBastionHosts": "1",
+                    "PublicSubnet1ID": {
+                        "Fn::GetAtt": [
+                            "VPCStack",
+                            "Outputs.PublicSubnet1ID"
+                        ]
+                    },
+                    "PublicSubnet2ID": {
+                        "Fn::GetAtt": [
+                            "VPCStack",
+                            "Outputs.PublicSubnet2ID"
+                        ]
+                    },
+                    "QSS3BucketName": {
+                        "Ref": "QSS3BucketName"
+                    },
+                    "QSS3KeyPrefix": {
+                         "Ref": "QSS3KeyPrefix"
+                    },
+                    "RemoteAccessCIDR": {
+                        "Ref": "RemoteAccessCIDR"
+                    },
+                    "VPCID": {
+                        "Fn::GetAtt": [
+                            "VPCStack",
+                            "Outputs.VPCID"
+                        ]
+                    }
+                }
+            }
+        },
+        "ExternalLBStack": {
+            "DependsOn": "BastionStack",
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+                "TemplateURL": {
+                    "Fn::Sub": [
+                        "https://${S3Region}.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}templates/f5/external-LB.template",
+                        {
+                            "S3Region": {
+                                "Fn::If": [
+                                    "GovCloudCondition",
+                                    "s3-us-gov-west-1",
+                                    "s3"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "Parameters": {
+                    "deploymentName": {                                                   
+                        "Ref": "DeploymentName"                                           
+                    },
+                    "application": {
+                        "Ref": "Application"
+                    },
+                    "poolPort": "443",
+                    "vpc": {
+                        "Fn::GetAtt": [
+                            "VPCStack",
+                            "Outputs.VPCID"
+                        ]
+                    },
+                    "subnets": {
+                        "Fn::Join": [
+                            ",",
+                            [
+                                {
+                                    "Fn::GetAtt": [
+                                        "VPCStack",
+                                        "Outputs.PublicSubnet1ID"
+                                    ]
+                                },
+                                {
+                                    "Fn::GetAtt": [
+                                        "VPCStack",
+                                        "Outputs.PublicSubnet2ID"
+                                    ]
+                                }
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        "BIGIPStack": {
+            "DependsOn": "ExternalLBStack",
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+                "TemplateURL": {
+                    "Fn::Sub": [
+                        "https://${S3Region}.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}templates/f5/f5-bigip.template",
+                        {
+                            "S3Region": {
+                                "Fn::If": [
+                                    "GovCloudCondition",
+                                    "s3-us-gov-west-1",
+                                    "s3"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "Parameters": {
+                    "deploymentName": {                                                   
+                        "Ref": "DeploymentName"                                           
+                    },
+                    "vpc": {
+                        "Fn::GetAtt": [
+                            "VPCStack",
+                            "Outputs.VPCID"
+                        ]
+                    },
+                    "availabilityZones": {
+                        "Fn::Join": [
+                            ",",
+                            {
+                                "Ref": "AvailabilityZones"
+                            }
+                        ]
+                    },
+                    "subnets": {
+                        "Fn::Join": [
+                            ",",
+                            [
+                                {
+                                    "Fn::GetAtt": [
+                                        "VPCStack",
+                                        "Outputs.PrivateSubnet1AID"
+                                    ]
+                                },
+                                {
+                                    "Fn::GetAtt": [
+                                        "VPCStack",
+                                        "Outputs.PrivateSubnet2AID"
+                                    ]
+                                }
+                            ]
+                        ]
+                    },
+                    "restrictedSrcAddress": {
+                        "Ref": "VPCCIDR"
+                    },
+                    "bigipNetworkLoadBalancerTargetGroupsArns": {
+                         "Fn::GetAtt": [
+                             "ExternalLBStack",
+                             "Outputs.TargetGroupArn"
+                         ]
+                    },
+                    "sshKey": {
+                        "Ref": "KeyPairName"
+                    },
+                    "instanceType": {
+                        "Ref": "BIGIPInstanceType"
+                    },
+                    "throughput": {
+                        "Ref": "BIGIPThroughput"
+                    },
+                    "managementGuiPort": {
+                        "Ref": "BIGIPManagementGuiPort"
+                    },
+                    "timezone": "UTC",
+                    "ntpServer": "0.pool.ntp.org",   
+                    "scalingMinSize": {                                                 
+                        "Ref": "BIGIPScalingMinSize"
+                    },
+                    "scalingMaxSize": {                                                
+                        "Ref": "BIGIPScalingMaxSize"
+                    },
+                    "notificationEmail": {
+                        "Ref": "NotificationEmail"
+                    },
+                    "allowUsageAnalytics": {
+                        "Ref": "AllowUsageAnalytics"
+                    },
+                    "scaleDownBytesThreshold": "10000",
+                    "scaleUpBytesThreshold": "35000",
+                    "lowCpuThreshold": "0",                                               
+                    "highCpuThreshold": "80",
+                    "virtualServicePort": "80",
+                    "application": {
+                        "Ref": "Application"
+                    },
+                    "applicationPort": "80",
+                    "applicationPoolTagKey": {
+                        "Ref": "Application"
+                    },
+                    "application1PoolTagValue": {
+                        "Ref": "Application1PoolTagValue"
+                    },
+                    "application2PoolTagValue": {
+                        "Ref": "Application2PoolTagValue"
+                    },
+                    "environment": "quickstart",                                                    
+                    "group": "quickstart",                                                          
+                    "owner": "quickstart",
+                    "costcenter": "quickstart"
+                }
+            }
+        },
+        "Application1Stack": {
+            "DependsOn": "ExternalLBStack",
+            "Type": "AWS::CloudFormation::Stack",
+            "Condition" : "DemoCondition",
+            "Properties": {
+                "TemplateURL": {
+                    "Fn::Sub": [
+                        "https://${S3Region}.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}templates/f5/application.template",
+                        {
+                            "S3Region": {
+                                "Fn::If": [
+                                    "GovCloudCondition",
+                                    "s3-us-gov-west-1",
+                                    "s3"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "Parameters": {
+                    "deploymentName": {                                                   
+                        "Ref": "DeploymentName"                                           
+                    },
+                    "application": {
+                        "Ref": "Application"
+                    },
+                    "applicationPoolTagValue": {
+                        "Ref": "Application1PoolTagValue"
+                    },
+                    "vpc": {
+                        "Fn::GetAtt": [
+                            "VPCStack",
+                            "Outputs.VPCID"
+                        ]
+                    },
+                    "applicationSubnets": {
+                         "Fn::Join": [
+                             ",",
+                             [
+                                 {
+                                     "Fn::GetAtt": [
+                                         "VPCStack",
+                                         "Outputs.PrivateSubnet1AID"
+                                     ]
+                                 },
+                                 {
+                                     "Fn::GetAtt": [
+                                         "VPCStack",
+                                         "Outputs.PrivateSubnet2AID"
+                                     ]
+                                 }
+                             ]
+                         ]
+                    },
+                    "sshKey": {
+                        "Ref": "KeyPairName"
+                    },
+                    "restrictedSrcAddress": {
+                        "Ref": "VPCCIDR"
+                    },
+                    "containerName" : "f5devcentral/f5-demo-app:0.0.1"
+                }
+            }
+        },
+        "Application2Stack": {
+            "DependsOn": "Application1Stack",
+            "Type": "AWS::CloudFormation::Stack",
+            "Condition" : "DemoCondition",
+            "Properties": {
+                "TemplateURL": {
+                    "Fn::Sub": [
+                        "https://${S3Region}.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}templates/f5/application.template",
+                        {
+                            "S3Region": {
+                                "Fn::If": [
+                                    "GovCloudCondition",
+                                    "s3-us-gov-west-1",
+                                    "s3"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "Parameters": {
+                    "deploymentName": {                                                   
+                        "Ref": "DeploymentName"                                           
+                    },
+                    "application": {
+                        "Ref": "Application"
+                    },
+                    "applicationPoolTagValue": {
+                        "Ref": "Application2PoolTagValue"
+                    },
+                    "vpc": {
+                        "Fn::GetAtt": [
+                            "VPCStack",
+                            "Outputs.VPCID"
+                        ]
+                    },
+                    "applicationSubnets": {
+                         "Fn::Join": [
+                             ",",
+                             [
+                                 {
+                                     "Fn::GetAtt": [
+                                         "VPCStack",
+                                         "Outputs.PrivateSubnet1AID"
+                                     ]
+                                 },
+                                 {
+                                     "Fn::GetAtt": [
+                                         "VPCStack",
+                                         "Outputs.PrivateSubnet2AID"
+                                     ]
+                                 }
+                             ]
+                         ]
+                    },
+                    "sshKey": {
+                        "Ref": "KeyPairName"
+                    },
+                    "restrictedSrcAddress": {
+                        "Ref": "VPCCIDR"
+                    },
+                    "containerName" : "f5devcentral/f5-demo-app:0.0.2"
+                }
+            }
+        }
+    },
+    "Outputs": {                                                                             
+        "BastionAutoscaleGroup": {                                                           
+            "Value": {                                                                       
+                "Fn::GetAtt": [                                                              
+                    "BastionStack",                                                          
+                    "Outputs.BastionAutoScalingGroup"                                        
+                ]                                                                            
+            }                                                                                
+        },                                                                                   
+        "BIGIPAutoscaleGroup": {                                                             
+            "Value": {                                                                       
+                "Fn::GetAtt": [                                                              
+                    "BIGIPStack",                                                            
+                    "Outputs.BIGIPAutoscaleGroup"                                            
+                ]                                                                            
+            }                                                                                
+        },                                                                                   
+        "BIGIPS3Bucket": {                                                                   
+            "Value": {                                                                       
+                "Fn::GetAtt": [                                                              
+                    "BIGIPStack",                                                            
+                    "Outputs.BIGIPS3Bucket"                                                  
+                ]                                                                            
+            }                                                                                
+        },                                                                                   
+        "AppUrl": {                                                                          
+            "Value": {                                                                       
+                "Fn::GetAtt": [                                                              
+                    "ExternalLBStack",                                                       
+                    "Outputs.DnsName"                                   
+                ]                                                                            
+            }                                                                                
+        }                                                                                    
+    }                                                                                        
+}
