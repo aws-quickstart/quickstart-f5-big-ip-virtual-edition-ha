@@ -461,7 +461,7 @@
             "Properties": {
                 "TemplateURL": {
                     "Fn::Sub": [
-                        "https://${S3Region}.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}templates/f5/external-LB.template",
+                        "https://${S3Region}.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}templates/external-LB.template",
                         {
                             "S3Region": {
                                 "Fn::If": [
@@ -515,7 +515,7 @@
             "Properties": {
                 "TemplateURL": {
                     "Fn::Sub": [
-                        "https://${S3Region}.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}templates/f5/f5-bigip.template",
+                        "https://${S3Region}.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}templates/f5-bigip.template",
                         {
                             "S3Region": {
                                 "Fn::If": [
@@ -631,7 +631,7 @@
             "Properties": {
                 "TemplateURL": {
                     "Fn::Sub": [
-                        "https://${S3Region}.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}templates/f5/application.template",
+                        "https://${S3Region}.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}templates/application.template",
                         {
                             "S3Region": {
                                 "Fn::If": [
@@ -695,7 +695,7 @@
             "Properties": {
                 "TemplateURL": {
                     "Fn::Sub": [
-                        "https://${S3Region}.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}templates/f5/application.template",
+                        "https://${S3Region}.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}templates/application.template",
                         {
                             "S3Region": {
                                 "Fn::If": [
