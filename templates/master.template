@@ -14,7 +14,7 @@
             "Value":{
                 "Fn::GetAtt":[
                     "BastionStack",
-                    "Outputs.bastionAutoScalingGroup"
+                    "Outputs.BastionAutoScalingGroup"
                 ]
             }
         },
@@ -191,19 +191,19 @@
             "Type":"String"
         },
         "application":{
-            "Description":"Name of application deploying behind proxy. Will be used in naming objects in BIG-IP and AWS",
+            "Description":"Name of application deploying behind proxy. Will be used in naming objects in BIG-IP and AWS. BIG-IP uses both application and applicationPoolTagValues to discover new isntances of the apps whether they are custom apps or the demo app. Pleae makes ure that the key value pair in the tags of custom apps are set to application and applicationPoolTagValue.",
             "Type":"String",
             "MaxLength":20,
             "Default":"f5demoapp"
         },
         "application1PoolTagValue":{
-            "Description":"Application1 pool tag value. This is used to detect the auto-scaled instances by BIG-IP",
+            "Description":"Application1 pool tag value. This is used to detect the auto-scaled instances by BIG-IP. BIG-IP uses both application and applicationPoolTagValues to discover new isntances of the apps whether they are custom apps or the demo app. Pleae makes ure that the key value pair in the tags of custom apps are set to application and applicationPoolTagValue.",
             "Type":"String",
             "MaxLength":20,
             "Default":"f5-demo-app-0.0.1"
         },
         "application2PoolTagValue":{
-            "Description":"Application2 pool tag value. This is used to detect the auto-scaled instances by BIG-IP",
+            "Description":"Application2 pool tag value. This is used to detect the auto-scaled instances by BIG-IP BIG-IP uses both application and applicationPoolTagValues to discover new isntances of the apps whether they are custom apps or the demo app. Pleae makes ure that the key value pair in the tags of custom apps are set to application and applicationPoolTagValue.",
             "Type":"String",
             "MaxLength":20,
             "Default":"f5-demo-app-0.0.2"
@@ -227,7 +227,7 @@
         "bigipInstanceType":{
             "Description":"AWS Instance Size",
             "Type":"String",
-            "Default":"m4.large",
+            "Default":"m5.large",
             "AllowedValues":[
                 "t2.medium",                                                                  
                 "t2.large",                                                                   

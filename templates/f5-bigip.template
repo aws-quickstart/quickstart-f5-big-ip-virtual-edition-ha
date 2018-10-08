@@ -447,7 +447,7 @@
                     "default":"F5 Image Name"
                 },
                 "instanceType":{
-                    "default":"AWS Instance Size"
+                    "default":"AWS Instance Type"
                 },
                 "lowCpuThreshold":{
                     "default":"Low CPU Percentage Threshold"
@@ -666,7 +666,7 @@
                 "c5.4xlarge"
             ],
             "ConstraintDescription":"Must be a valid EC2 instance type for BIG-IP",
-            "Default":"m5.xlarge",
+            "Default":"m5.large",
             "Description":"AWS instance type",
             "Type":"String"
         },

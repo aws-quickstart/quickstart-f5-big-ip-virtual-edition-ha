@@ -237,7 +237,7 @@
         "bigipInstanceType":{
             "Description":"AWS Instance Type",
             "Type":"String",
-            "Default":"m4.large",
+            "Default":"m5.large",
             "AllowedValues":[
                 "t2.medium",                                                                  
                 "t2.large",                                                                   
