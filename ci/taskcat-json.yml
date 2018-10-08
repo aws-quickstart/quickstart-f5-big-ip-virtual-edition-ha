@@ -1,0 +1,15 @@
+---
+global:
+  owner: k.anna@f5.com
+  qsname: quickstart-f5-big-ip-virtual-edition
+  s3bucket: f5-quickstart
+  regions:
+    - us-east-1
+  reporting: true
+tests:
+  taskcat-json:
+    parameter_input: quickstart-input.json
+    regions:
+      - us-east-1
+    template_file: master.template
+

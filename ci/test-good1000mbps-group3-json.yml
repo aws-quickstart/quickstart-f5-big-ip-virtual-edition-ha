@@ -1,0 +1,18 @@
+---
+global:
+  owner: k.anna@f5.com
+  qsname: quickstart-f5-big-ip-virtual-edition
+  #s3bucket: aws-quickstart
+  regions:
+    - us-east-1  
+    - ap-northeast-2  
+    - eu-central-1  
+  reporting: true
+tests:
+  taskcat-json:
+    parameter_input: input-good1000mbps.json
+    regions:
+      - us-east-1  
+      - ap-northeast-2  
+      - eu-central-1  
+    template_file: master.template
