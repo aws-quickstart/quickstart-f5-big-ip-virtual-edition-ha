@@ -1,0 +1,34 @@
+[                                                                                            
+    {                                                                                        
+        "ParameterKey": "qss3BucketName",                                                    
+        "ParameterValue": "$[taskcat_autobucket]"                                             
+    }, 
+    {                                                                                        
+        "ParameterKey": "bigipInstanceType",                                                    
+        "ParameterValue": "m4.large"                                             
+    }, 
+    {                                                                                        
+        "ParameterKey": "availabilityZones",                                                 
+        "ParameterValue": "$[taskcat_genaz_2]"                                               
+    },                                                                                       
+    {                                                                                        
+        "ParameterKey": "keyPairName",                                                       
+        "ParameterValue": "Kiran-Key"                                                        
+    },                                                                                       
+    {                                                                                        
+        "ParameterKey": "remoteAccessCIDR",                                                  
+        "ParameterValue": "0.0.0.0/0"                                                        
+    },                                                                                       
+    {                                                                                        
+        "ParameterKey": "bigipImage",                                                        
+        "ParameterValue": "Good25Mbps"                                                       
+    },                                                                                       
+    {                                                                                        
+        "ParameterKey": "notificationEmail",                                                 
+        "ParameterValue": "k.anna@f5.com"                                                    
+    },                                                                                       
+    {                                                                                        
+        "ParameterKey": "allowUsageAnalytics",                                               
+        "ParameterValue": "No"                                                               
+    }                                                                                        
+]      
