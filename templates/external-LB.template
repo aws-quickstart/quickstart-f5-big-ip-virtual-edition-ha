@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion":"2010-09-09",
-    "Description":"This template deploys an external network load balancer to provide tier one disaggration to the BIG-IPs.  **WARNING** This template creates an external network loadbalancer and security group. You will be billed for the AWS resources and network traffic used if you create a stack from this template.",
+    "Description":"This template deploys an external network load balancer to provide tier one disaggregation to the BIG-IPs.  **WARNING** This template creates an external network load balancer and security group. You will be billed for the AWS resources and network traffic used if you create a stack from this template.",
     "Outputs":{
         "DnsName":{
             "Description":"DNS Name for the ELB Group containing BIG-IP",
@@ -40,7 +40,7 @@
     },
     "Parameters":{
         "application":{
-            "Description":"Service Name - used for creating objects. ex. service1",
+            "Description":"Name of the Application - used for creating objects. ex. service1",
             "Type":"String",
             "MaxLength":20,
             "Default":"f5demoapp"

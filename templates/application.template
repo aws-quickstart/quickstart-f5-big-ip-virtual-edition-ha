@@ -62,15 +62,18 @@
     },
     "Parameters":{
         "application":{
-            "Description":"Service Name Short- used for creating objects. ex. service1",
+            "Description":"Name of the  application -used for creating objects. ex. service1",
             "Type":"String",
             "MaxLength":20,
             "Default":"f5demoapp"
         },
+        "applicationPoolTagKey":{
+            "Description":"Application pool tag key",
+            "Type":"String"
+        },
         "applicationPoolTagValue":{
-            "Description":"Application Pool tag value",
-            "Type":"String",
-            "MaxLength":20
+            "Description":"Application pool tag value",
+            "Type":"String"
         },
         "applicationSubnets":{
             "Description":"Application Subnet IDs",
@@ -82,7 +85,7 @@
             "Default":"f5devcentral/f5-demo-app:latest"
         },
         "deploymentName":{
-            "Description":"Name the template uses to create object names",
+            "Description":"Name the template used to create object names",
             "Type":"String",
             "MaxLength":25,
             "Default":"f5awsqs"
@@ -168,7 +171,7 @@
                     },
                     {
                         "Key":{
-                            "Ref":"application"
+                            "Ref":"applicationPoolTagKey"
                         },
                         "Value":{
                             "Ref":"applicationPoolTagValue"
@@ -249,7 +252,7 @@
                     },
                     {
                         "Key":{
-                            "Ref":"application"
+                            "Ref":"applicationPoolTagKey"
                         },
                         "Value":{
                             "Ref":"applicationPoolTagValue"

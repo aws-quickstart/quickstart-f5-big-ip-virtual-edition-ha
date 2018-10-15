@@ -302,13 +302,20 @@
             "ParameterGroups":[
                 {
                     "Label":{
-                        "default":"Deployment"
+                        "default":"AWS Quickstart Configuration"
                     },
                     "Parameters":[
-                        "deploymentName",
                         "qss3BucketName",                                                      
                         "qss3KeyPrefix",
                         "qss3Region"
+                    ]
+                },
+                {
+                    "Label":{
+                        "default":"Web App  Configuration"
+                    },
+                    "Parameters":[
+                        "deploymentName"
                     ]
                 },
                 {
@@ -525,7 +532,7 @@
                 "Yes",
                 "No"
             ],
-            "Default":"Yes",
+            "Default":"No",
             "Description":"This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you select **No** statistics are not sent.",
             "Type":"String"
         },
@@ -543,6 +550,7 @@
             "Type":"String"
         },
         "application":{
+            "AllowedPattern":"[a-zA-Z0-9]+",
             "Default":"f5app",
             "Description":"Name of the Application Tag",
             "Type":"String"
@@ -594,7 +602,7 @@
         },
         "deploymentName":{
             "Default":"f5awsqs",
-            "Description":"Name the template uses to create object names",
+            "Description":"Name the template used to create object names",
             "MaxLength":25,
             "Type":"String"
         },
@@ -1729,7 +1737,7 @@
                         "Fn::Join":[
                             "",
                             [
-                                "#!/bin/bash -x\n",
+                                "#!/bin/bash\n",
                                 "/opt/aws/apitools/cfn-init-1.4-0.amzn1/bin/cfn-init -v -s ",
                                 {
                                     "Ref":"AWS::StackId"

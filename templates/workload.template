@@ -13,7 +13,7 @@
         "DemoCondition":{
             "Fn::Equals":[
                 {
-                    "Ref":"deployDemoAppWorkLoad"
+                    "Ref":"deployDemoWebApp"
                 },
                 "Yes"
             ]
@@ -50,20 +50,20 @@
             "ParameterGroups":[
                 {
                     "Label":{
-                        "default":"Deployment"
-                    },
-                    "Parameters":[
-                        "deploymentName",
-                        "deployDemoAppWorkLoad"
-                    ]
-                },
-                {
-                    "Label":{
                         "default":"AWS Quickstart Configuration"
                     },
                     "Parameters":[
                         "qss3BucketName",
                         "qss3KeyPrefix"
+                    ]
+                },
+                {
+                    "Label":{
+                        "default":"Web App Configuration"
+                    },
+                    "Parameters":[
+                        "deploymentName",
+                        "deployDemoWebApp"
                     ]
                 },
                 {
@@ -106,8 +106,10 @@
                     },
                     "Parameters":[
                         "application",
+                        "applicationPoolTagKey",
                         "application1PoolTagValue",
-                        "application2PoolTagValue"
+                        "application2PoolTagValue",
+                        "applicationRestrictedSrcAddr"
                     ]
                 },
                 {
@@ -125,13 +127,19 @@
                     "default":"Send Anonymous Statistics to F5"
                 },
                 "application":{
-                    "default":"Application"
+                    "default":"Application Name"
+                },
+                "applicationPoolTagKey":{
+                    "default":"Application Pool Tag Key"
                 },
                 "application1PoolTagValue":{
                     "default":"Application1 Pool Tag Value"
                 },
                 "application2PoolTagValue":{
                     "default":"Application2 Pool Tag Value"
+                },
+                "applicationRestrictedSrcAddr":{
+                    "default":"Application Restricted Source Address"
                 },
                 "availabilityZones":{
                     "default":"Availability Zones"
@@ -146,13 +154,13 @@
                     "default":"Management Port"
                 },
                 "bigipScalingMaxSize":{
-                    "default":"Maximum BIG-IP Instances"
+                    "default":"Maximum No. of BIG-IP Instances"
                 },
                 "bigipScalingMinSize":{
-                    "default":"Minimum BIG-IP Instances"
+                    "default":"Minimum No. of BIG-IP Instances"
                 },
-                "deployDemoAppWorkLoad":{
-                    "default":"Deploy Demo App Work Load"
+                "deployDemoWebApp":{
+                    "default":"Deploy Demo Web App"
                 },
                 "deploymentName":{
                     "default":"Deployment Name"
@@ -196,46 +204,64 @@
                 "Yes",
                 "No"
             ],
-            "Default":"Yes",
+            "Default":"No",
             "Description":"This deployment can send anonymous statistics to F5 to help us determine how to improve our solutionsi.If you select **No** statistics are not sent.",
             "Type":"String"
         },
         "application":{
-            "Description":"An appropriate name that describes the use of this deployment",
+            "AllowedPattern":"[a-zA-Z0-9]+",
+            "Description":"An appropriate name that describes the use of this deployment.",
             "Type":"String",
             "MaxLength":20,
             "Default":"f5demoapp"
         },
-        "application1PoolTagValue":{
-            "Description":"Application1 pool tag value. This is used to detect the auto-scaled instances by BIG-IP",
+        "applicationPoolTagKey":{
+            "Description":"Application1 pool tag Key. This is used to detect the auto-scaled instances by BIG-IP.",
             "Type":"String",
-            "MaxLength":20,
+            "Default":"f5demoapp"
+        },
+        "application1PoolTagValue":{
+            "Description":"Application1 pool tag value. This is used to detect the auto-scaled instances by BIG-IP.",
+            "Type":"String",
             "Default":"f5-demo-app-0.0.1"
         },
         "application2PoolTagValue":{
-            "Description":"Application2 pool tag value. This is used to detect the auto-scaled instances by BIG-IP",
+            "Description":"Application2 pool tag value. This is used to detect the auto-scaled instances by BIG-IP.",
             "Type":"String",
-            "MaxLength":20,
             "Default":"f5-demo-app-0.0.2"
         },
+        "applicationRestrictedSrcAddr":{
+            "AllowedPattern":"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([0-9]|[1-2][0-9]|3[0-2]))$",
+            "ConstraintDescription":"address must be in the form x.x.x.x/x",
+            "Description":"Restricted source address to the web app.",
+            "Type":"String"
+        }, 
         "availabilityZones":{
             "Description":"List of Availability Zones to use for the subnets in the VPC. Note: The logical order is preserved and only 2 AZs are used for this deployment.",
             "Type":"List<AWS::EC2::AvailabilityZone::Name>"
         },
         "bigipImage":{
-            "Description":"BIG-IP Image for BIG-IP VE",
+            "Description":"BIG-IP Image for BIG-IP VE.",
             "Type":"String",
             "Default":"Good25Mbps",
             "AllowedValues":[
                 "Good25Mbps",
                 "Good200Mbps",
                 "Good1000Mbps",
-                "Good5000Mbps"
+                "Good5000Mbps",
+                "Better25Mbps",
+                "Better200Mbps",
+                "Better1000Mbps",
+                "Better5000Mbps",
+                "Best25Mbps",
+                "Best200Mbps",
+                "Best1000Mbps",
+                "Best5000Mbps"
             ],
             "ConstraintDescription":"Select the BIG-IP Image you want to use"
         },
         "bigipInstanceType":{
-            "Description":"AWS Instance Type",
+            "Description":"AWS Instance Type.",
             "Type":"String",
             "Default":"m5.large",
             "AllowedValues":[
@@ -269,13 +295,13 @@
             "ConstraintDescription":"Must be a valid BIG-IP BEST virtual EC2 instance type."
         },
         "bigipManagementGuiPort":{
-            "Description":"Port for the BIG-IP management Configuration utility",
+            "Description":"Port for the BIG-IP management Configuration utility.",
             "Type":"Number",
             "Default":8443,
             "ConstraintDescription":"Must be a valid, unused port on the BIG-IP."
         },
         "bigipScalingMaxSize":{
-            "Description":"Maximum number of BIG-IP instances (1-8) that can be created in the Auto Scale Group",
+            "Description":"Maximum number of BIG-IP instances (1-8) that can be created in the Auto Scale Group.",
             "Default":"1",
             "ConstraintDescription":"Must be a number between 1-8.",
             "Type":"Number",
@@ -283,14 +309,14 @@
             "MinValue":"1"
         },
         "bigipScalingMinSize":{
-            "Description":"Minimum number of BIG-IP instances (1-8) you want available in the Auto Scale Group",
+            "Description":"Minimum number of BIG-IP instances (1-8) you want available in the Auto Scale Group.",
             "Default":"1",
             "ConstraintDescription":"Must be a number between 1-8",
             "Type":"Number",
             "MaxValue":"8",
             "MinValue":"1"
         },
-        "deployDemoAppWorkLoad":{
+        "deployDemoWebApp":{
             "AllowedValues":[
                 "Yes",
                 "No"
@@ -300,35 +326,35 @@
             "Type":"String"
         },
         "deploymentName":{
-            "Description":"Name is used as a prefix for object names",
+            "Description":"Name is used as a prefix for object names.",
             "Type":"String",
             "MaxLength":25,
             "Default":"f5awsqs"
         },
         "notificationEmail":{
-            "Description":"\"VALID EMAIL ADDRESS TO SEND AUTO SCALING EVENT NOTIFICATIONS\"",
+            "Description":"\"VALID EMAIL ADDRESS TO SEND AUTO SCALING EVENT NOTIFICATIONS.\"",
             "ConstraintDescription":"Must be a valid email address.",
             "AllowedPattern":".+@.+",
             "Type":"String"
         },
         "privateSubnet1ID":{
-            "Description":"Private Subnet1 ID",
+            "Description":"Private Subnet1 ID.",
             "Type":"AWS::EC2::Subnet::Id"
         },
         "privateSubnet2ID":{
-            "Description":"Private Subnet2 ID",
+            "Description":"Private Subnet2 ID.",
             "Type":"AWS::EC2::Subnet::Id"
         },
         "publicSubnet1ID":{
-            "Description":"Public Subnet1 ID",
+            "Description":"Public Subnet1 ID.",
             "Type":"AWS::EC2::Subnet::Id"
         },
         "publicSubnet2ID":{
-            "Description":"Public Subnet2 ID",
+            "Description":"Public Subnet2 ID.",
             "Type":"AWS::EC2::Subnet::Id"
         },
         "restrictedSrcAddress":{
-            "Description":" The IP address range that can be used to SSH to the EC2 instances",
+            "Description":" The IP address range that can be used to SSH to the EC2 instances.",
             "Type":"String",
             "MinLength":"9",
             "MaxLength":"18",
@@ -350,11 +376,11 @@
             "Type":"String"
         },
         "sshKey":{
-            "Description":"Public/private key pairs allow you to securely connect to your instance after it launches",
+            "Description":"Public/private key pairs allow you to securely connect to your instance after it launches.",
             "Type":"AWS::EC2::KeyPair::KeyName"
         },
         "vpc":{
-            "Description":"Common VPC for whole deployment",
+            "Description":"Common VPC for whole deployment.",
             "Type":"AWS::EC2::VPC::Id"
         }
     },
@@ -452,7 +478,9 @@
                     "restrictedSrcAddress":{
                         "Ref":"restrictedSrcAddress"
                     },
-                    "restrictedSrcAddressApp":"0.0.0.0/0",
+                    "restrictedSrcAddressApp": {
+                        "Ref":"applicationRestrictedSrcAddr"
+                    },
                     "bigipNetworkLoadBalancerTargetGroupsArns":{
                         "Fn::GetAtt":[
                             "ExternalLBStack",
@@ -502,7 +530,7 @@
                         "Ref":"application"
                     },
                     "applicationPoolTagKey":{
-                        "Ref":"application"
+                        "Ref":"applicationPoolTagKey"
                     },
                     "application1PoolTagValue":{
                         "Ref":"application1PoolTagValue"
@@ -548,6 +576,9 @@
                     },
                     "application":{
                         "Ref":"application"
+                    },
+                    "applicationPoolTagKey":{
+                        "Ref":"applicationPoolTagKey"
                     },
                     "applicationPoolTagValue":{
                         "Ref":"application1PoolTagValue"
@@ -603,6 +634,9 @@
                     },
                     "application":{
                         "Ref":"application"
+                    },
+                    "applicationPoolTagKey":{
+                        "Ref":"applicationPoolTagKey"
                     },
                     "applicationPoolTagValue":{
                         "Ref":"application2PoolTagValue"
