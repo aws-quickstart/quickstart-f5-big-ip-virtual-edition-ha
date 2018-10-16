@@ -223,7 +223,7 @@
         "applicationRestrictedSrcAddr":{
             "AllowedPattern":"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([0-9]|[1-2][0-9]|3[0-2]))$",
             "ConstraintDescription":"address must be in the form x.x.x.x/x",
-            "Description":"Restricted source address to the web app.",
+            "Description":"Allowed CIDR block to the virtual service and web app.",
             "Type":"String"
         },
         "availabilityZones":{
@@ -233,7 +233,7 @@
         "bigipImage":{
             "Description":"BIG-IP Image for BIG-IP VE.",
             "Type":"String",
-            "Default":"Good25Mbps",
+            "Default":"PerAppVeLtm25Mbps",
             "AllowedValues":[
                 "Good25Mbps",
                 "Good200Mbps",
@@ -246,7 +246,9 @@
                 "Best25Mbps",
                 "Best200Mbps",
                 "Best1000Mbps",
-                "Best5000Mbps"
+                "Best5000Mbps",
+                "PerAppVeLtm25Mbps",
+                "PerAppVeLtm200Mbps"
             ],
             "ConstraintDescription":"Select the BIG-IP Image you want to use"
         },
