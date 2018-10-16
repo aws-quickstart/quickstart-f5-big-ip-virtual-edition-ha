@@ -18,7 +18,11 @@
     {                                                                                        
         "ParameterKey": "remoteAccessCIDR",                                                  
         "ParameterValue": "0.0.0.0/0"                                                        
-    },                                                                                       
+    }, 
+    {                                                                                        
+        "ParameterKey": "applicationRestrictedSrcAddr",                                                  
+        "ParameterValue": "0.0.0.0/0"                                                        
+    }, 
     {                                                                                        
         "ParameterKey": "bigipImage",                                                        
         "ParameterValue": "Good25Mbps"                                                       
