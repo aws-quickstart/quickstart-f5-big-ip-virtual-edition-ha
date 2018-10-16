@@ -3,7 +3,25 @@
 
 ## Instructions:
 
-This quickstart template deploys a full demo application stack, including an Auto Scale Group of BIG-IPs sitting in front of two application Auto Scale Groups. The BIG-IPs provide advanced application services, ex. SSL termination/inspection, URI routing and service discovery to demonstrate a typical micro services use case and/or Blue and Green deployment strategy. The virtual service on BIG-IP is configured via [Application Services Extension](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/3/) (BIG-IP's declarative API similar to Cloudformation).
+This quickstart template deploys a full demo application stack, including an Auto Scale Group of BIG-IPs sitting in front of two application Auto Scale Groups. The BIG-IPs provide advanced application services, ex. SSL termination/inspection, URI routing and service discovery to demonstrate a typical micro services use case and/or Blue and Green deployment strategy. The virtual service on BIG-IP is configured via its declarative API named [Application Services Extension](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/3/).
+
+### Prerequisites
+The following are prerequisites and notes for this solution:
+
+Existing Network Stack:
+
+ - The appropriate permission in AWS to launch CloudFormation (CFT) templates. You must be using an IAM user with the AdministratorAccess policy attached and have permission to create Auto Scale Groups, S3 Buckets, Cloudwatch Alarms, SNS Topics, SQS Queues, Lambda functions and IAM roles. For details on permissions and all AWS configuration, see https://aws.amazon.com/documentation/.
+ - The subnet for the BIG-IP network requires a route and access to the Internet for the initial configuration to download the BIG-IP cloud library. 
+ - Accepted the EULA for the F5 image in the AWS marketplace. If you have not deployed BIG-IP VE in your environment before, search for F5 in the Marketplace and then click **Accept Software Terms**.  This only appears the first time you attempt to launch an F5 image. By default, this solution deploys the F5 BIG-IP [Per App LTM 25Mbps](https://aws.amazon.com/marketplace/pp/B07G5NSK97) image. For information, see [K14810: Overview of BIG-IP VE license and throughput limits](https://support.f5.com/csp/article/K14810).
+ - Key pair for management access to BIG-IP VE (you can create or import the key pair in AWS), see https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html for information.
+
+
+Full Quickstart Stack:
+
+If deploying the full example Quickstart Stack (including Network/Bastion Host/Example Web Servers), in addition to the above existing stack requirements, you will also need permission to 
+- Create a Network Load Balancer 
+- Accept the EULA for the example web server image [Ubuntu 18.04 Bionic](https://aws.amazon.com/marketplace/pp/B07CQ33QKV)
+
 
 
 ### Deploy master.template
