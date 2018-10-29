@@ -1,0 +1,42 @@
+[                                                                                            
+    {                                                                                        
+        "ParameterKey": "qss3BucketName",                                                    
+        "ParameterValue": "$[taskcat_autobucket]"                                             
+    },                                                                                       
+    {                                                                                        
+        "ParameterKey": "deploymentName",                                                    
+        "ParameterValue": "$[taskcat_genpass_8A]"                                             
+    },                                                                                       
+    {                                                                                        
+        "ParameterKey": "bigipInstanceType",                                                    
+        "ParameterValue": "c4.8xlarge"                                             
+    },                                                                                       
+    {                                                                                        
+        "ParameterKey": "availabilityZones",                                                 
+        "ParameterValue": "$[taskcat_genaz_2]"                                               
+    },                                                                                       
+    {                                                                                        
+        "ParameterKey": "keyPairName",                                                       
+        "ParameterValue": "Kiran-Key"                                                        
+    },                                                                                       
+    {                                                                                        
+        "ParameterKey": "remoteAccessCIDR",                                                  
+        "ParameterValue": "0.0.0.0/0"                                                        
+    }, 
+    {
+        "ParameterKey": "applicationRestrictedSrcAddr",
+        "ParameterValue": "0.0.0.0/0"
+    },
+    {                                                                                        
+        "ParameterKey": "bigipImage",                                                        
+        "ParameterValue": "Good5000Mbps"                                                       
+    },                                                                                       
+    {                                                                                        
+        "ParameterKey": "notificationEmail",                                                 
+        "ParameterValue": "k.anna@f5.com"                                                    
+    },                                                                                       
+    {                                                                                        
+        "ParameterKey": "allowUsageAnalytics",                                               
+        "ParameterValue": "No"                                                               
+    }                                                                                        
+]      
