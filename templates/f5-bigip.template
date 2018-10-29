@@ -1677,42 +1677,42 @@
                                 "group":"root",
                                 "owner":"root",
                                 "mode":"000755",
-                                "source": { "Fn::Join" : [ "", [ "https://", { "Ref" : "qss3Region" }, ".amazonaws.com/", { "Ref" : "qss3BucketName" }, "/", { "Ref" : "qss3KeyPrefix" }, "scripts/getNameServer.sh" ]  ] },
+                                "source": { "Fn::Join" : [ "", [ "https://", { "Ref" : "qss3BucketName" }, ".",  { "Ref" : "qss3Region" }, ".amazonaws.com/", { "Ref" : "qss3KeyPrefix" }, "scripts/getNameServer.sh" ]  ] },
                                 "authentication" : "s3AccessCreds"
                             },
                             "/config/cloud/aws/run_autoscale_backup.sh":{
                                 "group":"root",
                                 "owner":"root",
                                 "mode":"000755",
-                                "source": { "Fn::Join" : [ "", [ "https://", { "Ref" : "qss3Region" }, ".amazonaws.com/", { "Ref" : "qss3BucketName" }, "/", { "Ref" : "qss3KeyPrefix" }, "scripts/run_autoscale_backup.sh" ]  ] },
+                                "source": { "Fn::Join" : [ "", [ "https://", { "Ref" : "qss3BucketName" }, ".",  { "Ref" : "qss3Region" }, ".amazonaws.com/", { "Ref" : "qss3KeyPrefix" }, "scripts/run_autoscale_backup.sh" ]  ] },
                                 "authentication" : "s3AccessCreds"
                             },
                             "/config/cloud/aws/run_autoscale_update.sh":{
                                 "group":"root",
                                 "owner":"root",
                                 "mode":"000755",
-                                "source": { "Fn::Join" : [ "", [ "https://", { "Ref" : "qss3Region" }, ".amazonaws.com/", { "Ref" : "qss3BucketName" }, "/", { "Ref" : "qss3KeyPrefix" }, "scripts/run_autoscale_update.sh" ]  ] },
+                                "source": { "Fn::Join" : [ "", [ "https://", { "Ref" : "qss3BucketName" }, ".",  { "Ref" : "qss3Region" }, ".amazonaws.com/", { "Ref" : "qss3KeyPrefix" }, "scripts/run_autoscale_update.sh" ]  ] },
                                 "authentication" : "s3AccessCreds"
                             },
                             "/config/installCloudLibs.sh":{
                                 "group":"root",
                                 "owner":"root",
                                 "mode":"000755",
-                                "source": { "Fn::Join" : [ "", [ "https://", { "Ref" : "qss3Region" }, ".amazonaws.com/", { "Ref" : "qss3BucketName" }, "/", { "Ref" : "qss3KeyPrefix" }, "scripts/installCloudLibs.sh" ]  ] },
+                                "source": { "Fn::Join" : [ "", [ "https://", { "Ref" : "qss3BucketName" }, ".",  { "Ref" : "qss3Region" }, ".amazonaws.com/", { "Ref" : "qss3KeyPrefix" }, "scripts/installCloudLibs.sh" ]  ] },
                                 "authentication" : "s3AccessCreds"
                             },
                             "/config/verifyHash":{
                                 "group":"root",
                                 "owner":"root",
                                 "mode":"000755",
-                                "source": { "Fn::Join" : [ "", [ "https://", { "Ref" : "qss3Region" }, ".amazonaws.com/", { "Ref" : "qss3BucketName" }, "/", { "Ref" : "qss3KeyPrefix" }, "scripts/verifyHash" ]  ] },
+                                "source": { "Fn::Join" : [ "", [ "https://", { "Ref" : "qss3BucketName" }, ".",  { "Ref" : "qss3Region" }, ".amazonaws.com/", { "Ref" : "qss3KeyPrefix" }, "scripts/verifyHash" ]  ] },
                                 "authentication" : "s3AccessCreds"
                             },
                             "/config/waitThenRun.sh":{
                                 "group":"root",
                                 "owner":"root",
                                 "mode":"000755",
-                                "source": { "Fn::Join" : [ "", [ "https://", { "Ref" : "qss3Region" }, ".amazonaws.com/", { "Ref" : "qss3BucketName" }, "/", { "Ref" : "qss3KeyPrefix" }, "scripts/waitThenRun.sh" ]  ] },
+                                "source": { "Fn::Join" : [ "", [ "https://", { "Ref" : "qss3BucketName" }, ".",  { "Ref" : "qss3Region" }, ".amazonaws.com/", { "Ref" : "qss3KeyPrefix" }, "scripts/waitThenRun.sh" ]  ] },
                                 "authentication" : "s3AccessCreds"
                             }
                         }

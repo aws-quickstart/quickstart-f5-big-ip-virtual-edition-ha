@@ -1,6 +1,16 @@
 {
     "AWSTemplateFormatVersion":"2010-09-09",
     "Description":"This template deploys a full application stack, including a network, bastion host, auto scaled BIG-IPs and demo applications. It creates a VPC infrastructure for a multi-AZ, multi-tier deployment of a Linux based Application infrastructure. It will deploy a bastion and managed NAT gateways or NAT instances into the public subnet for each Availability Zone. Finally, it will create a webapp template for demonstration purposes.  **WARNING** This template creates multiple AWS resources. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Conditions":{
+        "GovCloudCondition":{
+            "Fn::Equals":[
+                {
+                    "Ref":"AWS::Region"
+                },
+                "us-gov-west-1"
+            ]
+        }
+    },
     "Outputs":{
         "appUrl":{
             "Value":{
@@ -389,30 +399,20 @@
             "Type":"String"
         }
     },
-    "Conditions":{
-        "GovCloudCondition":{
-            "Fn::Equals":[
-                {
-                    "Ref":"AWS::Region"
-                },
-                "us-gov-west-1"
-            ]
-        }
-    },
     "Resources":{
         "VPCStack":{
             "Type":"AWS::CloudFormation::Stack",
             "Properties":{
                 "TemplateURL":{
                     "Fn::Sub":[
-                        "https://${qss3Region}.amazonaws.com/${qss3BucketName}/${qss3KeyPrefix}submodules/quickstart-aws-vpc/templates/aws-vpc.template",
+                        "https://${qss3BucketName}.${qss3Region}.amazonaws.com/${qss3KeyPrefix}submodules/quickstart-aws-vpc/templates/aws-vpc.template",
                         {
-                            "qss3Region":{
-                                "Fn::If":[
-                                    "GovCloudCondition",
-                                    "s3-us-gov-west-1",
-                                    "s3"
-                                ]
+                            "qss3Region": {                                                  
+                                "Fn::If": [                                                  
+                                    "GovCloudCondition",                                     
+                                    "s3-us-gov-west-1",                                      
+                                    "s3"                                                
+                                ]                                                            
                             }
                         }
                     ]
@@ -454,14 +454,14 @@
             "Properties":{
                 "TemplateURL":{
                     "Fn::Sub":[
-                        "https://${qss3Region}.amazonaws.com/${qss3BucketName}/${qss3KeyPrefix}submodules/quickstart-linux-bastion/templates/linux-bastion.template",
+                        "https://${qss3BucketName}.${qss3Region}.amazonaws.com/${qss3KeyPrefix}submodules/quickstart-linux-bastion/templates/linux-bastion.template",
                         {
-                            "qss3Region":{
-                                "Fn::If":[
-                                    "GovCloudCondition",
-                                    "s3-us-gov-west-1",
-                                    "s3"
-                                ]
+                            "qss3Region": {                                                  
+                                "Fn::If": [                                                  
+                                    "GovCloudCondition",                                     
+                                    "s3-us-gov-west-1",                                      
+                                    "s3"                                                
+                                ]                                                            
                             }
                         }
                     ]
@@ -513,14 +513,14 @@
             "Properties":{
                 "TemplateURL":{
                     "Fn::Sub":[
-                        "https://${qss3Region}.amazonaws.com/${qss3BucketName}/${qss3KeyPrefix}templates/workload.template",
+                        "https://${qss3BucketName}.${qss3Region}.amazonaws.com/${qss3KeyPrefix}templates/workload.template",
                         {
-                            "qss3Region":{
-                                "Fn::If":[
-                                    "GovCloudCondition",
-                                    "s3-us-gov-west-1",
-                                    "s3"
-                                ]
+                            "qss3Region": {                                                  
+                                "Fn::If": [                                                  
+                                    "GovCloudCondition",                                     
+                                    "s3-us-gov-west-1",                                      
+                                    "s3"                                                
+                                ]                                                            
                             }
                         }
                     ]

@@ -392,10 +392,10 @@
             "Properties":{
                 "TemplateURL":{
                     "Fn::Sub":[
-                        "https://${qss3Region}.amazonaws.com/${qss3BucketName}/${qss3KeyPrefix}templates/external-LB.template",
+                        "https://${qss3BucketName}.${qss3Region}.amazonaws.com/${qss3KeyPrefix}templates/external-LB.template",
                         {
-                            "qss3Region":{
-                                "Fn::If":[
+                            "qss3Region": {
+                                "Fn::If": [
                                     "GovCloudCondition",
                                     "s3-us-gov-west-1",
                                     "s3"
@@ -437,10 +437,10 @@
             "Properties":{
                 "TemplateURL":{
                     "Fn::Sub":[
-                        "https://${qss3Region}.amazonaws.com/${qss3BucketName}/${qss3KeyPrefix}templates/f5-bigip.template",
+                        "https://${qss3BucketName}.${qss3Region}.amazonaws.com/${qss3KeyPrefix}templates/f5-bigip.template",
                         {
-                            "qss3Region":{
-                                "Fn::If":[
+                            "qss3Region": {
+                                "Fn::If": [
                                     "GovCloudCondition",
                                     "s3-us-gov-west-1",
                                     "s3"
@@ -560,10 +560,10 @@
             "Properties":{
                 "TemplateURL":{
                     "Fn::Sub":[
-                        "https://${qss3Region}.amazonaws.com/${qss3BucketName}/${qss3KeyPrefix}templates/application.template",
+                        "https://${qss3BucketName}.${qss3Region}.amazonaws.com/${qss3KeyPrefix}templates/application.template",
                         {
-                            "qss3Region":{
-                                "Fn::If":[
+                            "qss3Region": {
+                                "Fn::If": [
                                     "GovCloudCondition",
                                     "s3-us-gov-west-1",
                                     "s3"
@@ -618,10 +618,10 @@
             "Properties":{
                 "TemplateURL":{
                     "Fn::Sub":[
-                        "https://${qss3Region}.amazonaws.com/${qss3BucketName}/${qss3KeyPrefix}templates/application.template",
+                        "https://${qss3BucketName}.${qss3Region}.amazonaws.com/${qss3KeyPrefix}templates/application.template",
                         {
-                            "qss3Region":{
-                                "Fn::If":[
+                            "qss3Region": {
+                                "Fn::If": [
                                     "GovCloudCondition",
                                     "s3-us-gov-west-1",
                                     "s3"
