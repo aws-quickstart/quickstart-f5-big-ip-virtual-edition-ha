@@ -1,9 +1,5 @@
 [                                                                                            
     {                                                                                        
-        "ParameterKey": "qss3BucketName",                                                    
-        "ParameterValue": "$[taskcat_autobucket]"                                             
-    },
-    {                                                                                        
         "ParameterKey": "deploymentName",                                                    
         "ParameterValue": "$[taskcat_genpass_8A]"                                             
     },
