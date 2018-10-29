@@ -2,7 +2,7 @@
 global:
   owner: k.anna@f5.com
   qsname: quickstart-f5-big-ip-virtual-edition
-  #s3bucket: aws-quickstart
+  marketplace-ami: true
   regions:
     - us-east-1
     - us-west-2 
