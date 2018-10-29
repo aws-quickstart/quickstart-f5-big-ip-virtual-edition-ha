@@ -18,7 +18,7 @@ global:
     - eu-west-1
   reporting: true
 tests:
-  test-perapp200mbps:
+  f5ve-perapp200mbps:
     template_file: master.template
     parameter_input: quickstart-input.json
     regions:
