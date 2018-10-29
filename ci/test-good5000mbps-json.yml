@@ -17,8 +17,8 @@ global:
     - eu-west-1
   reporting: true
 tests:
-  test-good25mbps-json:
-    parameter_input: input-good25mbps.json
+  test-good5000mbps-json:
+    parameter_input: input-good5000mbps.json
     template_file: master.template
     regions:
       - us-east-1

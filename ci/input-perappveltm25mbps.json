@@ -2,15 +2,15 @@
     {                                                                                        
         "ParameterKey": "qss3BucketName",                                                    
         "ParameterValue": "$[taskcat_autobucket]"                                             
-    },                                                                                       
+    },
     {                                                                                        
         "ParameterKey": "deploymentName",                                                    
         "ParameterValue": "$[taskcat_genpass_8A]"                                             
-    },                                                                                       
-    {                                                                                        
-        "ParameterKey": "bigipInstanceType",                                                    
-        "ParameterValue": "m4.large"                                             
-    },                                                                                       
+    },
+    {
+         "ParameterKey": "bigipInstanceType",
+         "ParameterValue": "m5.large"
+    },
     {                                                                                        
         "ParameterKey": "availabilityZones",                                                 
         "ParameterValue": "$[taskcat_genaz_2]"                                               
@@ -29,7 +29,7 @@
     },
     {                                                                                        
         "ParameterKey": "bigipImage",                                                        
-        "ParameterValue": "Good200Mbps"                                                       
+        "ParameterValue": "PerAppVeLtm25Mbps"                                                       
     },                                                                                       
     {                                                                                        
         "ParameterKey": "notificationEmail",                                                 
