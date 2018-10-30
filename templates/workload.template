@@ -50,24 +50,6 @@
             "ParameterGroups":[
                 {
                     "Label":{
-                        "default":"AWS Quickstart Configuration"
-                    },
-                    "Parameters":[
-                        "qss3BucketName",
-                        "qss3KeyPrefix"
-                    ]
-                },
-                {
-                    "Label":{
-                        "default":"Web App Configuration"
-                    },
-                    "Parameters":[
-                        "deploymentName",
-                        "deployDemoWebApp"
-                    ]
-                },
-                {
-                    "Label":{
                         "default":"Network Configuration"
                     },
                     "Parameters":[
@@ -120,7 +102,26 @@
                         "notificationEmail",
                         "allowUsageAnalytics"
                     ]
+                },
+                {
+                    "Label":{
+                        "default":"Web App Configuration"
+                    },
+                    "Parameters":[
+                        "deploymentName",
+                        "deployDemoWebApp"
+                    ]
+                },
+                {
+                    "Label":{
+                        "default":"AWS Quickstart Configuration"
+                    },
+                    "Parameters":[
+                        "qss3BucketName",
+                        "qss3KeyPrefix"
+                    ]
                 }
+                
             ],
             "ParameterLabels":{
                 "allowUsageAnalytics":{
@@ -145,10 +146,10 @@
                     "default":"Availability Zones"
                 },
                 "bigipImage":{
-                    "default":"BIGIP Image"
+                    "default":"BIG-IP Image"
                 },
                 "bigipInstanceType":{
-                    "default":"AWS Instance Type"
+                    "default":"BIG-IP EC2 Instance Type"
                 },
                 "bigipManagementGuiPort":{
                     "default":"Management Port"
@@ -193,7 +194,7 @@
                     "default":"Key Pair Name"
                 },
                 "vpc":{
-                    "default":"VPC"
+                    "default":"VPC ID"
                 }
             }
         }
@@ -216,17 +217,17 @@
             "Default":"f5demoapp"
         },
         "applicationPoolTagKey":{
-            "Description":"Application1 pool tag Key. This is used to detect the auto-scaled instances by BIG-IP.",
+            "Description":"This is used to detect the auto-scaled instances by BIG-IP. BIG-IP uses both application pool tag key and value to discover new instances of the apps whether they are custom apps or the demo app.",
             "Type":"String",
             "Default":"f5demoapp"
         },
         "application1PoolTagValue":{
-            "Description":"Application1 pool tag value. This is used to detect the auto-scaled instances by BIG-IP.",
+            "Description":"This is used to detect the auto-scaled instances by BIG-IP. BIG-IP uses both application pool tag and value to discover new instances of the apps whether they are custom apps or the demo app.",
             "Type":"String",
             "Default":"f5-demo-app-0.0.1"
         },
         "application2PoolTagValue":{
-            "Description":"Application2 pool tag value. This is used to detect the auto-scaled instances by BIG-IP.",
+            "Description":"This is used to detect the auto-scaled instances by BIG-IP BIG-IP uses both application pool tag value to discover new isntances of the apps whether they are custom apps or the demo app.",
             "Type":"String",
             "Default":"f5-demo-app-0.0.2"
         },
@@ -263,7 +264,7 @@
             "ConstraintDescription":"Select the BIG-IP Image you want to use"
         },
         "bigipInstanceType":{
-            "Description":"AWS Instance Type.",
+            "Description":"BIG-IP EC2 Instance Type.",
             "Type":"String",
             "Default":"m5.large",
             "AllowedValues":[
@@ -334,7 +335,7 @@
             "Default":"f5awsqs"
         },
         "notificationEmail":{
-            "Description":"\"VALID EMAIL ADDRESS TO SEND AUTO SCALING EVENT NOTIFICATIONS.\"",
+            "Description":"Valid email address to send auto-scaling event notifications.",
             "ConstraintDescription":"Must be a valid email address.",
             "AllowedPattern":".+@.+",
             "Type":"String"
@@ -382,7 +383,7 @@
             "Type":"AWS::EC2::KeyPair::KeyName"
         },
         "vpc":{
-            "Description":"Common VPC for whole deployment.",
+            "Description":"VPC Id for the deployment.",
             "Type":"AWS::EC2::VPC::Id"
         }
     },

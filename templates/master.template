@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion":"2010-09-09",
-    "Description":"This template deploys a full application stack, including a network, bastion host, auto scaled BIG-IPs and demo applications. It creates a VPC infrastructure for a multi-AZ, multi-tier deployment of a Linux based Application infrastructure. It will deploy a bastion and managed NAT gateways or NAT instances into the public subnet for each Availability Zone. Finally, it will create a webapp template for demonstration purposes.  **WARNING** This template creates multiple AWS resources. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Description":"This template deploys a full application stack, including a network, bastion host, auto scaled BIG-IPs and demo applications. It creates a VPC infrastructure for a multi-AZ, multi-tier deployment of a Linux based Application infrastructure. It will deploy a bastion and managed NAT gateways or NAT instances into the public subnet for each Availability Zone. Finally, it will create an optional webapp template for demonstration purposes.  **WARNING** This template creates multiple AWS resources. You will be billed for the AWS resources used if you create a stack from this template.",
     "Conditions":{
         "GovCloudCondition":{
             "Fn::Equals":[
@@ -48,24 +48,6 @@
     "Metadata":{
         "AWS::CloudFormation::Interface":{
             "ParameterGroups":[
-                {
-                    "Label":{
-                        "default":"AWS Quick Start Configuration"
-                    },
-                    "Parameters":[
-                        "qss3BucketName",
-                        "qss3KeyPrefix"
-                    ]
-                },
-                {
-                    "Label":{
-                        "default":"Web App Configuration"
-                    },
-                    "Parameters":[
-                        "deploymentName",
-                        "deployDemoWebApp"
-                    ]
-                },
                 {
                     "Label":{
                         "default":"Network Configuration"
@@ -120,6 +102,24 @@
                         "notificationEmail",
                         "allowUsageAnalytics"
                     ]
+                },
+                {
+                    "Label":{
+                        "default":"Web App Configuration"
+                    },
+                    "Parameters":[
+                        "deploymentName",
+                        "deployDemoWebApp"
+                    ]
+                },
+                {
+                    "Label":{
+                        "default":"AWS Quick Start Configuration"
+                    },
+                    "Parameters":[
+                        "qss3BucketName",
+                        "qss3KeyPrefix"
+                    ]
                 }
             ],
             "ParameterLabels":{
@@ -148,7 +148,7 @@
                     "default":"BIG-IP Image"
                 },
                 "bigipInstanceType":{
-                    "default":"AWS Instance Size"
+                    "default":"BIG-IP EC2 Instance Size"
                 },
                 "bigipManagementGuiPort":{
                     "default":"Management Port"
@@ -205,7 +205,7 @@
                 "No"
             ],
             "Default":"No",
-            "Description":"This deployment can send anonymous statistics to F5 to help us determine how to improve our solutionsi. If you select **No** statistics are not sent.",
+            "Description":"This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you select **No** statistics are not sent.",
             "Type":"String"
         },
         "application":{
@@ -216,17 +216,17 @@
             "Default":"f5demoapp"
         },
         "applicationPoolTagKey":{
-            "Description":"Application pool tag key. This is used to detect the auto-scaled instances by BIG-IP. BIG-IP uses both application pool tag key and value to discover new instances of the apps whether they are custom apps or the demo app.",
+            "Description":"This is used to detect the auto-scaled instances by BIG-IP. BIG-IP uses both application pool tag key and value to discover new instances of the apps whether they are custom apps or the demo app.",
             "Type":"String",
             "Default":"f5demoapp"
         },
         "application1PoolTagValue":{
-            "Description":"Application1 pool tag value. This is used to detect the auto-scaled instances by BIG-IP. BIG-IP uses both application pool tag and value to discover new instances of the apps whether they are custom apps or the demo app.",
+            "Description":"This is used to detect the auto-scaled instances by BIG-IP. BIG-IP uses both application pool tag and value to discover new instances of the apps whether they are custom apps or the demo app.",
             "Type":"String",
             "Default":"f5-demo-app-0.0.1"
         },
         "application2PoolTagValue":{
-            "Description":"Application2 pool tag value. This is used to detect the auto-scaled instances by BIG-IP BIG-IP uses both application pool tag value to discover new isntances of the apps whether they are custom apps or the demo app.",
+            "Description":"This is used to detect the auto-scaled instances by BIG-IP BIG-IP uses both application pool tag value to discover new isntances of the apps whether they are custom apps or the demo app.",
             "Type":"String",
             "Default":"f5-demo-app-0.0.2"
         },
@@ -260,10 +260,10 @@
                 "PerAppVeLtm25Mbps",
                 "PerAppVeLtm200Mbps"
             ],
-            "ConstraintDescription":"Select the BIG-IP Image you want to use"
+            "ConstraintDescription":"Select the BIG-IP Image you want to use from the allowed values."
         },
         "bigipInstanceType":{
-            "Description":"AWS Instance Size.",
+            "Description":"BIG-IP EC2 Instance Size.",
             "Type":"String",
             "Default":"m5.large",
             "AllowedValues":[
@@ -338,7 +338,7 @@
             "Type":"AWS::EC2::KeyPair::KeyName"
         },
         "notificationEmail":{
-            "Description":"\"VALID EMAIL ADDRESS TO SEND AUTO SCALING EVENT NOTIFICATIONS.\"",
+            "Description":"Valid email address to send auto-scaling event notifications.",
             "ConstraintDescription":"Must be a valid email address.",
             "AllowedPattern":".+@.+",
             "Type":"String"

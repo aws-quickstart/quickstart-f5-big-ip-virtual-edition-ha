@@ -62,7 +62,7 @@
     },
     "Parameters":{
         "application":{
-            "Description":"Name of the  application -used for creating objects. ex. service1",
+            "Description":"Name of the  application used for creating objects. ex. service1",
             "Type":"String",
             "MaxLength":20,
             "Default":"f5demoapp"
