@@ -70,8 +70,8 @@
                 "Best200Mbps":"F5_Networks-BIGIP-VE-Best-PAYG-200Mbps-14.0.0.1-0.0.2-20180830",
                 "Best1000Mbps":"F5_Networks-BIGIP-VE-Best-PAYG-1000Mbps-14.0.0.1-0.0.2-20180830",
                 "Best5000Mbps":"F5_Networks-BIGIP-VE-Best-PAYG-5000Mbps-14.0.0.1-0.0.2-20180830",
-                "PerAppVeLtm200Mbps": "F5_Networks-BIGIP-PerAppVE-PAYG-25Mbps-14.0.0.1-0.0.2-20180830", 
-                "PerAppVeLtm25Mbps": "F5_Networks-BIGIP-PerAppVE--PAYG-200Mbps-14.0.0.1-0.0.2-20180830"
+                "PerAppVeLtm200Mbps":"F5_Networks-BIGIP-PerAppVE-PAYG-25Mbps-14.0.0.1-0.0.2-20180830",
+                "PerAppVeLtm25Mbps":"F5_Networks-BIGIP-PerAppVE--PAYG-200Mbps-14.0.0.1-0.0.2-20180830"
             },
             "ap-northeast-1":{
                 "Good25Mbps":"ami-07ec24f4cd3cc19f1",
@@ -86,8 +86,8 @@
                 "Best200Mbps":"ami-07d9a501c54277157",
                 "Best1000Mbps":"ami-01394e7e3054daa99",
                 "Best5000Mbps":"ami-0a6eaf6a14581e7f6",
-                "PerAppVeLtm25Mbps": "ami-0388e37169690e2b4",
-                "PerAppVeLtm200Mbps": "ami-0b8e009f0418a1528"
+                "PerAppVeLtm25Mbps":"ami-0388e37169690e2b4",
+                "PerAppVeLtm200Mbps":"ami-0b8e009f0418a1528"
             },
             "ap-northeast-2":{
                 "Good25Mbps":"ami-0b892a9d7bf242326",
@@ -102,8 +102,8 @@
                 "Best200Mbps":"ami-00d519c907315c363",
                 "Best1000Mbps":"ami-0b697c233d0d17b96",
                 "Best5000Mbps":"ami-00257634b9d760299",
-                "PerAppVeLtm25Mbps": "ami-0095185cc3bf07e5c",
-                "PerAppVeLtm200Mbps": "ami-097d2d9d06cd35929"
+                "PerAppVeLtm25Mbps":"ami-0095185cc3bf07e5c",
+                "PerAppVeLtm200Mbps":"ami-097d2d9d06cd35929"
             },
             "ap-south-1":{
                 "Good25Mbps":"ami-057385af7a5771f06",
@@ -118,8 +118,8 @@
                 "Best200Mbps":"ami-09dd0f57ca14acab9",
                 "Best25Mbps":"ami-0955f25f6ea9b2e61",
                 "Best5000Mbps":"ami-02a72e730f9a3b6d4",
-                "PerAppVeLtm25Mbps": "ami-061f7332efb3ebffc",
-                "PerAppVeLtm200Mbps": "ami-0e8c7e98de52c696f"
+                "PerAppVeLtm25Mbps":"ami-061f7332efb3ebffc",
+                "PerAppVeLtm200Mbps":"ami-0e8c7e98de52c696f"
             },
             "ap-southeast-1":{
                 "Good25Mbps":"ami-00fcf5210cc560a9c",
@@ -134,8 +134,8 @@
                 "Best200Mbps":"ami-0a4613408c5013d0f",
                 "Best1000Mbps":"ami-03f91a7faebe79ebd",
                 "Best5000Mbps":"ami-073ff31a8a939f00a",
-                "PerAppVeLtm25Mbps": "ami-04d087f3e5b35069e",
-                "PerAppVeLtm200Mbps": "ami-00e1b2dd6845a216c"
+                "PerAppVeLtm25Mbps":"ami-04d087f3e5b35069e",
+                "PerAppVeLtm200Mbps":"ami-00e1b2dd6845a216c"
             },
             "ap-southeast-2":{
                 "Good25Mbps":"ami-0531fcce0a3acb798",
@@ -150,8 +150,8 @@
                 "Best1000Mbps":"ami-001ccbd7dbed015a5",
                 "Best5000Mbps":"ami-021f02c508011ecb7",
                 "Better5000Mbps":"ami-08b63fc83cf981b55",
-                "PerAppVeLtm25Mbps": "ami-05ef5e9518d23187e",
-                "PerAppVeLtm200Mbps": "ami-020ea942717ec30d7"
+                "PerAppVeLtm25Mbps":"ami-05ef5e9518d23187e",
+                "PerAppVeLtm200Mbps":"ami-020ea942717ec30d7"
             },
             "ca-central-1":{
                 "Good25Mbps":"ami-09a62e0d4d662df3e",
@@ -166,8 +166,8 @@
                 "Best200Mbps":"ami-0735e0401d620edeb",
                 "Best1000Mbps":"ami-0d6cd5ee204ca5332",
                 "Best5000Mbps":"ami-08707377775491895",
-                "PerAppVeLtm25Mbps": "ami-0a7fb00d85def50a5",
-                "PerAppVeLtm200Mbps": "ami-036a378de7a6635c7"
+                "PerAppVeLtm25Mbps":"ami-0a7fb00d85def50a5",
+                "PerAppVeLtm200Mbps":"ami-036a378de7a6635c7"
             },
             "eu-central-1":{
                 "Good25Mbps":"ami-093af6635b9bde5fe",
@@ -182,8 +182,8 @@
                 "Best200Mbps":"ami-0f7fbdfe9260e1024",
                 "Best1000Mbps":"ami-07710d025db1c4a2b",
                 "Best5000Mbps":"ami-0b09db045eb6b8a48",
-                "PerAppVeLtm25Mbps": "ami-089607d4e33a217ad",
-                "PerAppVeLtm200Mbps": "ami-047d1e3ecdc30ee94"
+                "PerAppVeLtm25Mbps":"ami-089607d4e33a217ad",
+                "PerAppVeLtm200Mbps":"ami-047d1e3ecdc30ee94"
             },
             "eu-west-1":{
                 "Good25Mbps":"ami-02a77ed05c13e5767",
@@ -198,8 +198,8 @@
                 "Best200Mbps":"ami-015109834e679ac9a",
                 "Best1000Mbps":"ami-076d5b9726c63abb5",
                 "Best5000Mbps":"ami-0426b4bcdf797aebc",
-                "PerAppVeLtm25Mbps": "ami-0441407b3bba825cf",
-                "PerAppVeLtm200Mbps": "ami-0a18302efe35a8aa3"
+                "PerAppVeLtm25Mbps":"ami-0441407b3bba825cf",
+                "PerAppVeLtm200Mbps":"ami-0a18302efe35a8aa3"
             },
             "eu-west-2":{
                 "Good25Mbps":"ami-06367af272a8d734b",
@@ -214,8 +214,8 @@
                 "Best200Mbps":"ami-0f375913009351695",
                 "Best1000Mbps":"ami-08c4ebe9174214ef6",
                 "Best5000Mbps":"ami-02a734c42df295b9e",
-                "PerAppVeLtm25Mbps": "ami-0d4fd4feae97648e5",
-                "PerAppVeLtm200Mbps": "ami-034ac016b0c62fabb"
+                "PerAppVeLtm25Mbps":"ami-0d4fd4feae97648e5",
+                "PerAppVeLtm200Mbps":"ami-034ac016b0c62fabb"
             },
             "eu-west-3":{
                 "Good25Mbps":"ami-0f0f711ef3b49fe5b",
@@ -230,8 +230,8 @@
                 "Best200Mbps":"ami-09e0539b92d6f9169",
                 "Best1000Mbps":"ami-01b2c34a16e3ed6ae",
                 "Best5000Mbps":"ami-027119ac6ec779f45",
-                "PerAppVeLtm25Mbps": "ami-00b4e3762e05d6f9b",
-                "PerAppVeLtm200Mbps": "ami-074bbb47274e7599e"
+                "PerAppVeLtm25Mbps":"ami-00b4e3762e05d6f9b",
+                "PerAppVeLtm200Mbps":"ami-074bbb47274e7599e"
             },
             "sa-east-1":{
                 "Good25Mbps":"ami-06f86c2d3c33911cc",
@@ -246,8 +246,8 @@
                 "Best200Mbps":"ami-042b61cb91891ed52",
                 "Best1000Mbps":"ami-0aae8432fd97e5c94",
                 "Best5000Mbps":"ami-0ebb13898d57cb679",
-                "PerAppVeLtm25Mbps": "ami-0084b7b2b14f53b3a",
-                "PerAppVeLtm200Mbps": "ami-0729d3f00c498b3b3"
+                "PerAppVeLtm25Mbps":"ami-0084b7b2b14f53b3a",
+                "PerAppVeLtm200Mbps":"ami-0729d3f00c498b3b3"
             },
             "us-east-1":{
                 "Good25Mbps":"ami-0c2bf91cae8ee4908",
@@ -262,8 +262,8 @@
                 "Best200Mbps":"ami-045bef7bd06d82a5e",
                 "Best1000Mbps":"ami-036218cc6949dcc0f",
                 "Best5000Mbps":"ami-007f2c6fe95db7e64",
-                "PerAppVeLtm25Mbps": "ami-0b81deb687d2315ca",
-                "PerAppVeLtm200Mbps": "ami-0103606757c66b65f"
+                "PerAppVeLtm25Mbps":"ami-0b81deb687d2315ca",
+                "PerAppVeLtm200Mbps":"ami-0103606757c66b65f"
             },
             "us-east-2":{
                 "Good25Mbps":"ami-0e64582b1e4b9dff0",
@@ -278,25 +278,25 @@
                 "Best200Mbps":"ami-0f21466530fdb897a",
                 "Best1000Mbps":"ami-0f80e6dcc1c63f8c8",
                 "Best5000Mbps":"ami-0b26442aae881f3f6",
-                "PerAppVeLtm25Mbps": "ami-03787a5940dbf498e",
-                "PerAppVeLtm200Mbps": "ami-05021f621bf4adf6a"
+                "PerAppVeLtm25Mbps":"ami-03787a5940dbf498e",
+                "PerAppVeLtm200Mbps":"ami-05021f621bf4adf6a"
             },
-            "us-gov-west-1": {
-    			"Good25Mbps": "ami-2ff8664e", 
-    			"Good200Mbps": "ami-42d14f23", 
-    			"Good1000Mbps": "ami-fedc429f", 
-    			"Good5000Mbps": "ami-15f76974",
-    			"Better25Mbps": "ami-eff9678e", 
-    			"Better200Mbps": "ami-7fe27c1e", 
-    			"Better1000Mbps": "ami-aaea74cb", 
-    			"Better5000Mbps": "ami-4bfa642a", 
-    			"Best25Mbps": "ami-49fa6428", 
-    			"Best200Mbps": "ami-6dfc620c", 
-            	"Best1000Mbps": "ami-33cc5252", 
-    			"Best5000Mbps": "ami-32cc5253",
-                "PerAppVeLtm25Mbps": "ami-db0a97ba",
-                "PerAppVeLtm200Mbps": "ami-517ce130"
-  			},
+            "us-gov-west-1":{
+                "Good25Mbps":"ami-2ff8664e",
+                "Good200Mbps":"ami-42d14f23",
+                "Good1000Mbps":"ami-fedc429f",
+                "Good5000Mbps":"ami-15f76974",
+                "Better25Mbps":"ami-eff9678e",
+                "Better200Mbps":"ami-7fe27c1e",
+                "Better1000Mbps":"ami-aaea74cb",
+                "Better5000Mbps":"ami-4bfa642a",
+                "Best25Mbps":"ami-49fa6428",
+                "Best200Mbps":"ami-6dfc620c",
+                "Best1000Mbps":"ami-33cc5252",
+                "Best5000Mbps":"ami-32cc5253",
+                "PerAppVeLtm25Mbps":"ami-db0a97ba",
+                "PerAppVeLtm200Mbps":"ami-517ce130"
+            },
             "us-west-1":{
                 "Good25Mbps":"ami-08accec47f1b7bdf4",
                 "Good200Mbps":"ami-0140f6e6aba3cd5cb",
@@ -310,8 +310,8 @@
                 "Best200Mbps":"ami-0bf14c9d04576ef20",
                 "Best1000Mbps":"ami-09ab0b08d76a1b296",
                 "Best5000Mbps":"ami-0092032c9a34daa36",
-                "PerAppVeLtm25Mbps": "ami-07625cf7389a91be1",
-                "PerAppVeLtm200Mbps": "ami-0023c7a778272aab0"
+                "PerAppVeLtm25Mbps":"ami-07625cf7389a91be1",
+                "PerAppVeLtm200Mbps":"ami-0023c7a778272aab0"
             },
             "us-west-2":{
                 "Good25Mbps":"ami-0000b82909b6bb56d",
@@ -326,8 +326,8 @@
                 "Best200Mbps":"ami-0ed5c693bc68ebfaa",
                 "Best1000Mbps":"ami-0be50586a9a1e74ff",
                 "Best5000Mbps":"ami-00e0991124419d44c",
-                "PerAppVeLtm25Mbps": "ami-04bd86739a4bf3ee0",
-                "PerAppVeLtm200Mbps": "ami-04eba7db5cb10496e"
+                "PerAppVeLtm25Mbps":"ami-04bd86739a4bf3ee0",
+                "PerAppVeLtm200Mbps":"ami-04eba7db5cb10496e"
             }
         }
     },
@@ -339,7 +339,7 @@
                         "default":"AWS Quickstart Configuration"
                     },
                     "Parameters":[
-                        "qss3BucketName",                                                      
+                        "qss3BucketName",
                         "qss3KeyPrefix",
                         "qss3Region"
                     ]
@@ -1288,12 +1288,18 @@
         },
         "BigipLaunchConfig":{
             "Metadata":{
-                "AWS::CloudFormation::Authentication": {
-                    "s3AccessCreds" : {
-                        "type": "S3",
-                        "buckets": [ { "Ref" :  "qss3BucketName" } ],
-                        "roleName": { "Ref": "BigipAutoScalingAccessRole" }
-                    } 
+                "AWS::CloudFormation::Authentication":{
+                    "s3AccessCreds":{
+                        "type":"S3",
+                        "buckets":[
+                            {
+                                "Ref":"qss3BucketName"
+                            }
+                        ],
+                        "roleName":{
+                            "Ref":"BigipAutoScalingAccessRole"
+                        }
+                    }
                 },
                 "AWS::CloudFormation::Init":{
                     "config":{
@@ -1523,7 +1529,6 @@
                                             "    ##### BEGIN AS3 CUSTOMIZATION #####\n",
                                             "    touch /var/config/rest/iapps/enable\n",
                                             "    curl -u admin: -sk -m 10 https://localhost:8443/mgmt/shared/iapp/package-management-tasks -H 'Content-Type: application/json' --data '{\"operation\":\"INSTALL\",\"packageFilePath\":\"/var/config/rest/downloads/f5-appsvcs.noarch.rpm\"}'\n",
-                                            "    curl -s --retry 20 -m 10 -o /config/cloud/aws/virtual_service_defintion.json https://s3-us-west-2.amazonaws.com/f5poweredstack/as3/scripts/https_uri_routing_w_sd_aws.json\n",
                                             "    sed -i.bak \"s/us-east-1/${region}/\" /config/cloud/aws/virtual_service_defintion.json\n",
                                             "    sed -i.bak \"s/f5demoapp/${applicationPoolTagKey}/\" /config/cloud/aws/virtual_service_defintion.json\n",
                                             "    sed -i.bak \"s/f5-demo-app-0.0.1/${application1PoolTagValue}/\" /config/cloud/aws/virtual_service_defintion.json\n",
@@ -1673,47 +1678,187 @@
                                 "owner":"root",
                                 "source":"https://raw.githubusercontent.com/F5Networks/f5-appsvcs-extension/v3.4.0/dist/f5-appsvcs-3.4.0-2.noarch.rpm"
                             },
+                            "/config/cloud/aws/virtual_service_defintion.json":{
+                                "group":"root",
+                                "owner":"root",
+                                "mode":"000755",
+                                "source":{
+                                    "Fn::Join":[
+                                        "",
+                                        [
+                                            "https://",
+                                            {
+                                                "Ref":"qss3BucketName"
+                                            },
+                                            ".",
+                                            {
+                                                "Ref":"qss3Region"
+                                            },
+                                            ".amazonaws.com/",
+                                            {
+                                                "Ref":"qss3KeyPrefix"
+                                            },
+                                            "scripts/virtual_service_defintion.json"
+                                        ]
+                                    ]
+                                },
+                                "authentication":"s3AccessCreds"
+                            },
                             "/config/cloud/aws/getNameServer.sh":{
                                 "group":"root",
                                 "owner":"root",
                                 "mode":"000755",
-                                "source": { "Fn::Join" : [ "", [ "https://", { "Ref" : "qss3BucketName" }, ".",  { "Ref" : "qss3Region" }, ".amazonaws.com/", { "Ref" : "qss3KeyPrefix" }, "scripts/getNameServer.sh" ]  ] },
-                                "authentication" : "s3AccessCreds"
+                                "source":{
+                                    "Fn::Join":[
+                                        "",
+                                        [
+                                            "https://",
+                                            {
+                                                "Ref":"qss3BucketName"
+                                            },
+                                            ".",
+                                            {
+                                                "Ref":"qss3Region"
+                                            },
+                                            ".amazonaws.com/",
+                                            {
+                                                "Ref":"qss3KeyPrefix"
+                                            },
+                                            "scripts/getNameServer.sh"
+                                        ]
+                                    ]
+                                },
+                                "authentication":"s3AccessCreds"
                             },
                             "/config/cloud/aws/run_autoscale_backup.sh":{
                                 "group":"root",
                                 "owner":"root",
                                 "mode":"000755",
-                                "source": { "Fn::Join" : [ "", [ "https://", { "Ref" : "qss3BucketName" }, ".",  { "Ref" : "qss3Region" }, ".amazonaws.com/", { "Ref" : "qss3KeyPrefix" }, "scripts/run_autoscale_backup.sh" ]  ] },
-                                "authentication" : "s3AccessCreds"
+                                "source":{
+                                    "Fn::Join":[
+                                        "",
+                                        [
+                                            "https://",
+                                            {
+                                                "Ref":"qss3BucketName"
+                                            },
+                                            ".",
+                                            {
+                                                "Ref":"qss3Region"
+                                            },
+                                            ".amazonaws.com/",
+                                            {
+                                                "Ref":"qss3KeyPrefix"
+                                            },
+                                            "scripts/run_autoscale_backup.sh"
+                                        ]
+                                    ]
+                                },
+                                "authentication":"s3AccessCreds"
                             },
                             "/config/cloud/aws/run_autoscale_update.sh":{
                                 "group":"root",
                                 "owner":"root",
                                 "mode":"000755",
-                                "source": { "Fn::Join" : [ "", [ "https://", { "Ref" : "qss3BucketName" }, ".",  { "Ref" : "qss3Region" }, ".amazonaws.com/", { "Ref" : "qss3KeyPrefix" }, "scripts/run_autoscale_update.sh" ]  ] },
-                                "authentication" : "s3AccessCreds"
+                                "source":{
+                                    "Fn::Join":[
+                                        "",
+                                        [
+                                            "https://",
+                                            {
+                                                "Ref":"qss3BucketName"
+                                            },
+                                            ".",
+                                            {
+                                                "Ref":"qss3Region"
+                                            },
+                                            ".amazonaws.com/",
+                                            {
+                                                "Ref":"qss3KeyPrefix"
+                                            },
+                                            "scripts/run_autoscale_update.sh"
+                                        ]
+                                    ]
+                                },
+                                "authentication":"s3AccessCreds"
                             },
                             "/config/installCloudLibs.sh":{
                                 "group":"root",
                                 "owner":"root",
                                 "mode":"000755",
-                                "source": { "Fn::Join" : [ "", [ "https://", { "Ref" : "qss3BucketName" }, ".",  { "Ref" : "qss3Region" }, ".amazonaws.com/", { "Ref" : "qss3KeyPrefix" }, "scripts/installCloudLibs.sh" ]  ] },
-                                "authentication" : "s3AccessCreds"
+                                "source":{
+                                    "Fn::Join":[
+                                        "",
+                                        [
+                                            "https://",
+                                            {
+                                                "Ref":"qss3BucketName"
+                                            },
+                                            ".",
+                                            {
+                                                "Ref":"qss3Region"
+                                            },
+                                            ".amazonaws.com/",
+                                            {
+                                                "Ref":"qss3KeyPrefix"
+                                            },
+                                            "scripts/installCloudLibs.sh"
+                                        ]
+                                    ]
+                                },
+                                "authentication":"s3AccessCreds"
                             },
                             "/config/verifyHash":{
                                 "group":"root",
                                 "owner":"root",
                                 "mode":"000755",
-                                "source": { "Fn::Join" : [ "", [ "https://", { "Ref" : "qss3BucketName" }, ".",  { "Ref" : "qss3Region" }, ".amazonaws.com/", { "Ref" : "qss3KeyPrefix" }, "scripts/verifyHash" ]  ] },
-                                "authentication" : "s3AccessCreds"
+                                "source":{
+                                    "Fn::Join":[
+                                        "",
+                                        [
+                                            "https://",
+                                            {
+                                                "Ref":"qss3BucketName"
+                                            },
+                                            ".",
+                                            {
+                                                "Ref":"qss3Region"
+                                            },
+                                            ".amazonaws.com/",
+                                            {
+                                                "Ref":"qss3KeyPrefix"
+                                            },
+                                            "scripts/verifyHash"
+                                        ]
+                                    ]
+                                },
+                                "authentication":"s3AccessCreds"
                             },
                             "/config/waitThenRun.sh":{
                                 "group":"root",
                                 "owner":"root",
                                 "mode":"000755",
-                                "source": { "Fn::Join" : [ "", [ "https://", { "Ref" : "qss3BucketName" }, ".",  { "Ref" : "qss3Region" }, ".amazonaws.com/", { "Ref" : "qss3KeyPrefix" }, "scripts/waitThenRun.sh" ]  ] },
-                                "authentication" : "s3AccessCreds"
+                                "source":{
+                                    "Fn::Join":[
+                                        "",
+                                        [
+                                            "https://",
+                                            {
+                                                "Ref":"qss3BucketName"
+                                            },
+                                            ".",
+                                            {
+                                                "Ref":"qss3Region"
+                                            },
+                                            ".amazonaws.com/",
+                                            {
+                                                "Ref":"qss3KeyPrefix"
+                                            },
+                                            "scripts/waitThenRun.sh"
+                                        ]
+                                    ]
+                                },
+                                "authentication":"s3AccessCreds"
                             }
                         }
                     }
@@ -1881,6 +2026,7 @@
             "Type":"AWS::SNS::Topic"
         },
         "SQSQueue":{
+            "DependsOn":"S3Bucket",
             "Properties":{
                 "MessageRetentionPeriod":3600
             },
@@ -1910,7 +2056,7 @@
             "Properties":{
                 "Code":{
                     "ZipFile":{
-                        "Fn::Sub":"#!/usr/bin/python\n\nfrom __future__ import print_function\nimport os\nimport sys\nimport time\nimport botocore\nimport boto3\nimport cfnresponse\nimport json\nimport logging\n\nlog = logging.getLogger()\nlog.setLevel(logging.INFO)\n\ndef handler(event, context):\n    print('Received event: %s' % json.dumps(event,indent=2))\n    try:\n      region      = event['ResourceProperties']['region']\n      bucket_name = event['ResourceProperties']['bucketName']\n      asg_name    = event['ResourceProperties']['autoscalingGroupName']\n\n      if event['RequestType'] == 'Create' or event['RequestType'] == 'Update':\n        # Tell CFT custom resource was successfully created and handled \n        cfnresponse.send(event, context, cfnresponse.SUCCESS, {}, None )\n      elif event['RequestType'] == 'Delete':\n        try:\n          asg_client = boto3.client('autoscaling', region_name=region ) # Create Autoscale client\n        except botocore.exceptions.ClientError as e:\n          print(str(e))\n          sys.exit(\"Exiting...\")\n\n        # Create EC2 client\n        try:\n          s3_client = boto3.client('s3', region_name=region ) # Create Autoscale client\n        except botocore.exceptions.ClientError as e:\n          print(str(e))\n          sys.exit(\"Exiting...\")\n\n        s3 = boto3.resource('s3')\n        ec2 = boto3.resource('ec2')\n        instances = []\n        asg = \"\"\n\n        # Delete items in S3 Bucket so CFT can delete it\n        bucket = s3.Bucket(bucket_name)\n        bucket.objects.all().delete()\n        bucket.delete()\n\n        # Removing Scale-In protection from Master \n        for instance in asg_client.describe_auto_scaling_instances()['AutoScalingInstances']:\n          if asg_name == instance['AutoScalingGroupName']:\n            instances.append( instance['InstanceId'])\n            asg = instance['AutoScalingGroupName']\n        if instances:\n          print('Auto Scale: Removing Scale-In protection from Master: %s' % (str(instances)))\n          asg_client.set_instance_protection(\n              InstanceIds = instances,\n              AutoScalingGroupName=asg,\n              ProtectedFromScaleIn=False\n          )\n        # Sucessfully handled event\n        cfnresponse.send(event, context, cfnresponse.SUCCESS, {}, None)\n      else:\n        cfnresponse.send(event, context, cfnresponse.FAILED, {}, None)\n\n    except Exception as e:\n        print('Exception in handling the request, %s' % (str(e)))\n        cfnresponse.send(event, context, cfnresponse.FAILED, {}, None)\n"
+                        "Fn::Sub":"#!/usr/bin/python\n\nfrom __future__ import print_function\nimport os\nimport sys\nimport time\nimport botocore\nimport boto3\nimport cfnresponse\nimport json\nimport logging\n\nlog = logging.getLogger()\nlog.setLevel(logging.INFO)\n\ndef handler(event, context):\n    print('Received event: %s' % json.dumps(event,indent=2))\n    try:\n      region      = event['ResourceProperties']['region']\n      bucket_name = event['ResourceProperties']['bucketName']\n      asg_name    = event['ResourceProperties']['autoscalingGroupName']\n\n      if event['RequestType'] == 'Create' or event['RequestType'] == 'Update':\n        # Tell CFT custom resource was successfully created and handled \n        cfnresponse.send(event, context, cfnresponse.SUCCESS, {}, None )\n      elif event['RequestType'] == 'Delete':\n        try:\n          asg_client = boto3.client('autoscaling', region_name=region ) # Create Autoscale client\n        except botocore.exceptions.ClientError as e:\n          print(str(e))\n          sys.exit(\"Exiting...\")\n\n        # Create EC2 client\n        try:\n          s3_client = boto3.client('s3', region_name=region ) # Create Autoscale client\n        except botocore.exceptions.ClientError as e:\n          print(str(e))\n          sys.exit(\"Exiting...\")\n\n        s3 = boto3.resource('s3')\n        ec2 = boto3.resource('ec2')\n        instances = []\n        asg = \"\"\n\n        # Delete items in S3 Bucket so CFT can delete it\n        bucket = s3.Bucket(bucket_name)\n        if bucket.objects.all().delete():\n          bucket.delete()\n        else:\n          cfnresponse.send(event, context, cfnresponse.FAILED, {}, None)\n          \n        # Removing Scale-In protection from Master \n        for instance in asg_client.describe_auto_scaling_instances()['AutoScalingInstances']:\n          if asg_name == instance['AutoScalingGroupName']:\n            instances.append( instance['InstanceId'])\n            asg = instance['AutoScalingGroupName']\n        if instances:\n          print('Auto Scale: Removing Scale-In protection from Master: %s' % (str(instances)))\n          asg_client.set_instance_protection(\n              InstanceIds = instances,\n              AutoScalingGroupName=asg,\n              ProtectedFromScaleIn=False\n          )\n        # Sucessfully cleaned up\n        cfnresponse.send(event, context, cfnresponse.SUCCESS, {}, None)\n      else:\n        cfnresponse.send(event, context, cfnresponse.FAILED, {}, None)\n\n    except Exception as e:\n        print('Exception in handling the request, %s' % (str(e)))\n        cfnresponse.send(event, context, cfnresponse.FAILED, {}, None)\n"
                     }
                 },
                 "Environment":{

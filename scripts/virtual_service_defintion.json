@@ -1,151 +1,150 @@
-{
-    "class": "ADC",
-    "controls": {
-        "archiveTimestamp": "2018-10-05T00:04:40.516Z"
-    },
-    "id": "urn:uuid:33045210-3ab8-4636-9b2a-c98d22ab915e",
-    "label": "HTTPS",
-    "remark": "Wildcard HTTPS Virtual with URI Routing and Service Discovery",
-    "schemaVersion": "3.0.0",
-    "tenant": {
-        "class": "Tenant",
-        "https_virtual": {
-            "HTTP_Profile": {
-                "class": "HTTP_Profile",
-                "xForwardedFor": true
+{  
+   "class":"ADC",
+   "schemaVersion":"3.0.0",
+   "id":"urn:uuid:33045210-3ab8-4636-9b2a-c98d22ab915e",
+   "label":"HTTPS",
+   "remark":"Wildcard HTTPS Virtual with URI Routing and Service Discovery",
+   "tenant":{  
+      "class":"Tenant",
+      "https_virtual":{  
+         "class":"Application",
+         "template":"https",
+         "serviceMain":{  
+            "class":"Service_HTTPS",
+            "virtualAddresses":[  
+               "0.0.0.0"
+            ],
+            "snat":"auto",
+            "pool":"pool_blue",
+            "profileTCP":{  
+               "ingress":{  
+                  "use":"TCP_Profile"
+               },
+               "egress":"wan"
             },
-            "TCP_Profile": {
-                "class": "TCP_Profile",
-                "idleTimeout": 60
+            "serverTLS":{  
+               "bigip":"/Common/example-clientssl-profile"
             },
-            "class": "Application",
-            "forward_policy": {
-                "class": "Endpoint_Policy",
-                "rules": [
-                    {
-                        "actions": [
-                            {
-                                "event": "request",
-                                "select": {
-                                    "pool": {
-                                        "use": "pool_blue"
-                                    }
-                                },
-                                "type": "forward"
-                            }
-                        ],
-                        "conditions": [
-                            {
-                                "path": {
-                                    "operand": "starts-with",
-                                    "values": [
-                                        "/static"
-                                    ]
-                                },
-                                "type": "httpUri"
-                            }
-                        ],
-                        "name": "uri_1"
-                    },
-                    {
-                        "actions": [
-                            {
-                                "event": "request",
-                                "select": {
-                                    "pool": {
-                                        "use": "pool_green"
-                                    }
-                                },
-                                "type": "forward"
-                            }
-                        ],
-                        "conditions": [
-                            {
-                                "path": {
-                                    "operand": "starts-with",
-                                    "values": [
-                                        "/api"
-                                    ]
-                                },
-                                "type": "httpUri"
-                            }
-                        ],
-                        "name": "uri_2"
-                    },
-                    {
-                        "actions": [
-                            {
-                                "event": "request",
-                                "select": {
-                                    "pool": {
-                                        "use": "pool_blue"
-                                    }
-                                },
-                                "type": "forward"
-                            }
-                        ],
-                        "name": "default"
-                    }
-                ]
+            "redirect80": false,
+            "persistenceMethods":[  
+
+            ],
+            "profileHTTP":{  
+               "use":"HTTP_Profile"
             },
-            "pool_blue": {
-                "class": "Pool",
-                "members": [
-                    {
-                        "addressDiscovery": "aws",
-                        "addressRealm": "private",
-                        "region": "us-east-1",
-                        "servicePort": 80,
-                        "tagKey": "f5demoapp",
-                        "tagValue": "f5-demo-app-0.0.2",
-                        "updateInterval": 5
-                    }
-                ],
-                "monitors": [
-                    "http"
-                ]
-            },
-            "pool_green": {
-                "class": "Pool",
-                "members": [
-                    {
-                        "addressDiscovery": "aws",
-                        "addressRealm": "private",
-                        "region": "us-east-1",
-                        "servicePort": 80,
-                        "tagKey": "f5demoapp",
-                        "tagValue": "f5-demo-app-0.0.2",
-                        "updateInterval": 5
-                    }
-                ],
-                "monitors": [
-                    "http"
-                ]
-            },
-            "serviceMain": {
-                "class": "Service_HTTPS",
-                "persistenceMethods": [],
-                "policyEndpoint": "forward_policy",
-                "pool": "pool_blue",
-                "profileHTTP": {
-                    "use": "HTTP_Profile"
-                },
-                "profileTCP": {
-                    "egress": "wan",
-                    "ingress": {
-                        "use": "TCP_Profile"
-                    }
-                },
-                "redirect80": false,
-                "serverTLS": {
-                    "bigip": "/Common/example-clientssl-profile"
-                },
-                "snat": "auto",
-                "virtualAddresses": [
-                    "0.0.0.0"
-                ]
-            },
-            "template": "https"
-        }
-    }
+            "policyEndpoint":"forward_policy"
+         },
+         "pool_blue":{  
+            "class":"Pool",
+            "monitors":[  
+               "http"
+            ],
+            "members":[  
+               {  
+                  "servicePort":80,
+                  "addressDiscovery":"aws",
+                  "updateInterval":5,
+                  "tagKey":"f5demoapp",
+                  "tagValue":"f5-demo-app-0.0.1",
+                  "addressRealm":"private",
+                  "region":"us-east-1"
+               }
+            ]
+         },
+         "pool_green":{  
+            "class":"Pool",
+            "monitors":[  
+               "http"
+            ],
+            "members":[  
+               {  
+                  "servicePort":80,
+                  "addressDiscovery":"aws",
+                  "updateInterval":5,
+                  "tagKey":"f5demoapp",
+                  "tagValue":"f5-demo-app-0.0.2",
+                  "addressRealm":"private",
+                  "region":"us-east-1"
+               }
+            ]
+         },
+         "HTTP_Profile":{  
+            "class":"HTTP_Profile",
+            "xForwardedFor":true
+         },
+         "TCP_Profile":{  
+            "class":"TCP_Profile",
+            "idleTimeout":60
+         },
+         "forward_policy":{  
+            "class":"Endpoint_Policy",
+            "rules":[  
+               {  
+                  "name":"uri_1",
+                  "conditions":[  
+                     {  
+                        "type":"httpUri",
+                        "path":{  
+                           "operand":"starts-with",
+                           "values":[  
+                              "/static"
+                           ]
+                        }
+                     }
+                  ],
+                  "actions":[  
+                     {  
+                        "type":"forward",
+                        "event":"request",
+                        "select":{  
+                           "pool":{  
+                              "use":"pool_blue"
+                           }
+                        }
+                     }
+                  ]
+               },
+               {  
+                  "name":"uri_2",
+                  "conditions":[  
+                     {  
+                        "type":"httpUri",
+                        "path":{  
+                           "operand":"starts-with",
+                           "values":[  
+                              "/api"
+                           ]
+                        }
+                     }
+                  ],
+                  "actions":[  
+                     {  
+                        "type":"forward",
+                        "event":"request",
+                        "select":{  
+                           "pool":{  
+                              "use":"pool_green"
+                           }
+                        }
+                     }
+                  ]
+               },
+               {  
+                  "name":"default",
+                  "actions":[  
+                     {  
+                        "type":"forward",
+                        "event":"request",
+                        "select":{  
+                           "pool":{  
+                              "use":"pool_blue"
+                           }
+                        }
+                     }
+                  ]
+               }
+            ]
+         }
+      }
+   }
 }
