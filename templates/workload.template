@@ -181,7 +181,7 @@
                 "publicSubnet2ID":{
                     "default":"Public Subnet2 ID"
                 },
-                "restrictedSrcAddr":{
+                "restrictedSrcAddress":{
                     "default":"Allowed Internal Access CIDR"
                 },
                 "qss3BucketName":{
@@ -206,7 +206,7 @@
                 "No"
             ],
             "Default":"No",
-            "Description":"This deployment can send anonymous statistics to F5 to help us determine how to improve our solutionsi.If you select **No** statistics are not sent.",
+            "Description":"This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions.If you select **No** statistics are not sent.",
             "Type":"String"
         },
         "application":{
@@ -324,7 +324,7 @@
                 "Yes",
                 "No"
             ],
-            "Default":"Yes",
+            "Default":"No",
             "Description":"This is used to deploy the demo WebApps.",
             "Type":"String"
         },

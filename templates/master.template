@@ -323,7 +323,7 @@
                 "Yes",
                 "No"
             ],
-            "Default":"Yes",
+            "Default":"No",
             "Description":"This is used to deploy the demo WebApps.",
             "Type":"String"
         },
