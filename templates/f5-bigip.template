@@ -1529,12 +1529,12 @@
                                             "    ##### BEGIN AS3 CUSTOMIZATION #####\n",
                                             "    touch /var/config/rest/iapps/enable\n",
                                             "    curl -u admin: -sk -m 10 https://localhost:8443/mgmt/shared/iapp/package-management-tasks -H 'Content-Type: application/json' --data '{\"operation\":\"INSTALL\",\"packageFilePath\":\"/var/config/rest/downloads/f5-appsvcs.noarch.rpm\"}'\n",
-                                            "    sed -i.bak \"s/us-east-1/${region}/\" /config/cloud/aws/virtual_service_defintion.json\n",
-                                            "    sed -i.bak \"s/f5demoapp/${applicationPoolTagKey}/\" /config/cloud/aws/virtual_service_defintion.json\n",
-                                            "    sed -i.bak \"s/f5-demo-app-0.0.1/${application1PoolTagValue}/\" /config/cloud/aws/virtual_service_defintion.json\n",
-                                            "    sed -i.bak \"s/f5-demo-app-0.0.2/${application2PoolTagValue}/\" /config/cloud/aws/virtual_service_defintion.json\n",
+                                            "    sed -i.bak \"s/us-east-1/${region}/\" /config/cloud/aws/virtual_service_definition.json\n",
+                                            "    sed -i.bak \"s/f5demoapp/${applicationPoolTagKey}/\" /config/cloud/aws/virtual_service_definition.json\n",
+                                            "    sed -i.bak \"s/f5-demo-app-0.0.1/${application1PoolTagValue}/\" /config/cloud/aws/virtual_service_definition.json\n",
+                                            "    sed -i.bak \"s/f5-demo-app-0.0.2/${application2PoolTagValue}/\" /config/cloud/aws/virtual_service_definition.json\n",
                                             "    sleep 10\n",
-                                            "    curl -u admin: -sk --retry 20 -m 10 -X POST -d @/config/cloud/aws/virtual_service_defintion.json https://localhost:8443/mgmt/shared/appsvcs/declare\n",
+                                            "    curl -u admin: -sk --retry 20 -m 10 -X POST -d @/config/cloud/aws/virtual_service_definition.json https://localhost:8443/mgmt/shared/appsvcs/declare\n",
                                             "    curl -u admin: -sk -m 10 -X GET https://localhost:8443/mgmt/shared/appsvcs/declare\n",
                                             "    # CREATE QUICKSTART USER\n",
                                             "    quickstartPassword=$(cat /shared/vadc/aws/iid-document | jq -r .instanceId)\n",
@@ -1678,7 +1678,7 @@
                                 "owner":"root",
                                 "source":"https://raw.githubusercontent.com/F5Networks/f5-appsvcs-extension/v3.4.0/dist/f5-appsvcs-3.4.0-2.noarch.rpm"
                             },
-                            "/config/cloud/aws/virtual_service_defintion.json":{
+                            "/config/cloud/aws/virtual_service_definition.json":{
                                 "group":"root",
                                 "owner":"root",
                                 "mode":"000755",
@@ -1698,7 +1698,7 @@
                                             {
                                                 "Ref":"qss3KeyPrefix"
                                             },
-                                            "scripts/virtual_service_defintion.json"
+                                            "scripts/virtual_service_definition.json"
                                         ]
                                     ]
                                 },
