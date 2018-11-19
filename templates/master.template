@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion":"2010-09-09",
-    "Description":"This template deploys a full application stack, including a network, bastion host, auto scaled BIG-IPs and demo applications. It creates a VPC infrastructure for a multi-AZ, multi-tier deployment of a Linux based Application infrastructure. It will deploy a bastion and managed NAT gateways or NAT instances into the public subnet for each Availability Zone. Finally, it will create an optional webapp template for demonstration purposes.  **WARNING** This template creates multiple AWS resources. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Description":"This template deploys a full application stack, including a network, bastion host, auto scaled BIG-IPs and demo applications. It creates a VPC infrastructure for a multi-AZ, multi-tier deployment of a Linux based Application infrastructure. It will deploy a bastion and managed NAT gateways or NAT instances into the public subnet for each Availability Zone. Finally, it will create an optional webapp template for demonstration purposes.  **WARNING** This template creates multiple AWS resources. You will be billed for the AWS resources used if you create a stack from this template.(q-1p2474b65)",
     "Conditions":{
         "GovCloudCondition":{
             "Fn::Equals":[
