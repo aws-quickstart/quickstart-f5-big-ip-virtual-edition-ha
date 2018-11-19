@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion":"2010-09-09",
-    "Description":"This template deploys an auto scale group of BIG-IPs and demo applications **WARNING** This template creates multiple AWS resources including an auto scale group of BIG-IPs, two auto scale groups for applications, S3 bucket, SNS queue, lambda function, IAM roles and related resources. You will be billed for the AWS resources used if you create a stack from this template.(q-1p2474b6a)",
+    "Description":"This template deploys an auto scale group of BIG-IPs and demo applications **WARNING** This template creates multiple AWS resources including an auto scale group of BIG-IPs, two auto scale groups for applications, S3 bucket, SNS queue, lambda function, IAM roles and related resources. You will be billed for the AWS resources used if you create a stack from this template.(qs-1p2474b6a)",
     "Conditions":{
         "GovCloudCondition":{
             "Fn::Equals":[
