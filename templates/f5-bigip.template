@@ -58,20 +58,20 @@
     "Mappings":{
         "AWSAMIRegionMap":{
             "AMI":{
-                "Good25Mbps":"F5_Networks-BIGIP-VE-Good-PAYG-25Mbps-14.0.0.1-0.0.2-20180830",
-                "Good200Mbps":"F5_Networks-BIGIP-VE-Good-PAYG-200Mbps-14.0.0.1-0.0.2-20180830",
-                "Good1000Mbps":"F5_Networks-BIGIP-VE-Good-PAYG-1000Mbps-14.0.0.1-0.0.2-20180830",
-                "Good5000Mbps":"F5_Networks-BIGIP-VE-Good-PAYG-5000Mbps-14.0.0.1-0.0.2-20180830",
-                "Better25Mbps":"F5_Networks-BIGIP-VE-Better-PAYG-25Mbps-14.0.0.1-0.0.2-20180830",
-                "Better200Mbps":"F5_Networks-BIGIP-VE-Better-PAYG-200Mbps-14.0.0.1-0.0.2-20180830",
-                "Better1000Mbps":"F5_Networks-BIGIP-VE-Better-PAYG-1000Mbps-14.0.0.1-0.0.2-20180830",
-                "Better5000Mbps":"F5_Networks-BIGIP-VE-Better-PAYG-5000Mbps-14.0.0.1-0.0.2-20180830",
-                "Best25Mbps":"F5_Networks-BIGIP-VE-Best-PAYG-25Mbps-14.0.0.1-0.0.2-20180830",
-                "Best200Mbps":"F5_Networks-BIGIP-VE-Best-PAYG-200Mbps-14.0.0.1-0.0.2-20180830",
-                "Best1000Mbps":"F5_Networks-BIGIP-VE-Best-PAYG-1000Mbps-14.0.0.1-0.0.2-20180830",
-                "Best5000Mbps":"F5_Networks-BIGIP-VE-Best-PAYG-5000Mbps-14.0.0.1-0.0.2-20180830",
-                "PerAppVeLtm200Mbps":"F5_Networks-BIGIP-PerAppVE-PAYG-25Mbps-14.0.0.1-0.0.2-20180830",
-                "PerAppVeLtm25Mbps":"F5_Networks-BIGIP-PerAppVE--PAYG-200Mbps-14.0.0.1-0.0.2-20180830"
+                "Good25Mbps":"F5 BIGIP-14.1.0.3-0.0.6 PAYG-Good 25Mbps-190326002717-8e1217d4-a046-4cdf-894e-e38175bae37f-ami-0c5dfde2c62c76a33.4",
+                "Good200Mbps":"F5 BIGIP-14.1.0.3-0.0.6 PAYG-Good 200Mbps-190326002717-6081f8e8-acf7-4eb8-be75-c2aa11d7526c-ami-077f9a39aa9340b3c.4",
+                "Good1000Mbps":"F5 BIGIP-14.1.0.3-0.0.6 PAYG-Good 1Gbps-190326002717-7fb2f9db-2a12-4915-9abb-045b6388cccd-ami-008ff44ad50fc330a.4",
+                "Good5000Mbps":"F5 BIGIP-14.1.0.3-0.0.6 PAYG-Good 5Gbps-190326002717-5d902121-d100-4e76-8d93-88b460373a93-ami-0e26c1cc12f3d701c.4",
+                "Better25Mbps":"F5 BIGIP-14.1.0.3-0.0.6 PAYG-Better 25Mbps-190326003218-63f7b910-af5e-4aa0-9358-d66b7c51ebaa-ami-05152b68a51c1ab54.4",
+                "Better200Mbps":"F5 BIGIP-14.1.0.3-0.0.6 PAYG-Better 200Mbps-190326003218-bfe1c762-fc65-48ef-a205-29e2770cb15b-ami-0b6a94f835c6639f4.4",
+                "Better1000Mbps":"F5 BIGIP-14.1.0.3-0.0.6 PAYG-Better 1Gbps-190326003218-cd5685be-9635-460e-9448-20bd5bead545-ami-04fc1a5eff19528a9.4",
+                "Better5000Mbps":"F5 BIGIP-14.1.0.3-0.0.6 PAYG-Better 5Gbps-190326003218-88911710-61af-4bd3-8f35-c8039f7cbd64-ami-0167cb1fd280b3426.4",
+                "Best25Mbps":"F5 BIGIP-14.1.0.3-0.0.6 PAYG-Best 25Mbps-190326003218-3e567b08-20a9-444f-a72a-7e8da3c2cbdf-ami-0dddbedcae22fc9ab.4",
+                "Best200Mbps":"F5 BIGIP-14.1.0.3-0.0.6 PAYG-Best 200Mbps-190326003218-0d09bfd3-90c5-4b9c-98a2-c3860dbfcd9e-ami-045ef7956a4a2a3ad.4",
+                "Best1000Mbps":"F5 BIGIP-14.1.0.3-0.0.6 PAYG-Best 1Gbps-190326003218-929ca0d8-c2d7-4068-8f9a-eb75a677afed-ami-0f654d6b8ae659df6.4",
+                "Best5000Mbps":"F5 BIGIP-14.1.0.3-0.0.6 PAYG-Best 5Gbps-190326003218-3ae146c4-c964-4544-9b79-fabe54156519-ami-06b9c478a8306a5c0.4",
+                "PerAppVeLtm200Mbps":"FF5 BIGIP-14.1.0.3-0.0.6 PAYG-PVE LTM 200Mbps-190326002211-5fdfc03f-4b68-4e8d-aedc-b3a781a03b41-ami-0cfa66f8010470bc8.4",
+                "PerAppVeLtm25Mbps":"F5 BIGIP-14.1.0.3-0.0.6 PAYG-PVE LTM 25Mbps-190326002211-b58d460e-0699-420e-b218-956d0a9c3767-ami-0281b892b34ff3a13.4"
             },
             "ap-northeast-1":{
                 "Good25Mbps":"ami-07ec24f4cd3cc19f1",
