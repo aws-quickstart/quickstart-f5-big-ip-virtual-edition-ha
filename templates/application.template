@@ -14,49 +14,49 @@
                 "US1804HVM":"ubuntu-images-hvm-ssd-ubuntu-bionic-18.04-amd64-server-20180814"
             },
             "ap-northeast-1":{
-                "US1804HVM":"ami-0eeb679d57500a06c"
+                "US1804HVM":"ami-0cb1c8cab7f5249b6"
             },
             "ap-northeast-2":{
-                "US1804HVM":"ami-0fd02cb7da42ee5e0"
+                "US1804HVM":"ami-081626bfb3fbc9f49"
             },
             "ap-south-1":{
-                "US1804HVM":"ami-009110a2bf8d7dd0a"
+                "US1804HVM":"ami-0cf8402efdb171312"
             },
             "ap-southeast-1":{
-                "US1804HVM":"ami-03b6f27628a4569c8"
+                "US1804HVM":"ami-099d318f80eab7e94"
             },
             "ap-southeast-2":{
-                "US1804HVM":"ami-0edcec072887c2caa"
+                "US1804HVM":"ami-08a648fb5cc86fb74"
             },
             "ca-central-1":{
-                "US1804HVM":"ami-0d0eaed20348a3389"
+                "US1804HVM":"ami-0bc1dd4eb012a451e"
             },
             "eu-central-1":{
-                "US1804HVM":"ami-0ac05733838eabc06"
+                "US1804HVM":"ami-0cdab515472ca0bac"
             },
             "eu-west-1":{
-                "US1804HVM":"ami-06358f49b5839867c"
+                "US1804HVM":"ami-01cca82393e531118"
             },
             "eu-west-2":{
-                "US1804HVM":"ami-077a5b1762a2dde35"
+                "US1804HVM":"ami-0a7c91b6616d113b1"
             },
             "eu-west-3":{
-                "US1804HVM":"ami-0ad37dbbe571ce2a1"
+                "US1804HVM":"ami-033e0056c336ecff0"
             },
             "sa-east-1":{
-                "US1804HVM":"ami-02a3447be1ec3a38f"
+                "US1804HVM":"ami-094c359b4d8c6a8ca"
             },
             "us-east-1":{
-                "US1804HVM":"ami-07d0cf3af28718ef8"
+                "US1804HVM":"ami-064a0193585662d74"
             },
             "us-east-2":{
-                "US1804HVM":"ami-05c1fa8df71875112"
+                "US1804HVM":"ami-021b7b04f1ac696c2"
             },
             "us-west-1":{
-                "US1804HVM":"ami-08fd8ae3806f09a08"
+                "US1804HVM":"ami-056d04da775d124d7"
             },
             "us-west-2":{
-                "US1804HVM":"ami-06f2f779464715dc5"
+                "US1804HVM":"ami-09a3d8a7177216dcf"
             }
         }
     },
