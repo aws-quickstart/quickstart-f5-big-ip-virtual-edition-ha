@@ -32,16 +32,16 @@
                 "US1804HVM":"ami-0179543623c8e6647"
             },
             "eu-central-1":{
-                "US1804HVM":"ami-0dffee650f80cbced"
+                "US1804HVM":"ami-0a8561d8c5a4f098a"
             },
             "eu-west-1":{
-                "US1804HVM":"ami-06f42fd8c0931ce4b"
+                "US1804HVM":"ami-0039c41a10b230acb"
             },
             "eu-west-2":{
-                "US1804HVM":"ami-09b984525e8ba2206"
+                "US1804HVM":"ami-068a81fe63a7fcdc7"
             },
             "eu-west-3":{
-                "US1804HVM":"ami-0b12754d476af8dbb"
+                "US1804HVM":"ami-03978f890dd98611d"
             },
             "sa-east-1":{
                 "US1804HVM":"ami-0f921f57ccbc209c2"
