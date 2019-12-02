@@ -1,295 +1,175 @@
-{
-    "AWSTemplateFormatVersion":"2010-09-09",
-    "Description":"This template deploys a small demo application which will serve as an application pool on the BIG-IP.  **WARNING** This template creates an auto scale group and associated security group. You will be billed for the AWS resources used if you create a stack from this template.",
-    "Outputs":{
-        "appAutoscaleGroupName":{
-            "Value":{
-                "Ref":"AppAutoscaleGroup"
-            }
-        }
-    },
-    "Mappings":{
-        "AWSAMIRegionMap":{
-            "AMI":{
-                "US1804HVM":"ubuntu-images-hvm-ssd-ubuntu-bionic-18.04-amd64-server-20180814"
-            },
-            "ap-northeast-1":{
-                "US1804HVM":"ami-0d5db3e2a1b98ca94"
-            },
-            "ap-northeast-2":{
-                "US1804HVM":"ami-0f4362c71ffaf7759"
-            },
-            "ap-south-1":{
-                "US1804HVM":"ami-0237472cf337d9529"
-            },
-            "ap-southeast-1":{
-                "US1804HVM":"ami-0c199cae95cea87f0"
-            },
-            "ap-southeast-2":{
-                "US1804HVM":"ami-0c0483bc96aef8b2f"
-            },
-            "ca-central-1":{
-                "US1804HVM":"ami-0dbe45195223e250b"
-            },
-            "eu-central-1":{
-                "US1804HVM":"ami-040a1551f9c9d11ad"
-            },
-            "eu-west-1":{
-                "US1804HVM":"ami-0e41581acd7dedd99"
-            },
-            "eu-west-2":{
-                "US1804HVM":"ami-00f94dc949fea2adf"
-            },
-            "eu-west-3":{
-                "US1804HVM":"ami-0df03c7641cf41947"
-            },
-            "sa-east-1":{
-                "US1804HVM":"ami-0065a65613972a22a"
-            },
-            "us-east-1":{
-                "US1804HVM":"ami-0d5ae5525eb033d0a"
-            },
-            "us-east-2":{
-                "US1804HVM":"ami-0a7f2b5b6b87eaa1b"
-            },
-            "us-west-1":{
-                "US1804HVM":"ami-00a3e4424e9ab3e56"
-            },
-            "us-west-2":{
-                "US1804HVM":"ami-09c6723c6c24250c9"
-            }
-        }
-    },
-    "Parameters":{
-        "application":{
-            "Description":"Name of the  application used for creating objects. ex. service1",
-            "Type":"String",
-            "MaxLength":20,
-            "Default":"f5demoapp"
-        },
-        "applicationPoolTagKey":{
-            "Description":"Application pool tag key",
-            "Type":"String"
-        },
-        "applicationPoolTagValue":{
-            "Description":"Application pool tag value",
-            "Type":"String"
-        },
-        "applicationSubnets":{
-            "Description":"Application Subnet IDs",
-            "Type":"List<AWS::EC2::Subnet::Id>"
-        },
-        "containerName":{
-            "Description":"Container Name",
-            "Type":"String",
-            "Default":"f5devcentral/f5-demo-app:latest"
-        },
-        "deploymentName":{
-            "Description":"Name the template used to create object names",
-            "Type":"String",
-            "MaxLength":25,
-            "Default":"f5awsqs"
-        },
-        "instanceType":{
-            "AllowedValues":[
-                "t2.small"
-            ],
-            "ConstraintDescription":"must be a valid EC2 instance type",
-            "Default":"t2.small",
-            "Description":"App EC2 instance type",
-            "Type":"String"
-        },
-        "sshKey":{
-            "Description":"Name of an existing EC2 KeyPair to enable SSH access to the instance",
-            "Type":"AWS::EC2::KeyPair::KeyName"
-        },
-        "restrictedSrcAddress":{
-            "Description":" The IP address range that can be used to SSH to the EC2 instances",
-            "Type":"String",
-            "MinLength":"9",
-            "MaxLength":"18",
-            "AllowedPattern":"(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
-            "ConstraintDescription":"must be a valid IP CIDR range of the form x.x.x.x/x."
-        },
-        "vpc":{
-            "Description":"Common VPC for whole deployment",
-            "Type":"AWS::EC2::VPC::Id"
-        }
-    },
-    "Resources":{
-        "AppSecurityGroup":{
-            "Type":"AWS::EC2::SecurityGroup",
-            "Properties":{
-                "VpcId":{
-                    "Ref":"vpc"
-                },
-                "GroupDescription":"Enable SSH access via port 22 and enable access to web on 80 and 443",
-                "SecurityGroupIngress":[
-                    {
-                        "IpProtocol":"tcp",
-                        "FromPort":"22",
-                        "ToPort":"22",
-                        "CidrIp":{
-                            "Ref":"restrictedSrcAddress"
-                        }
-                    },
-                    {
-                        "IpProtocol":"tcp",
-                        "FromPort":"80",
-                        "ToPort":"80",
-                        "CidrIp":{
-                            "Ref":"restrictedSrcAddress"
-                        }
-                    },
-                    {
-                        "IpProtocol":"tcp",
-                        "FromPort":"443",
-                        "ToPort":"443",
-                        "CidrIp":{
-                            "Ref":"restrictedSrcAddress"
-                        }
-                    }
-                ],
-                "Tags":[
-                    {
-                        "Key":"Name",
-                        "Value":{
-                            "Fn::Join":[
-                                "",
-                                [
-                                    {
-                                        "Ref":"deploymentName"
-                                    },
-                                    "-",
-                                    {
-                                        "Ref":"application"
-                                    },
-                                    "-appsecuritygroup"
-                                ]
-                            ]
-                        }
-                    },
-                    {
-                        "Key":{
-                            "Ref":"applicationPoolTagKey"
-                        },
-                        "Value":{
-                            "Ref":"applicationPoolTagValue"
-                        }
-                    }
-                ]
-            }
-        },
-        "AppLaunchConfig":{
-            "Type":"AWS::AutoScaling::LaunchConfiguration",
-            "Properties":{
-                "ImageId":{
-                    "Fn::FindInMap":[
-                        "AWSAMIRegionMap",
-                        {
-                            "Ref":"AWS::Region"
-                        },
-                        "US1804HVM"
-                    ]
-                },
-                "InstanceType":{
-                    "Ref":"instanceType"
-                },
-                "AssociatePublicIpAddress":false,
-                "KeyName":{
-                    "Ref":"sshKey"
-                },
-                "SecurityGroups":[
-                    {
-                        "Ref":"AppSecurityGroup"
-                    }
-                ],
-                "UserData":{
-                    "Fn::Base64":{
-                        "Fn::Join":[
-                            "",
-                            [
-                                "#!/bin/bash\n",
-                                "### Xenial 16.04\n",
-                                "# Install Docker\n",
-                                "sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - \n",
-                                "sudo add-apt-repository \"deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\"\n",
-                                "sudo apt-get update\n",
-                                "sudo apt-get install -y docker-ce\n",
-                                "# Deploy App\n",
-                                "sudo docker run --name f5demo -p 80:80 -p 443:443 -d ",
-                                {
-                                    "Ref":"containerName"
-                                },
-                                "\n"
-                            ]
-                        ]
-                    }
-                }
-            }
-        },
-        "AppAutoscaleGroup":{
-            "Type":"AWS::AutoScaling::AutoScalingGroup",
-            "Properties":{
-                "Tags":[
-                    {
-                        "Key":"Name",
-                        "Value":{
-                            "Fn::Join":[
-                                "",
-                                [
-                                    {
-                                        "Ref":"applicationPoolTagValue"
-                                    },
-                                    "-autoscale-instance-",
-                                    {
-                                        "Ref":"deploymentName"
-                                    }
-                                ]
-                            ]
-                        },
-                        "PropagateAtLaunch":true
-                    },
-                    {
-                        "Key":{
-                            "Ref":"applicationPoolTagKey"
-                        },
-                        "Value":{
-                            "Ref":"applicationPoolTagValue"
-                        },
-                        "PropagateAtLaunch":true
-                    },
-                    {
-                        "Key":"containerName",
-                        "Value":{
-                            "Ref":"containerName"
-                        },
-                        "PropagateAtLaunch":true
-                    }
-                ],
-                "VPCZoneIdentifier":{
-                    "Ref":"applicationSubnets"
-                },
-                "Cooldown":"600",
-                "HealthCheckGracePeriod":120,
-                "LaunchConfigurationName":{
-                    "Ref":"AppLaunchConfig"
-                },
-                "MaxSize":"1",
-                "MinSize":"1",
-                "MetricsCollection":[
-                    {
-                        "Granularity":"1Minute"
-                    }
-                ]
-            },
-            "UpdatePolicy":{
-                "AutoScalingRollingUpdate":{
-                    "MaxBatchSize":"1",
-                    "MinInstancesInService":"1",
-                    "PauseTime":"PT3M"
-                }
-            }
-        }
-    }
-}
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >-
+  This template deploys a small demo application which will serve as an application
+  pool on the BIG-IP.  **WARNING** This template creates an auto scale group and associated
+  security group. You will be billed for the AWS resources used if you create a stack
+  from this template.
+Outputs:
+  appAutoscaleGroupName:
+    Value: !Ref 'AppAutoscaleGroup'
+Mappings:
+  AWSAMIRegionMap:
+    AMI:
+      US1804HVM: ubuntu-images-hvm-ssd-ubuntu-bionic-18.04-amd64-server-20180814
+    ap-northeast-1:
+      US1804HVM: ami-0d5db3e2a1b98ca94
+    ap-northeast-2:
+      US1804HVM: ami-0f4362c71ffaf7759
+    ap-south-1:
+      US1804HVM: ami-0237472cf337d9529
+    ap-southeast-1:
+      US1804HVM: ami-0c199cae95cea87f0
+    ap-southeast-2:
+      US1804HVM: ami-0c0483bc96aef8b2f
+    ca-central-1:
+      US1804HVM: ami-0dbe45195223e250b
+    eu-central-1:
+      US1804HVM: ami-040a1551f9c9d11ad
+    eu-west-1:
+      US1804HVM: ami-0e41581acd7dedd99
+    eu-west-2:
+      US1804HVM: ami-00f94dc949fea2adf
+    eu-west-3:
+      US1804HVM: ami-0df03c7641cf41947
+    sa-east-1:
+      US1804HVM: ami-0065a65613972a22a
+    us-east-1:
+      US1804HVM: ami-0d5ae5525eb033d0a
+    us-east-2:
+      US1804HVM: ami-0a7f2b5b6b87eaa1b
+    us-west-1:
+      US1804HVM: ami-00a3e4424e9ab3e56
+    us-west-2:
+      US1804HVM: ami-09c6723c6c24250c9
+Parameters:
+  application:
+    Description: Name of the  application used for creating objects. ex. service1
+    Type: String
+    MaxLength: 20
+    Default: f5demoapp
+  applicationPoolTagKey:
+    Description: Application pool tag key
+    Type: String
+  applicationPoolTagValue:
+    Description: Application pool tag value
+    Type: String
+  applicationSubnets:
+    Description: Application Subnet IDs
+    Type: List<AWS::EC2::Subnet::Id>
+  containerName:
+    Description: Container Name
+    Type: String
+    Default: f5devcentral/f5-demo-app:latest
+  deploymentName:
+    Description: Name the template used to create object names
+    Type: String
+    MaxLength: 25
+    Default: f5awsqs
+  instanceType:
+    AllowedValues:
+      - t2.small
+    ConstraintDescription: must be a valid EC2 instance type
+    Default: t2.small
+    Description: App EC2 instance type
+    Type: String
+  sshKey:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
+    Type: AWS::EC2::KeyPair::KeyName
+  restrictedSrcAddress:
+    Description: ' The IP address range that can be used to SSH to the EC2 instances'
+    Type: String
+    MinLength: '9'
+    MaxLength: '18'
+    AllowedPattern: (\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})
+    ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
+  vpc:
+    Description: Common VPC for whole deployment
+    Type: AWS::EC2::VPC::Id
+Resources:
+  AppSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref 'vpc'
+      GroupDescription: Enable SSH access via port 22 and enable access to web on
+        80 and 443
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: !Ref 'restrictedSrcAddress'
+        - IpProtocol: tcp
+          FromPort: '80'
+          ToPort: '80'
+          CidrIp: !Ref 'restrictedSrcAddress'
+        - IpProtocol: tcp
+          FromPort: '443'
+          ToPort: '443'
+          CidrIp: !Ref 'restrictedSrcAddress'
+      Tags:
+        - Key: Name
+          Value: !Join
+            - ''
+            - - !Ref 'deploymentName'
+              - '-'
+              - !Ref 'application'
+              - -appsecuritygroup
+        - Key: !Ref 'applicationPoolTagKey'
+          Value: !Ref 'applicationPoolTagValue'
+  AppLaunchConfig:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      ImageId: !FindInMap
+        - AWSAMIRegionMap
+        - !Ref 'AWS::Region'
+        - US1804HVM
+      InstanceType: !Ref 'instanceType'
+      AssociatePublicIpAddress: false
+      KeyName: !Ref 'sshKey'
+      SecurityGroups:
+        - !Ref 'AppSecurityGroup'
+      UserData: !Base64
+        Fn::Join:
+          - ''
+          - - "#!/bin/bash\n"
+            - "### Xenial 16.04\n"
+            - "# Install Docker\n"
+            - "sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo\
+              \ apt-key add - \n"
+            - "sudo add-apt-repository \"deb [arch=amd64] https://download.docker.com/linux/ubuntu\
+              \ $(lsb_release -cs) stable\"\n"
+            - "sudo apt-get update\n"
+            - "sudo apt-get install -y docker-ce\n"
+            - "# Deploy App\n"
+            - 'sudo docker run --name f5demo -p 80:80 -p 443:443 -d '
+            - !Ref 'containerName'
+            - "\n"
+  AppAutoscaleGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Join
+            - ''
+            - - !Ref 'applicationPoolTagValue'
+              - -autoscale-instance-
+              - !Ref 'deploymentName'
+          PropagateAtLaunch: true
+        - Key: !Ref 'applicationPoolTagKey'
+          Value: !Ref 'applicationPoolTagValue'
+          PropagateAtLaunch: true
+        - Key: containerName
+          Value: !Ref 'containerName'
+          PropagateAtLaunch: true
+      VPCZoneIdentifier: !Ref 'applicationSubnets'
+      Cooldown: '600'
+      HealthCheckGracePeriod: 120
+      LaunchConfigurationName: !Ref 'AppLaunchConfig'
+      MaxSize: '1'
+      MinSize: '1'
+      MetricsCollection:
+        - Granularity: 1Minute
+    UpdatePolicy:
+      AutoScalingRollingUpdate:
+        MaxBatchSize: '1'
+        MinInstancesInService: '1'
+        PauseTime: PT3M
