@@ -14,11 +14,7 @@
     {                                                                                        
         "ParameterKey": "availabilityZones",                                                 
         "ParameterValue": "$[taskcat_genaz_2]"                                               
-    },                                                                                       
-    {                                                                                        
-        "ParameterKey": "keyPairName",                                                       
-        "ParameterValue": "Kiran-Key"                                                        
-    },                                                                                       
+    },
     {                                                                                        
         "ParameterKey": "remoteAccessCIDR",                                                  
         "ParameterValue": "0.0.0.0/0"                                                        
@@ -28,12 +24,8 @@
         "ParameterValue": "0.0.0.0/0"
     },
     {                                                                                        
-        "ParameterKey": "bigipImage",                                                        
-        "ParameterValue": "PerAppVeLtm200Mbps"                                                       
-    },                                                                                       
-    {                                                                                        
         "ParameterKey": "notificationEmail",                                                 
-        "ParameterValue": "k.anna@f5.com"                                                    
+        "ParameterValue": "x@test.com"                                                    
     },                                                                                       
     {                                                                                        
         "ParameterKey": "allowUsageAnalytics",                                               
