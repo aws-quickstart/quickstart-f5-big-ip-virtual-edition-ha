@@ -12,35 +12,35 @@ Mappings:
     AMI:
       US1804HVM: ubuntu-images-hvm-ssd-ubuntu-bionic-18.04-amd64-server-20180814
     ap-northeast-1:
-      US1804HVM: ami-0d5db3e2a1b98ca94
+      US1804HVM: ami-0f6b4f4104d26f399
     ap-northeast-2:
-      US1804HVM: ami-0f4362c71ffaf7759
+      US1804HVM: ami-02b4a5559ce53a570
     ap-south-1:
-      US1804HVM: ami-0237472cf337d9529
+      US1804HVM: ami-0245841fc4b40e22f
     ap-southeast-1:
-      US1804HVM: ami-0c199cae95cea87f0
+      US1804HVM: ami-07febfdfb4080320e
     ap-southeast-2:
-      US1804HVM: ami-0c0483bc96aef8b2f
+      US1804HVM: ami-04a0f7552cff370ba
     ca-central-1:
-      US1804HVM: ami-0dbe45195223e250b
+      US1804HVM: ami-0972a0d3135cf1fc0
     eu-central-1:
-      US1804HVM: ami-040a1551f9c9d11ad
+      US1804HVM: ami-09356619876445425
     eu-west-1:
-      US1804HVM: ami-0e41581acd7dedd99
+      US1804HVM: ami-04c58523038d79132
     eu-west-2:
-      US1804HVM: ami-00f94dc949fea2adf
+      US1804HVM: ami-00622b440d92e55c0
     eu-west-3:
-      US1804HVM: ami-0df03c7641cf41947
+      US1804HVM: ami-0b70d1460d5c7a299
     sa-east-1:
-      US1804HVM: ami-0065a65613972a22a
+      US1804HVM: ami-049f5d88d2d436431
     us-east-1:
-      US1804HVM: ami-0d5ae5525eb033d0a
+      US1804HVM: ami-00a208c7cdba991ea
     us-east-2:
-      US1804HVM: ami-0a7f2b5b6b87eaa1b
+      US1804HVM: ami-059d836af932792c3
     us-west-1:
-      US1804HVM: ami-00a3e4424e9ab3e56
+      US1804HVM: ami-0f42d8c4eb586ccf7
     us-west-2:
-      US1804HVM: ami-09c6723c6c24250c9
+      US1804HVM: ami-0a7d051a1c4b54f65
 Parameters:
   application:
     Description: Name of the  application used for creating objects. ex. service1
