@@ -1,0 +1,16 @@
+---
+global:
+  owner: a.kashcheev@f5.com
+  qsname: quickstart-f5-big-ip-virtual-edition-ha
+  marketplace-ami: true
+  regions:
+    - us-east-1
+    - us-west-2
+  reporting: true
+tests:
+  f5ve-defaults:
+    template_file: main.yaml
+    parameter_input: quickstart-input.json
+    regions:
+      - us-east-1
+      - us-west-2
