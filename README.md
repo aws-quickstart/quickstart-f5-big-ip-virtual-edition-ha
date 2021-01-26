@@ -1,7 +1,6 @@
 # quickstart-f5-big-ip-virtual-edition-ha
 
 
-# quickstart-f5-big-ip-virtual-edition
 ## F5 BIG-IP Virtual Edition (VE) on the AWS Cloud
 
 
