@@ -1,0 +1,11 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: This template represents an example of parent template to demonstrate how to link Access template
+Resources:
+  Access:
+    Type: 'AWS::CloudFormation::Stack'
+    Properties:
+      TemplateURL: >-
+        https://raw.githubusercontent.com/F5Networks/f5-aws-cloudformation-v2/master/examples/modules/access/access.yaml
+      Parameters:
+        solutionType: Failover
+        s3Bucket: example-s3-bucket-name

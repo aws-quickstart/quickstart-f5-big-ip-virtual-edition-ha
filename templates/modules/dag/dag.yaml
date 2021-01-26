@@ -1,0 +1,791 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  DAG/Ingress Template is intended to deploy Load Balancers, Public Ip addresses
+  for all BIGIP Cloud Solutions (i.e. High-Availability or Autoscale)
+Mappings:
+  Transformations:
+    Boolean:
+      'No': 'false'
+      'Yes': 'true'
+Conditions:
+  externalLB: !Equals
+    - 'Yes'
+    - !Ref provisionExternalBigipLoadBalancer
+  internalLB: !Equals
+    - 'Yes'
+    - !Ref provisionInternalBigipLoadBalancer
+  createMgmtPublicIP01: !Or
+    - !Equals
+      - !Ref numberPublicMgmtIPAddresses
+      - '1'
+    - !Condition createMgmtPublicIP02
+  createMgmtPublicIP02: !Or
+    - !Equals
+      - !Ref numberPublicMgmtIPAddresses
+      - '2'
+    - !Condition createMgmtPublicIP03
+  createMgmtPublicIP03: !Or
+    - !Equals
+      - !Ref numberPublicMgmtIPAddresses
+      - '3'
+    - !Condition createMgmtPublicIP04
+  createMgmtPublicIP04: !Equals
+    - !Ref numberPublicMgmtIPAddresses
+    - '4'
+  createExternalPublicIP01: !Or
+    - !Equals
+      - '1'
+      - !Ref numberPublicExternalIPAddresses
+    - !Condition createExternalPublicIP02
+  createExternalPublicIP02: !Or
+    - !Equals
+      - '2'
+      - !Ref numberPublicExternalIPAddresses
+    - !Condition createExternalPublicIP03
+  createExternalPublicIP03: !Or
+    - !Equals
+      - '3'
+      - !Ref numberPublicExternalIPAddresses
+    - !Condition createExternalPublicIP04
+  createExternalPublicIP04: !Equals
+    - '4'
+    - !Ref numberPublicExternalIPAddresses
+  createAppSecurityGroup: !Equals
+    - 'Yes'
+    - !Ref createAppSecurityGroup
+Metadata:
+  'AWS::CloudFormation::Interface':
+    ParameterGroups:
+      - Label:
+          default: Security Group
+        Parameters:
+          - restrictedSrcAddress
+          - restrictedSrcAddressApp
+          - restrictedSrcPort
+      - Label:
+          default: External Elastic Load Balancer
+        Parameters:
+          - provisionExternalBigipLoadBalancer
+          - externalSubnetAz1
+          - externalSubnetAz2
+          - vpc
+      - Label:
+          default: Internal Elastic Load Balancer
+        Parameters:
+          - provisionInternalBigipLoadBalancer
+          - internalSubnetAz1
+          - internalSubnetAz2
+          - vpc
+      - Label:
+          default: Public IP
+        Parameters:
+          - numberPublicMgmtIPAddresses
+          - numberPublicExternalIPAddresses
+      - Label:
+          default: App Security Group
+        Parameters:
+          - createAppSecurityGroup
+      - Label:
+          default: Resources Tags
+        Parameters:
+          - application
+          - costcenter
+          - environment
+          - group
+          - owner
+    ParameterLabels:
+      application:
+        default: Application
+      costcenter:
+        default: Cost Center
+      environment:
+        default: Environment
+      externalSubnetAz1:
+        default: Subnet Availability Zone 1
+      externalSubnetAz2:
+        default: Subnet Availability Zone 2
+      group:
+        default: Group
+      internalSubnetAz1:
+        default: Subnet Availability Zone 1
+      internalSubnetAz2:
+        default: Subnet Availability Zone 2
+      numberPublicExternalIPAddresses:
+        default: Number of External Public IP addresses
+      numberPublicMgmtIPAddresses:
+        default: Number of Management Public IP addresses
+      owner:
+        default: Owner
+      provisionExternalBigipLoadBalancer:
+        default: Provision External Elastic Load Balancer
+      createAppSecurityGroup:
+        default: Provision App Security Group
+      provisionInternalBigipLoadBalancer:
+        default: Provision Internal Elastic Load Balancer
+      restrictedSrcPort:
+        default: Management port
+      restrictedSrcAddress:
+        default: Management address
+      restrictedSrcAddressApp:
+        default: Restricted Source Address to Application
+      vpc:
+        default: VPC Id
+  Version: 1.0.0
+Outputs:
+  StackName:
+    Description: dag nested stack name
+    Value: !Ref "AWS::StackName"
+  ExternalElasticLoadBalancer:
+    Description: Elastic Load Balancer
+    Condition: externalLB
+    Value: !Ref ExternalBigIpLoadBalancer
+  ExternalElasticLoadBalancerDnsName:
+    Description: Elastic Load Balancer
+    Condition: externalLB
+    Value: !GetAtt
+      - ExternalBigIpLoadBalancer
+      - DNSName
+  ExternalTargetGroupHttps:
+    Description: Elastic Load Balancer Target Group
+    Value: !If
+      - externalLB
+      - !Ref ExternalTargetGroupHttps
+      - OPTIONAL
+  ExternalTargetGroupHttp:
+    Description: Elastic Load Balancer Target Group
+    Value: !If
+      - externalLB
+      - !Ref ExternalTargetGroupHttp
+      - OPTIONAL
+  InternalElasticLoadBalancer:
+    Description: Elastic Load Balancer
+    Condition: internalLB
+    Value: !Ref InternalBigIpLoadBalancer
+  InternalElasticLoadBalancerDnsName:
+    Description: Elastic Load Balancer
+    Condition: internalLB
+    Value: !GetAtt
+      - InternalBigIpLoadBalancer
+      - DNSName
+  InternalTargetGroupHttps:
+    Description: Elastic Load Balancer
+    Value: !If
+      - internalLB
+      - !Ref InternalTargetGroupHttps
+      - OPTIONAL
+  InternalTargetGroupHttp:
+    Description: Elastic Load Balancer
+    Value: !If
+      - internalLB
+      - !Ref InternalTargetGroupHttp
+      - OPTIONAL
+  BigipManagementEipAddress01:
+    Description: Elastic IP 01 for BIGIP Management Interface
+    Condition: createMgmtPublicIP01
+    Value: !Ref BigipManagementEipAddress01
+  BigipManagementEipAllocationId01:
+    Description: Allocation Id for Elastic IP 01 for BIGIP Management Interface
+    Condition: createMgmtPublicIP01
+    Value: !GetAtt
+      - BigipManagementEipAddress01
+      - AllocationId
+  BigipManagementEipAddress02:
+    Description: Elastic IP 02 for BIGIP Management Interface
+    Condition: createMgmtPublicIP02
+    Value: !Ref BigipManagementEipAddress02
+  BigipManagementEipAllocationId02:
+    Description: Allocation Id for Elastic IP 02 for BIGIP Management Interface
+    Condition: createMgmtPublicIP02
+    Value: !GetAtt
+      - BigipManagementEipAddress02
+      - AllocationId
+  BigipManagementEipAddress03:
+    Description: Elastic IP 03 for BIGIP Management Interface
+    Condition: createMgmtPublicIP03
+    Value: !Ref BigipManagementEipAddress03
+  BigipManagementEipAllocationId03:
+    Description: Allocation Id for Elastic IP 03 for BIGIP Management Interface
+    Condition: createMgmtPublicIP03
+    Value: !GetAtt
+      - BigipManagementEipAddress03
+      - AllocationId
+  BigipManagementEipAddress04:
+    Description: Elastic IP 04 for BIGIP Management Interface
+    Condition: createMgmtPublicIP04
+    Value: !Ref BigipManagementEipAddress04
+  BigipManagementEipAllocationId04:
+    Description: Allocation Id for Elastic IP 04 for BIGIP Management Interface
+    Condition: createMgmtPublicIP04
+    Value: !GetAtt
+      - BigipManagementEipAddress04
+      - AllocationId
+  BigipExternalEipAddress00:
+    Description: Elastic IP 00 for BIGIP External Interface with primary IP
+    Condition: createExternalPublicIP01
+    Value: !Ref BigipExternalEipAddress00
+  BigipExternalEipAllocationId00:
+    Description: Allocation Id for Elastic IP 00 for BIGIP External Interface with primary IP
+    Condition: createExternalPublicIP01
+    Value: !GetAtt
+      - BigipExternalEipAddress00
+      - AllocationId
+  BigipExternalEipAddress01:
+    Description: Elastic IP 01 for BIGIP External Interface
+    Condition: createExternalPublicIP01
+    Value: !Ref BigipExternalEipAddress01
+  BigipExternalEipAllocationId01:
+    Description: Allocation Id for Elastic IP 01 for BIGIP External Interface
+    Condition: createExternalPublicIP01
+    Value: !GetAtt
+      - BigipExternalEipAddress01
+      - AllocationId
+  BigipExternalEipAddress02:
+    Description: Elastic IP 02 for BIGIP External Interface
+    Condition: createExternalPublicIP02
+    Value: !Ref BigipExternalEipAddress02
+  BigipExternalEipAllocationId02:
+    Description: Allocation Id for Elastic IP 02 for BIGIP External Interface
+    Condition: createExternalPublicIP02
+    Value: !GetAtt
+      - BigipExternalEipAddress02
+      - AllocationId
+  BigipExternalEipAddress03:
+    Description: Elastic IP 03 for BIGIP External Interface
+    Condition: createExternalPublicIP03
+    Value: !Ref BigipExternalEipAddress03
+  BigipExternalEipAllocationId03:
+    Description: Allocation Id for Elastic IP 03 for BIGIP External Interface
+    Condition: createExternalPublicIP03
+    Value: !GetAtt
+      - BigipExternalEipAddress03
+      - AllocationId
+  BigipExternalEipAddress04:
+    Description: Elastic IP 04 for BIGIP External Interface
+    Condition: createExternalPublicIP04
+    Value: !Ref BigipExternalEipAddress04
+  BigipExternalEipAllocationId04:
+    Description: Allocation Id for Elastic IP 04 for BIGIP External Interface
+    Condition: createExternalPublicIP04
+    Value: !GetAtt
+      - BigipExternalEipAddress04
+      - AllocationId
+  BigipExternalSecurityGroup:
+    Description: BIG-IP Security Group (External or Public)
+    Value: !Ref BigipExternalSecurityGroup
+  appSecurityGroupID:
+    Description: App Security Group ID
+    Value: !Ref appSecurityGroup
+Parameters:
+  application:
+    Default: f5app
+    Description: Name of the Application Tag.
+    Type: String
+  costcenter:
+    Default: f5costcenter
+    Description: Name of the Cost Center Tag.
+    Type: String
+  environment:
+    Default: f5env
+    Description: Name of the Environment Tag.
+    Type: String
+  externalSubnetAz1:
+    Default: UNDEFINED
+    Description: Availability Zone 1 External Subnet Id.
+    Type: String
+  externalSubnetAz2:
+    Default: UNDEFINED
+    Description: Availability Zone 2 External Subnet Id.
+    Type: String
+  group:
+    Default: f5group
+    Description: Name of the Group Tag.
+    Type: String
+  internalSubnetAz1:
+    Default: UNDEFINED
+    Description: Availability Zone 1 Internal Subnet Id.
+    Type: String
+  internalSubnetAz2:
+    Default: UNDEFINED
+    Description: Availability Zone 2 Internal Subnet Id.
+    Type: String
+  numberPublicExternalIPAddresses:
+    Default: 1
+    Description: Number of external public ip address to create.
+    MaxValue: 4
+    MinValue: 0
+    Type: Number
+  numberPublicMgmtIPAddresses:
+    Default: 1
+    Description: Number of public management ip addresses to create.
+    MaxValue: 4
+    MinValue: 0
+    Type: Number
+  owner:
+    Default: f5owner
+    Description: Name of the Owner Tag.
+    Type: String
+  provisionExternalBigipLoadBalancer:
+    AllowedValues:
+      - 'Yes'
+      - 'No'
+    Default: 'No'
+    Description: Select Yes if you would like to provision an external elastic load balancer.
+    Type: String
+  provisionInternalBigipLoadBalancer:
+    AllowedValues:
+      - 'Yes'
+      - 'No'
+    Default: 'No'
+    Description: Select Yes if you would like to provision an internal elastic load balancer.
+    Type: String
+  createAppSecurityGroup:
+    AllowedValues:
+      - 'Yes'
+      - 'No'
+    Default: 'Yes'
+    Description: Select Yes if you would like to create a Security Group for your Application.
+    Type: String
+  restrictedSrcAddress:
+    AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})'
+    ConstraintDescription: Must be a valid IP CIDR range of the form x.x.x.x/x.
+    Description: The IP address range used to SSH and access management GUI on the EC2 instances.
+    MaxLength: '18'
+    MinLength: '9'
+    Type: String
+  restrictedSrcAddressApp:
+    AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})'
+    ConstraintDescription: Must be a valid IP CIDR range of the form x.x.x.x/x.
+    Description: The IP address range that can be used to access web traffic (80/443) to the EC2 instances.
+    MaxLength: '18'
+    MinLength: '9'
+    Type: String
+  restrictedSrcPort:
+    ConstraintDescription: Must be a valid integer.
+    Default: 8443
+    Description: The management port used for BIGIP management GUI.
+    Type: Number
+  vpc:
+    Description: VPC Id.
+    Type: String
+Resources:
+  ExternalBigIpLoadBalancer:
+    Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
+    Condition: externalLB
+    Properties:
+      Type: network
+      Name: !Join
+        - ''
+        - - !Ref application
+          - '-BigipExtLb'
+      Scheme: internet-facing
+      Subnets:
+        - !Ref externalSubnetAz1
+        - !Ref externalSubnetAz2
+      Tags:
+        - Key: Application
+          Value: !Ref application
+        - Key: Costcenter
+          Value: !Ref costcenter
+        - Key: Environment
+          Value: !Ref environment
+        - Key: Group
+          Value: !Ref group
+        - Key: Owner
+          Value: !Ref owner
+  ExternalLBListenerHttps:
+    Type: 'AWS::ElasticLoadBalancingV2::Listener'
+    Condition: externalLB
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref ExternalTargetGroupHttps
+      LoadBalancerArn: !Ref ExternalBigIpLoadBalancer
+      Port: '443'
+      Protocol: TCP
+  ExternalLBListenerHttp:
+    Type: 'AWS::ElasticLoadBalancingV2::Listener'
+    Condition: externalLB
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref ExternalTargetGroupHttp
+      LoadBalancerArn: !Ref ExternalBigIpLoadBalancer
+      Port: '80'
+      Protocol: TCP
+  ExternalTargetGroupHttps:
+    Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
+    Condition: externalLB
+    Properties:
+      Name: !Join
+        - ''
+        - - !Ref application
+          - '-EXT-HTTPS'
+      Port: '443'
+      Protocol: TCP
+      HealthCheckIntervalSeconds: '10'
+      HealthCheckPath: /
+      HealthCheckProtocol: HTTPS
+      HealthyThresholdCount: '2'
+      UnhealthyThresholdCount: '2'
+      TargetGroupAttributes:
+        - Key: deregistration_delay.timeout_seconds
+          Value: '20'
+      VpcId: !Ref vpc
+  ExternalTargetGroupHttp:
+    Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
+    Condition: externalLB
+    Properties:
+      Name: !Join
+        - ''
+        - - !Ref application
+          - '-EXT-HTTP'
+      Port: '80'
+      Protocol: TCP
+      HealthCheckIntervalSeconds: '10'
+      HealthCheckPath: /
+      HealthCheckProtocol: HTTP
+      HealthyThresholdCount: '2'
+      UnhealthyThresholdCount: '2'
+      TargetGroupAttributes:
+        - Key: deregistration_delay.timeout_seconds
+          Value: '20'
+      VpcId: !Ref vpc
+  InternalBigIpLoadBalancer:
+    Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
+    Condition: internalLB
+    Properties:
+      Type: network
+      Name: !Join
+        - ''
+        - - !Ref application
+          - '-BigipIntLb'
+      Scheme: internal
+      Subnets:
+        - !Ref internalSubnetAz1
+        - !Ref internalSubnetAz2
+      Tags:
+        - Key: Application
+          Value: !Ref application
+        - Key: Costcenter
+          Value: !Ref costcenter
+        - Key: Environment
+          Value: !Ref environment
+        - Key: Group
+          Value: !Ref group
+        - Key: Owner
+          Value: !Ref owner
+  InternalLBListenerHttps:
+    Type: 'AWS::ElasticLoadBalancingV2::Listener'
+    Condition: internalLB
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref InternalTargetGroupHttps
+      LoadBalancerArn: !Ref InternalBigIpLoadBalancer
+      Port: '443'
+      Protocol: TCP
+  InternalLBListenerHttp:
+    Type: 'AWS::ElasticLoadBalancingV2::Listener'
+    Condition: internalLB
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref InternalTargetGroupHttp
+      LoadBalancerArn: !Ref InternalBigIpLoadBalancer
+      Port: '80'
+      Protocol: TCP
+  InternalTargetGroupHttps:
+    Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
+    Condition: internalLB
+    Properties:
+      Name: !Join
+        - ''
+        - - !Ref application
+          - '-INT-HTTPS'
+      Port: '443'
+      Protocol: TCP
+      HealthCheckIntervalSeconds: '10'
+      HealthCheckPath: /
+      HealthCheckProtocol: HTTPS
+      HealthyThresholdCount: '2'
+      UnhealthyThresholdCount: '2'
+      TargetGroupAttributes:
+        - Key: deregistration_delay.timeout_seconds
+          Value: '20'
+      VpcId: !Ref vpc
+  InternalTargetGroupHttp:
+    Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
+    Condition: internalLB
+    Properties:
+      Name: !Join
+        - ''
+        - - !Ref application
+          - '-INT-HTTP'
+      Port: '80'
+      Protocol: TCP
+      HealthCheckIntervalSeconds: '10'
+      HealthCheckPath: /
+      HealthCheckProtocol: HTTP
+      HealthyThresholdCount: '2'
+      UnhealthyThresholdCount: '2'
+      TargetGroupAttributes:
+        - Key: deregistration_delay.timeout_seconds
+          Value: '20'
+      VpcId: !Ref vpc
+  BigipManagementEipAddress01:
+    Condition: createMgmtPublicIP01
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Application
+          Value: !Ref application
+        - Key: Costcenter
+          Value: !Ref costcenter
+        - Key: Environment
+          Value: !Ref environment
+        - Key: Group
+          Value: !Ref group
+        - Key: Name
+          Value: !Join
+            - ''
+            - - 'EIP:'
+              - !Ref 'AWS::StackName'
+        - Key: Owner
+          Value: !Ref owner
+    Type: 'AWS::EC2::EIP'
+  BigipManagementEipAddress02:
+    Condition: createMgmtPublicIP02
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Application
+          Value: !Ref application
+        - Key: Costcenter
+          Value: !Ref costcenter
+        - Key: Environment
+          Value: !Ref environment
+        - Key: Group
+          Value: !Ref group
+        - Key: Name
+          Value: !Join
+            - ''
+            - - 'EIP:'
+              - !Ref 'AWS::StackName'
+        - Key: Owner
+          Value: !Ref owner
+    Type: 'AWS::EC2::EIP'
+  BigipManagementEipAddress03:
+    Condition: createMgmtPublicIP03
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Application
+          Value: !Ref application
+        - Key: Costcenter
+          Value: !Ref costcenter
+        - Key: Environment
+          Value: !Ref environment
+        - Key: Group
+          Value: !Ref group
+        - Key: Name
+          Value: !Join
+            - ''
+            - - 'EIP:'
+              - !Ref 'AWS::StackName'
+        - Key: Owner
+          Value: !Ref owner
+    Type: 'AWS::EC2::EIP'
+  BigipManagementEipAddress04:
+    Condition: createMgmtPublicIP04
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Application
+          Value: !Ref application
+        - Key: Costcenter
+          Value: !Ref costcenter
+        - Key: Environment
+          Value: !Ref environment
+        - Key: Group
+          Value: !Ref group
+        - Key: Name
+          Value: !Join
+            - ''
+            - - 'EIP:'
+              - !Ref 'AWS::StackName'
+        - Key: Owner
+          Value: !Ref owner
+    Type: 'AWS::EC2::EIP'
+  BigipExternalEipAddress00:
+    Condition: createExternalPublicIP01
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Application
+          Value: !Ref application
+        - Key: Costcenter
+          Value: !Ref costcenter
+        - Key: Environment
+          Value: !Ref environment
+        - Key: Group
+          Value: !Ref group
+        - Key: Name
+          Value: !Join
+            - ''
+            - - 'EIP:'
+              - !Ref 'AWS::StackName'
+        - Key: Owner
+          Value: !Ref owner
+    Type: 'AWS::EC2::EIP'
+  BigipExternalEipAddress01:
+    Condition: createExternalPublicIP01
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Application
+          Value: !Ref application
+        - Key: Costcenter
+          Value: !Ref costcenter
+        - Key: Environment
+          Value: !Ref environment
+        - Key: Group
+          Value: !Ref group
+        - Key: Name
+          Value: !Join
+            - ''
+            - - 'EIP:'
+              - !Ref 'AWS::StackName'
+        - Key: Owner
+          Value: !Ref owner
+    Type: 'AWS::EC2::EIP'
+  BigipExternalEipAddress02:
+    Condition: createExternalPublicIP02
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Application
+          Value: !Ref application
+        - Key: Costcenter
+          Value: !Ref costcenter
+        - Key: Environment
+          Value: !Ref environment
+        - Key: Group
+          Value: !Ref group
+        - Key: Name
+          Value: !Join
+            - ''
+            - - 'EIP:'
+              - !Ref 'AWS::StackName'
+        - Key: Owner
+          Value: !Ref owner
+    Type: 'AWS::EC2::EIP'
+  BigipExternalEipAddress03:
+    Condition: createExternalPublicIP03
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Application
+          Value: !Ref application
+        - Key: Costcenter
+          Value: !Ref costcenter
+        - Key: Environment
+          Value: !Ref environment
+        - Key: Group
+          Value: !Ref group
+        - Key: Name
+          Value: !Join
+            - ''
+            - - 'EIP:'
+              - !Ref 'AWS::StackName'
+        - Key: Owner
+          Value: !Ref owner
+    Type: 'AWS::EC2::EIP'
+  BigipExternalEipAddress04:
+    Condition: createExternalPublicIP04
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Application
+          Value: !Ref application
+        - Key: Costcenter
+          Value: !Ref costcenter
+        - Key: Environment
+          Value: !Ref environment
+        - Key: Group
+          Value: !Ref group
+        - Key: Name
+          Value: !Join
+            - ''
+            - - 'EIP:'
+              - !Ref 'AWS::StackName'
+        - Key: Owner
+          Value: !Ref owner
+    Type: 'AWS::EC2::EIP'
+  BigipExternalSecurityGroup:
+    Properties:
+      GroupDescription: 'Public or External interface rules, including BIG-IP management'
+      SecurityGroupIngress:
+        - CidrIp: !Ref restrictedSrcAddress
+          FromPort: '22'
+          IpProtocol: tcp
+          ToPort: '22'
+        - CidrIp: !Ref restrictedSrcAddress
+          FromPort: !Ref restrictedSrcPort
+          IpProtocol: tcp
+          ToPort: !Ref restrictedSrcPort
+        - CidrIp: !Ref restrictedSrcAddressApp
+          FromPort: '80'
+          IpProtocol: tcp
+          ToPort: '80'
+        - CidrIp: !Ref restrictedSrcAddressApp
+          FromPort: '443'
+          IpProtocol: tcp
+          ToPort: '443'
+      Tags:
+        - Key: Application
+          Value: !Ref application
+        - Key: Costcenter
+          Value: !Ref costcenter
+        - Key: Environment
+          Value: !Ref environment
+        - Key: Group
+          Value: !Ref group
+        - Key: Name
+          Value: !Join
+            - ''
+            - - 'Bigip Security Group: '
+              - !Ref 'AWS::StackName'
+        - Key: Owner
+          Value: !Ref owner
+      VpcId: !Ref vpc
+    Type: 'AWS::EC2::SecurityGroup'
+  BigipSecurityGroupIngressManagementGuiPort:
+    Properties:
+      FromPort: !Ref restrictedSrcPort
+      GroupId: !Ref BigipExternalSecurityGroup
+      IpProtocol: tcp
+      SourceSecurityGroupId: !Ref BigipExternalSecurityGroup
+      ToPort: !Ref restrictedSrcPort
+    Type: 'AWS::EC2::SecurityGroupIngress'
+  appSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Condition: createAppSecurityGroup
+    Properties:
+      VpcId: !Ref vpc
+      GroupDescription: Enable SSH access via port 22 and enable access to web on 80 and 443 for the application
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: !Ref restrictedSrcAddress
+        - IpProtocol: tcp
+          FromPort: '80'
+          ToPort: '80'
+          CidrIp: !Ref restrictedSrcAddress
+        - IpProtocol: tcp
+          FromPort: '443'
+          ToPort: '443'
+          CidrIp: !Ref restrictedSrcAddress
+      Tags:
+        - Key: Application
+          Value: !Ref application

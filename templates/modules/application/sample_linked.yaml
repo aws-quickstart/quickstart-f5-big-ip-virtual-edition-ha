@@ -1,0 +1,14 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: This template represents an example of parent template to demonstrate how to link the application template
+Resources:
+  Access:
+    Type: 'AWS::CloudFormation::Stack'
+    Properties:
+      TemplateURL: >-
+        https://raw.githubusercontent.com/F5Networks/f5-aws-cloudformation-v2/master/examples/modules/application/application.yaml
+      Parameters:
+        sshKey: example-ssh-key-name
+        restrictedSrcAddress: 0.0.0.0/0
+        vpc: example-vpc-name
+        applicationSubnets: subnet-abcdefg
+        appSecurityGroupID: app-00002
