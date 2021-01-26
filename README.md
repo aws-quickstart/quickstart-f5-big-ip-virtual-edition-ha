@@ -1,7 +1,7 @@
 # quickstart-f5-big-ip-virtual-edition-ha
 
 
-## F5 BIG-IP Virtual Edition (VE) on the AWS Cloud
+## High Availability pair of F5 BIG-IP Virtual Editions (VEs) on the AWS Cloud
 
 
 This Quick Start deploys BIG-IP Virtual Editions (VE), an application delivery and security services platform from F5 Networks, on the Amazon Web Services (AWS) Cloud in about 30 minutes.  
