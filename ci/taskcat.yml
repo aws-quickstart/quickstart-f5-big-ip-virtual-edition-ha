@@ -1,4 +1,8 @@
 ---
+general:
+  s3_bucket: $[taskcat_autobucket]
+  tags:
+    delete: 'True'
 project:
   owner: a.kashcheev@f5.com
   name: quickstart-f5-big-ip-virtual-edition-ha

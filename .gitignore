@@ -4,6 +4,7 @@
 *.swo
 *.bak
 *~
+temp/
 *.log
 logs/*
 # ignore credentials file(s)
