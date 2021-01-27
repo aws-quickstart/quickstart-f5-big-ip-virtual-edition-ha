@@ -1,16 +1,21 @@
 ---
-global:
+project:
   owner: a.kashcheev@f5.com
-  qsname: quickstart-f5-big-ip-virtual-edition-ha
-  marketplace-ami: true
+  name: quickstart-f5-big-ip-virtual-edition-ha
   regions:
     - us-east-1
     - us-west-2
-  reporting: true
+  tags:
+    delete: 'True'
 tests:
-  f5ve-defaults:
-    template_file: main.yaml
-    parameter_input: quickstart-input.json
+  f5ve-ha-defaults:
+    template: templates/main.yaml
+    parameters:
+      qss3BucketName: $[taskcat_autobucket]
+      bigipInstanceType: m5.xlarge
+      availabilityZones: $[taskcat_genaz_2]
+      remoteAccessCIDR: 0.0.0.0/0
+      keyPairName: dewpt
     regions:
       - us-east-1
       - us-west-2

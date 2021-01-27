@@ -5,6 +5,7 @@
 *.bak
 *~
 *.log
+logs/*
 # ignore credentials file(s)
 *.credentials.json
 *_creds.json
