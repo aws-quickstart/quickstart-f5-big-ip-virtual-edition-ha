@@ -844,7 +844,7 @@ Resources:
         costcenter: !Ref costcenter
         environment: !Ref environment
         group: !Ref group
-  Dag01:
+  Dag:
     Type: 'AWS::CloudFormation::Stack'
     Properties:
       TemplateURL:
@@ -884,7 +884,7 @@ Resources:
   BigipInstance01:
     DependsOn:
       - Access
-      - Dag01
+      - Dag
     Type: 'AWS::CloudFormation::Stack'
     Properties:
       TemplateURL:
@@ -896,12 +896,12 @@ Resources:
         customImageId: !If [noCustomImageId, !FindInMap [!FindInMap [VERSION, !Ref version, REGIONMAP], !Ref 'AWS::Region', !FindInMap [AWSBigipThroughput, !Ref throughput, !Ref imageName]], !Ref customImageId]
         instanceType: !Ref instanceType
         mgmtSubnetId: !Ref privateSubnet1ID
-        mgmtSecurityGroupId: !GetAtt [Dag01, Outputs.BigipExternalSecurityGroup]
+        mgmtSecurityGroupId: !GetAtt [Dag, Outputs.BigipExternalSecurityGroup]
         mgmtSelfIp: DYNAMIC
         externalSubnetId: !Ref publicSubnet1ID
-        externalSecurityGroupId: !GetAtt [Dag01, Outputs.BigipExternalSecurityGroup]
-        externalPrimaryPublicId: !GetAtt [Dag01, Outputs.BigipExternalEipAllocationId00]
-        externalPublicIpIds: !GetAtt [Dag01, Outputs.BigipExternalEipAllocationId01]
+        externalSecurityGroupId: !GetAtt [Dag, Outputs.BigipExternalSecurityGroup]
+        externalPrimaryPublicId: !GetAtt [Dag, Outputs.BigipExternalEipAllocationId00]
+        externalPublicIpIds: !GetAtt [Dag, Outputs.BigipExternalEipAllocationId01]
         internalSubnetId: !Ref 'AWS::NoValue'
         bigipRuntimeInitConfig: !Ref bigipRuntimeInitConfig
         bigipInstanceProfile: !GetAtt [Access, Outputs.BigipInstanceProfile]
@@ -909,7 +909,7 @@ Resources:
   BigipInstance02:
     DependsOn:
       - Access
-      - Dag01
+      - Dag
     Type: 'AWS::CloudFormation::Stack'
     Properties:
       TemplateURL:
@@ -921,11 +921,11 @@ Resources:
         customImageId: !If [noCustomImageId, !FindInMap [!FindInMap [VERSION, !Ref version, REGIONMAP], !Ref 'AWS::Region', !FindInMap [AWSBigipThroughput, !Ref throughput, !Ref imageName]], !Ref customImageId]
         instanceType: !Ref instanceType
         mgmtSubnetId: !Ref privateSubnet2ID
-        mgmtSecurityGroupId: !GetAtt [Dag01, Outputs.BigipExternalSecurityGroup]
+        mgmtSecurityGroupId: !GetAtt [Dag, Outputs.BigipExternalSecurityGroup]
         mgmtSelfIp: DYNAMIC
         externalSubnetId: !Ref publicSubnet2ID
-        externalSecurityGroupId: !GetAtt [Dag01, Outputs.BigipExternalSecurityGroup]
-        externalPrimaryPublicId: !GetAtt [Dag01, Outputs.BigipExternalEipAllocationId02]
+        externalSecurityGroupId: !GetAtt [Dag, Outputs.BigipExternalSecurityGroup]
+        externalPrimaryPublicId: !GetAtt [Dag, Outputs.BigipExternalEipAllocationId02]
         externalPublicIpIds: !Ref 'AWS::NoValue'
         internalSubnetId:  !Ref 'AWS::NoValue'
         bigipRuntimeInitConfig: !Ref bigipRuntimeInitConfig

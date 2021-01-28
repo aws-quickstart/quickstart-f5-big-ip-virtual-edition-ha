@@ -389,7 +389,7 @@ Parameters:
   numSecondaryPrivateIpAddress:
     Default: 1
     Description: The number of dynamic secondary private IP's to associate to external nic.
-    MinValue: 1
+    MinValue: 0
     Type: Number
   owner:
     Default: f5owner
