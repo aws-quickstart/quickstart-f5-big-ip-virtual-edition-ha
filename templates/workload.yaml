@@ -926,7 +926,6 @@ Resources:
         externalSubnetId: !Ref publicSubnet2ID
         externalSecurityGroupId: !GetAtt [Dag, Outputs.BigipExternalSecurityGroup]
         externalPrimaryPublicId: !GetAtt [Dag, Outputs.BigipExternalEipAllocationId02]
-        externalPublicIpIds: !Ref 'AWS::NoValue'
         internalSubnetId:  !Ref 'AWS::NoValue'
         bigipRuntimeInitConfig: !Ref bigipRuntimeInitConfig
         bigipInstanceProfile: !GetAtt [Access, Outputs.BigipInstanceProfile]
