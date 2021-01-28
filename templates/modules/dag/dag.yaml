@@ -2,11 +2,6 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: >-
   DAG/Ingress Template is intended to deploy Load Balancers, Public Ip addresses
   for all BIGIP Cloud Solutions (i.e. High-Availability or Autoscale)
-Mappings:
-  Transformations:
-    Boolean:
-      'No': 'false'
-      'Yes': 'true'
 Conditions:
   externalLB: !Equals
     - 'Yes'
@@ -273,6 +268,7 @@ Outputs:
     Description: BIG-IP Security Group (External or Public)
     Value: !Ref BigipExternalSecurityGroup
   appSecurityGroupID:
+    Condition: createAppSecurityGroup
     Description: App Security Group ID
     Value: !Ref appSecurityGroup
 Parameters:
@@ -400,7 +396,7 @@ Resources:
         - Type: forward
           TargetGroupArn: !Ref ExternalTargetGroupHttps
       LoadBalancerArn: !Ref ExternalBigIpLoadBalancer
-      Port: '443'
+      Port: 443
       Protocol: TCP
   ExternalLBListenerHttp:
     Type: 'AWS::ElasticLoadBalancingV2::Listener'
@@ -410,7 +406,7 @@ Resources:
         - Type: forward
           TargetGroupArn: !Ref ExternalTargetGroupHttp
       LoadBalancerArn: !Ref ExternalBigIpLoadBalancer
-      Port: '80'
+      Port: 80
       Protocol: TCP
   ExternalTargetGroupHttps:
     Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
@@ -420,13 +416,13 @@ Resources:
         - ''
         - - !Ref application
           - '-EXT-HTTPS'
-      Port: '443'
+      Port: 443
       Protocol: TCP
-      HealthCheckIntervalSeconds: '10'
+      HealthCheckIntervalSeconds: 10
       HealthCheckPath: /
       HealthCheckProtocol: HTTPS
-      HealthyThresholdCount: '2'
-      UnhealthyThresholdCount: '2'
+      HealthyThresholdCount: 2
+      UnhealthyThresholdCount: 2
       TargetGroupAttributes:
         - Key: deregistration_delay.timeout_seconds
           Value: '20'
@@ -439,13 +435,13 @@ Resources:
         - ''
         - - !Ref application
           - '-EXT-HTTP'
-      Port: '80'
+      Port: 80
       Protocol: TCP
-      HealthCheckIntervalSeconds: '10'
+      HealthCheckIntervalSeconds: 10
       HealthCheckPath: /
       HealthCheckProtocol: HTTP
-      HealthyThresholdCount: '2'
-      UnhealthyThresholdCount: '2'
+      HealthyThresholdCount: 2
+      UnhealthyThresholdCount: 2
       TargetGroupAttributes:
         - Key: deregistration_delay.timeout_seconds
           Value: '20'
@@ -482,7 +478,7 @@ Resources:
         - Type: forward
           TargetGroupArn: !Ref InternalTargetGroupHttps
       LoadBalancerArn: !Ref InternalBigIpLoadBalancer
-      Port: '443'
+      Port: 443
       Protocol: TCP
   InternalLBListenerHttp:
     Type: 'AWS::ElasticLoadBalancingV2::Listener'
@@ -492,7 +488,7 @@ Resources:
         - Type: forward
           TargetGroupArn: !Ref InternalTargetGroupHttp
       LoadBalancerArn: !Ref InternalBigIpLoadBalancer
-      Port: '80'
+      Port: 80
       Protocol: TCP
   InternalTargetGroupHttps:
     Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
@@ -502,13 +498,13 @@ Resources:
         - ''
         - - !Ref application
           - '-INT-HTTPS'
-      Port: '443'
+      Port: 443
       Protocol: TCP
-      HealthCheckIntervalSeconds: '10'
+      HealthCheckIntervalSeconds: 10
       HealthCheckPath: /
       HealthCheckProtocol: HTTPS
-      HealthyThresholdCount: '2'
-      UnhealthyThresholdCount: '2'
+      HealthyThresholdCount: 2
+      UnhealthyThresholdCount: 2
       TargetGroupAttributes:
         - Key: deregistration_delay.timeout_seconds
           Value: '20'
@@ -521,13 +517,13 @@ Resources:
         - ''
         - - !Ref application
           - '-INT-HTTP'
-      Port: '80'
+      Port: 80
       Protocol: TCP
-      HealthCheckIntervalSeconds: '10'
+      HealthCheckIntervalSeconds: 10
       HealthCheckPath: /
       HealthCheckProtocol: HTTP
-      HealthyThresholdCount: '2'
-      UnhealthyThresholdCount: '2'
+      HealthyThresholdCount: 2
+      UnhealthyThresholdCount: 2
       TargetGroupAttributes:
         - Key: deregistration_delay.timeout_seconds
           Value: '20'
@@ -726,21 +722,21 @@ Resources:
       GroupDescription: 'Public or External interface rules, including BIG-IP management'
       SecurityGroupIngress:
         - CidrIp: !Ref restrictedSrcAddress
-          FromPort: '22'
+          FromPort: 22
           IpProtocol: tcp
-          ToPort: '22'
+          ToPort: 22
         - CidrIp: !Ref restrictedSrcAddress
           FromPort: !Ref restrictedSrcPort
           IpProtocol: tcp
           ToPort: !Ref restrictedSrcPort
         - CidrIp: !Ref restrictedSrcAddressApp
-          FromPort: '80'
+          FromPort: 80
           IpProtocol: tcp
-          ToPort: '80'
+          ToPort: 80
         - CidrIp: !Ref restrictedSrcAddressApp
-          FromPort: '443'
+          FromPort: 443
           IpProtocol: tcp
-          ToPort: '443'
+          ToPort: 443
       Tags:
         - Key: Application
           Value: !Ref application
@@ -775,16 +771,16 @@ Resources:
       GroupDescription: Enable SSH access via port 22 and enable access to web on 80 and 443 for the application
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: '22'
-          ToPort: '22'
+          FromPort: 22
+          ToPort: 22
           CidrIp: !Ref restrictedSrcAddress
         - IpProtocol: tcp
-          FromPort: '80'
-          ToPort: '80'
+          FromPort: 80
+          ToPort: 80
           CidrIp: !Ref restrictedSrcAddress
         - IpProtocol: tcp
-          FromPort: '443'
-          ToPort: '443'
+          FromPort: 443
+          ToPort: 443
           CidrIp: !Ref restrictedSrcAddress
       Tags:
         - Key: Application

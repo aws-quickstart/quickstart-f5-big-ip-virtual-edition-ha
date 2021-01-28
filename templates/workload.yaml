@@ -856,31 +856,57 @@ Resources:
         restrictedSrcAddressApp: !Ref restrictedSrcAddressApp
         restrictedSrcAddress: !Ref restrictedSrcAddress
         restrictedSrcPort: 443
+        createAppSecurityGroup: 'Yes'
         application: !Ref application
         costcenter: !Ref costcenter
         environment: !Ref environment
         group: !Ref group
         numberPublicExternalIPAddresses: !Ref numberPublicExternalIPAddresses
         numberPublicMgmtIPAddresses: !If [usePublicMgmtAddress, 1, 0]
-  Application:
+#  Application:
+#    Type: 'AWS::CloudFormation::Stack'
+#    Properties:
+#      TemplateURL:
+#        !Sub
+#        - https://${s3BucketName}.${s3Region}.amazonaws.com/${s3KeyPrefix}templates/modules/application/application.yaml
+#        - { s3Region: !If [govCloudCondition, s3-us-gov-west-1, s3] }
+#      Parameters:
+#        sshKey: !Ref sshKey
+#        restrictedSrcAddress: !Ref restrictedSrcAddress
+#        setAppPublicIP: 'true'
+#        vpc: !Ref vpc
+#        applicationSubnets: !Ref privateSubnet2ID
+#        appDockerImageName: !Ref appDockerImageName
+#        application: !Ref application
+#        costcenter: !Ref costcenter
+#        environment: !Ref environment
+#        group: !Ref group
+  BigipInstance01:
+    DependsOn:
+      - Access
+      - Dag
     Type: 'AWS::CloudFormation::Stack'
     Properties:
       TemplateURL:
         !Sub
-        - https://${s3BucketName}.${s3Region}.amazonaws.com/${s3KeyPrefix}templates/modules/application/application.yaml
+        - https://${s3BucketName}.${s3Region}.amazonaws.com/${s3KeyPrefix}templates/modules/bigip-standalone/bigip-standalone.yaml
         - { s3Region: !If [govCloudCondition, s3-us-gov-west-1, s3] }
       Parameters:
         sshKey: !Ref sshKey
-        restrictedSrcAddress: !Ref restrictedSrcAddress
-        setAppPublicIP: 'true'
-        vpc: !Ref vpc
-        applicationSubnets: !Ref privateSubnet2ID
-        appDockerImageName: !Ref appDockerImageName
-        application: !Ref application
-        costcenter: !Ref costcenter
-        environment: !Ref environment
-        group: !Ref group
-  BigipStandalone:
+        customImageId: !If [noCustomImageId, !FindInMap [!FindInMap [VERSION, !Ref version, REGIONMAP], !Ref 'AWS::Region', !FindInMap [AWSBigipThroughput, !Ref throughput, !Ref imageName]], !Ref customImageId]
+        instanceType: !Ref instanceType
+        mgmtSubnetId: !Ref privateSubnet1ID
+        mgmtSecurityGroupId: !GetAtt [Dag, Outputs.BigipExternalSecurityGroup]
+        mgmtSelfIp: DYNAMIC
+        externalSubnetId: !Ref privateSubnet2ID
+        externalSecurityGroupId: !GetAtt [Dag, Outputs.BigipExternalSecurityGroup]
+        externalPrimaryPublicId: !GetAtt [Dag, Outputs.BigipExternalEipAllocationId00]
+        externalPublicIpIds: !If [externalIpAddresses4, !Join [',', [!GetAtt [Dag, Outputs.BigipExternalEipAllocationId01], !GetAtt [Dag, Outputs.BigipExternalEipAllocationId02], !GetAtt [Dag, Outputs.BigipExternalEipAllocationId03], !GetAtt [Dag, Outputs.BigipExternalEipAllocationId04]]], !If [externalIpAddresses3, !Join [',', [!GetAtt [Dag, Outputs.BigipExternalEipAllocationId01], !GetAtt [Dag, Outputs.BigipExternalEipAllocationId02], !GetAtt [Dag, Outputs.BigipExternalEipAllocationId03]]], !If [externalIpAddresses2, !Join [',', [!GetAtt [Dag, Outputs.BigipExternalEipAllocationId01], !GetAtt [Dag, Outputs.BigipExternalEipAllocationId02]]], !If [externalIpAddresses1, !GetAtt [Dag, Outputs.BigipExternalEipAllocationId01], OPTIONAL]]]]
+        internalSubnetId:  !Ref 'AWS::NoValue'
+        bigipRuntimeInitConfig: !Ref bigipRuntimeInitConfig
+        bigipInstanceProfile: !GetAtt [Access, Outputs.BigipInstanceProfile]
+        numSecondaryPrivateIpAddress: !Ref numberPublicExternalIPAddresses
+  BigipInstance01:
     DependsOn:
       - Access
       - Dag
@@ -901,7 +927,7 @@ Resources:
         externalSubnetId: !Ref privateSubnet2ID
         externalSecurityGroupId: !GetAtt [Dag, Outputs.BigipExternalSecurityGroup]
         externalPrimaryPublicId: !GetAtt [Dag, Outputs.BigipExternalEipAllocationId00]
-        externalPublicIpIds: OPTIONAL
+        externalPublicIpIds: !If [externalIpAddresses4, !Join [',', [!GetAtt [Dag, Outputs.BigipExternalEipAllocationId01], !GetAtt [Dag, Outputs.BigipExternalEipAllocationId02], !GetAtt [Dag, Outputs.BigipExternalEipAllocationId03], !GetAtt [Dag, Outputs.BigipExternalEipAllocationId04]]], !If [externalIpAddresses3, !Join [',', [!GetAtt [Dag, Outputs.BigipExternalEipAllocationId01], !GetAtt [Dag, Outputs.BigipExternalEipAllocationId02], !GetAtt [Dag, Outputs.BigipExternalEipAllocationId03]]], !If [externalIpAddresses2, !Join [',', [!GetAtt [Dag, Outputs.BigipExternalEipAllocationId01], !GetAtt [Dag, Outputs.BigipExternalEipAllocationId02]]], !If [externalIpAddresses1, !GetAtt [Dag, Outputs.BigipExternalEipAllocationId01], OPTIONAL]]]]
         internalSubnetId:  !Ref 'AWS::NoValue'
         bigipRuntimeInitConfig: !Ref bigipRuntimeInitConfig
         bigipInstanceProfile: !GetAtt [Access, Outputs.BigipInstanceProfile]
@@ -910,55 +936,55 @@ Outputs:
   access:
     Description: access nested stack name
     Value: !GetAtt [Access, Outputs.StackName]
-  application:
-    Description: application nested stack name
-    Value: !GetAtt [Application, Outputs.StackName]
-  applicationUrl1:
-    Condition: appUrl1
-    Description: url to public application address
-    Value: !Join
-      - ''
-      - - 'https://'
-        - !GetAtt [Dag, Outputs.BigipExternalEipAddress01]
-  applicationUrl2:
-    Condition: appUrl2
-    Description: url to public application address
-    Value: !Join
-      - ''
-      - - 'https://'
-        - !GetAtt [Dag, Outputs.BigipExternalEipAddress02]
-  applicationUrl3:
-    Condition: appUrl3
-    Description: url to public application address
-    Value: !Join
-      - ''
-      - - 'https://'
-        - !GetAtt [Dag, Outputs.BigipExternalEipAddress03]
-  applicationUrl4:
-    Condition: appUrl4
-    Description: url to public application address
-    Value: !Join
-      - ''
-      - - 'https://'
-        - !GetAtt [Dag, Outputs.BigipExternalEipAddress04]
-  bigipStandalone:
-    Description: bigip-standalone nested stack name
-    Value: !GetAtt [BigipStandalone, Outputs.StackName]
-  dag:
-    Description: dag nested stack name
-    Value: !GetAtt [Dag, Outputs.StackName]
-  managementUrl443:
-    Condition: mgmtUrl443
-    Description: url to public management address
-    Value: !Join
-      - ''
-      - - 'https://'
-        - !GetAtt [Dag, Outputs.BigipManagementEipAddress01]
-  managementUrl8443:
-    Condition: mgmtUrl8443
-    Description: url to public management address
-    Value: !Join
-      - ''
-      - - 'https://'
-        - !GetAtt [Dag, Outputs.BigipManagementEipAddress01]
-        - ':8443'
+#  application:
+#    Description: application nested stack name
+#    Value: !GetAtt [Application, Outputs.StackName]
+#  applicationUrl1:
+#    Condition: appUrl1
+#    Description: url to public application address
+#    Value: !Join
+#      - ''
+#      - - 'https://'
+#        - !GetAtt [Dag, Outputs.BigipExternalEipAddress01]
+#  applicationUrl2:
+#    Condition: appUrl2
+#    Description: url to public application address
+#    Value: !Join
+#      - ''
+#      - - 'https://'
+#        - !GetAtt [Dag, Outputs.BigipExternalEipAddress02]
+#  applicationUrl3:
+#    Condition: appUrl3
+#    Description: url to public application address
+#    Value: !Join
+#      - ''
+#      - - 'https://'
+#        - !GetAtt [Dag, Outputs.BigipExternalEipAddress03]
+#  applicationUrl4:
+#    Condition: appUrl4
+#    Description: url to public application address
+#    Value: !Join
+#      - ''
+#      - - 'https://'
+#        - !GetAtt [Dag, Outputs.BigipExternalEipAddress04]
+#  bigipStandalone:
+#    Description: bigip-standalone nested stack name
+#    Value: !GetAtt [BigipStandalone, Outputs.StackName]
+#  dag:
+#    Description: dag nested stack name
+#    Value: !GetAtt [Dag, Outputs.StackName]
+#  managementUrl443:
+#    Condition: mgmtUrl443
+#    Description: url to public management address
+#    Value: !Join
+#      - ''
+#      - - 'https://'
+#        - !GetAtt [Dag, Outputs.BigipManagementEipAddress01]
+#  managementUrl8443:
+#    Condition: mgmtUrl8443
+#    Description: url to public management address
+#    Value: !Join
+#      - ''
+#      - - 'https://'
+#        - !GetAtt [Dag, Outputs.BigipManagementEipAddress01]
+#        - ':8443'

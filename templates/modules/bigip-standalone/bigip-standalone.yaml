@@ -2,11 +2,6 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: >-
   BIGIP Standalone Template is intended to deploy standalone BIGIP VE instance
   virtual editions.
-Mappings:
-  Transformations:
-    Boolean:
-      'No': 'false'
-      'Yes': 'true'
 Conditions:
   is3Nic: !And
     - !Not
@@ -408,7 +403,7 @@ Resources:
     Condition: useDynamicInternalIpAddr
     Properties:
       Description: Internal Interface for the BIG-IP
-      GroupSet: 
+      GroupSet:
         - !If
           - useInternalSecurityGroupId
           - !Ref internalSecurityGroupId
@@ -468,9 +463,9 @@ Resources:
       GroupSet:
         - !Ref externalSecurityGroupId
       PrivateIpAddresses:
-        - Primary: 'true'
+        - Primary: true
           PrivateIpAddress: !Ref externalSelfIp
-        - Primary: 'false'
+        - Primary: false
           PrivateIpAddress: !Select
             - '0'
             - !Ref externalServiceIPs
@@ -484,7 +479,7 @@ Resources:
         - useDynamicExternalIpAddr
         - !Ref BigipExternalInterface
         - !Ref BigipStaticExternalInterface
-    Type: 'AWS::EC2::EIPAssociation'  
+    Type: 'AWS::EC2::EIPAssociation'
   BigipVipEipAssociation1:
     Condition: associateVip1
     Properties:
@@ -676,8 +671,8 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:
-            DeleteOnTermination: 'true'
-            VolumeSize: '100'
+            DeleteOnTermination: true
+            VolumeSize: 100
             VolumeType: gp2
         - DeviceName: /dev/xvdb
           NoDevice: {}
@@ -838,8 +833,8 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:
-            DeleteOnTermination: 'true'
-            VolumeSize: '100'
+            DeleteOnTermination: true
+            VolumeSize: 100
             VolumeType: gp2
         - DeviceName: /dev/xvdb
           NoDevice: {}
@@ -994,8 +989,8 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:
-            DeleteOnTermination: 'true'
-            VolumeSize: '100'
+            DeleteOnTermination: true
+            VolumeSize: 100
             VolumeType: gp2
         - DeviceName: /dev/xvdb
           NoDevice: {}

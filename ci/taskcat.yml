@@ -1,13 +1,11 @@
 ---
 general:
-  s3_bucket: $[taskcat_autobucket]
   tags:
     delete: 'True'
 project:
   owner: a.kashcheev@f5.com
   name: quickstart-f5-big-ip-virtual-edition-ha
   regions:
-    - us-east-1
     - us-west-2
   tags:
     delete: 'True'
@@ -19,7 +17,9 @@ tests:
       bigipInstanceType: m5.xlarge
       availabilityZones: $[taskcat_genaz_2]
       remoteAccessCIDR: 0.0.0.0/0
+      restrictedSrcAddress: 0.0.0.0/0
+      restrictedSrcAddressApp: 0.0.0.0/0
       keyPairName: dewpt
+      notificationEmail: a.kashcheev@f5.com
     regions:
-      - us-east-1
       - us-west-2
