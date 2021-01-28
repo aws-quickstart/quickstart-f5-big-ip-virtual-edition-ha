@@ -861,26 +861,7 @@ Resources:
         costcenter: !Ref costcenter
         environment: !Ref environment
         group: !Ref group
-        numberPublicExternalIPAddresses: !Ref numberPublicExternalIPAddresses
-        numberPublicMgmtIPAddresses: !If [usePublicMgmtAddress, 1, 0]
-  Dag02:
-    Type: 'AWS::CloudFormation::Stack'
-    Properties:
-      TemplateURL:
-        !Sub
-        - https://${s3BucketName}.${s3Region}.amazonaws.com/${s3KeyPrefix}templates/modules/dag/dag.yaml
-        - { s3Region: !If [govCloudCondition, s3-us-gov-west-1, s3] }
-      Parameters:
-        vpc: !Ref vpc
-        restrictedSrcAddressApp: !Ref restrictedSrcAddressApp
-        restrictedSrcAddress: !Ref restrictedSrcAddress
-        restrictedSrcPort: 443
-        createAppSecurityGroup: 'No'
-        application: !Ref application
-        costcenter: !Ref costcenter
-        environment: !Ref environment
-        group: !Ref group
-        numberPublicExternalIPAddresses: !Ref numberPublicExternalIPAddresses
+        numberPublicExternalIPAddresses: 2
         numberPublicMgmtIPAddresses: !If [usePublicMgmtAddress, 1, 0]
 #  Application:
 #    Type: 'AWS::CloudFormation::Stack'
@@ -914,21 +895,21 @@ Resources:
         sshKey: !Ref sshKey
         customImageId: !If [noCustomImageId, !FindInMap [!FindInMap [VERSION, !Ref version, REGIONMAP], !Ref 'AWS::Region', !FindInMap [AWSBigipThroughput, !Ref throughput, !Ref imageName]], !Ref customImageId]
         instanceType: !Ref instanceType
-        mgmtSubnetId: !Ref publicSubnet1ID
+        mgmtSubnetId: !Ref privateSubnet1ID
         mgmtSecurityGroupId: !GetAtt [Dag01, Outputs.BigipExternalSecurityGroup]
         mgmtSelfIp: DYNAMIC
-        externalSubnetId: !Ref privateSubnet1ID
+        externalSubnetId: !Ref publicSubnet1ID
         externalSecurityGroupId: !GetAtt [Dag01, Outputs.BigipExternalSecurityGroup]
         externalPrimaryPublicId: !GetAtt [Dag01, Outputs.BigipExternalEipAllocationId00]
-        externalPublicIpIds: !If [externalIpAddresses4, !Join [',', [!GetAtt [Dag01, Outputs.BigipExternalEipAllocationId01], !GetAtt [Dag01, Outputs.BigipExternalEipAllocationId02], !GetAtt [Dag01, Outputs.BigipExternalEipAllocationId03], !GetAtt [Dag01, Outputs.BigipExternalEipAllocationId04]]], !If [externalIpAddresses3, !Join [',', [!GetAtt [Dag01, Outputs.BigipExternalEipAllocationId01], !GetAtt [Dag01, Outputs.BigipExternalEipAllocationId02], !GetAtt [Dag01, Outputs.BigipExternalEipAllocationId03]]], !If [externalIpAddresses2, !Join [',', [!GetAtt [Dag01, Outputs.BigipExternalEipAllocationId01], !GetAtt [Dag01, Outputs.BigipExternalEipAllocationId02]]], !If [externalIpAddresses1, !GetAtt [Dag01, Outputs.BigipExternalEipAllocationId01], OPTIONAL]]]]
-        internalSubnetId:  !Ref 'AWS::NoValue'
+        externalPublicIpIds: !GetAtt [Dag01, Outputs.BigipExternalEipAllocationId01]
+        internalSubnetId: !Ref 'AWS::NoValue'
         bigipRuntimeInitConfig: !Ref bigipRuntimeInitConfig
         bigipInstanceProfile: !GetAtt [Access, Outputs.BigipInstanceProfile]
         numSecondaryPrivateIpAddress: !Ref numberPublicExternalIPAddresses
   BigipInstance02:
     DependsOn:
       - Access
-      - Dag02
+      - Dag01
     Type: 'AWS::CloudFormation::Stack'
     Properties:
       TemplateURL:
@@ -939,17 +920,17 @@ Resources:
         sshKey: !Ref sshKey
         customImageId: !If [noCustomImageId, !FindInMap [!FindInMap [VERSION, !Ref version, REGIONMAP], !Ref 'AWS::Region', !FindInMap [AWSBigipThroughput, !Ref throughput, !Ref imageName]], !Ref customImageId]
         instanceType: !Ref instanceType
-        mgmtSubnetId: !Ref publicSubnet2ID
-        mgmtSecurityGroupId: !GetAtt [Dag02, Outputs.BigipExternalSecurityGroup]
+        mgmtSubnetId: !Ref privateSubnet2ID
+        mgmtSecurityGroupId: !GetAtt [Dag01, Outputs.BigipExternalSecurityGroup]
         mgmtSelfIp: DYNAMIC
-        externalSubnetId: !Ref privateSubnet2ID
-        externalSecurityGroupId: !GetAtt [Dag02, Outputs.BigipExternalSecurityGroup]
-        externalPrimaryPublicId: !GetAtt [Dag02, Outputs.BigipExternalEipAllocationId00]
-        externalPublicIpIds: !If [externalIpAddresses4, !Join [',', [!GetAtt [Dag02, Outputs.BigipExternalEipAllocationId01], !GetAtt [Dag02, Outputs.BigipExternalEipAllocationId02], !GetAtt [Dag02, Outputs.BigipExternalEipAllocationId03], !GetAtt [Dag02, Outputs.BigipExternalEipAllocationId04]]], !If [externalIpAddresses3, !Join [',', [!GetAtt [Dag02, Outputs.BigipExternalEipAllocationId01], !GetAtt [Dag02, Outputs.BigipExternalEipAllocationId02], !GetAtt [Dag02, Outputs.BigipExternalEipAllocationId03]]], !If [externalIpAddresses2, !Join [',', [!GetAtt [Dag02, Outputs.BigipExternalEipAllocationId01], !GetAtt [Dag02, Outputs.BigipExternalEipAllocationId02]]], !If [externalIpAddresses1, !GetAtt [Dag02, Outputs.BigipExternalEipAllocationId01], OPTIONAL]]]]
+        externalSubnetId: !Ref publicSubnet2ID
+        externalSecurityGroupId: !GetAtt [Dag01, Outputs.BigipExternalSecurityGroup]
+        externalPrimaryPublicId: !GetAtt [Dag01, Outputs.BigipExternalEipAllocationId02]
+        externalPublicIpIds: !Ref 'AWS::NoValue'
         internalSubnetId:  !Ref 'AWS::NoValue'
         bigipRuntimeInitConfig: !Ref bigipRuntimeInitConfig
         bigipInstanceProfile: !GetAtt [Access, Outputs.BigipInstanceProfile]
-        numSecondaryPrivateIpAddress: !Ref numberPublicExternalIPAddresses
+        numSecondaryPrivateIpAddress: 0
 Outputs:
   access:
     Description: access nested stack name

@@ -255,16 +255,28 @@ Parameters:
     ConstraintDescription: Must be a valid email address.
     AllowedPattern: .+@.+
     Type: String
-  privateSubnet1CIDR:
+  privateSubnet1ACIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.11.0/24
     Description: CIDR block for private subnet 1 located in Availability Zone 1.
     Type: String
-  privateSubnet2CIDR:
+  privateSubnet1BCIDR:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    Default: 10.0.12.0/24
+    Description: CIDR block for private subnet 1 located in Availability Zone 1.
+    Type: String
+  privateSubnet2ACIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.21.0/24
+    Description: CIDR block for private subnet 2 located in Availability Zone 2.
+    Type: String
+  privateSubnet2BCIDR:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    Default: 10.0.22.0/24
     Description: CIDR block for private subnet 2 located in Availability Zone 2.
     Type: String
   publicSubnet1CIDR:
@@ -305,8 +317,10 @@ Resources:
           - !Ref 'availabilityZones'
         KeyPairName: !Ref 'keyPairName'
         NumberOfAZs: '2'
-        PrivateSubnet1ACIDR: !Ref 'privateSubnet1CIDR'
-        PrivateSubnet2ACIDR: !Ref 'privateSubnet2CIDR'
+        PrivateSubnet1ACIDR: !Ref 'privateSubnet1ACIDR'
+        PrivateSubnet1BCIDR: !Ref 'privateSubnet1BCIDR'
+        PrivateSubnet2ACIDR: !Ref 'privateSubnet2ACIDR'
+        PrivateSubnet2BCIDR: !Ref 'privateSubnet2BCIDR'
         PublicSubnet1CIDR: !Ref 'publicSubnet1CIDR'
         PublicSubnet2CIDR: !Ref 'publicSubnet2CIDR'
         VPCCIDR: !Ref 'vpcCIDR'
