@@ -363,6 +363,7 @@ Resources:
         publicSubnet2ID: !GetAtt 'VPCStack.Outputs.PublicSubnet2ID'
         sshKey: !Ref keyPairName
         numNics: 2
+        bigipRuntimeInitConfig: !Ref bigipRuntimeInitConfig
         customImageId: 'OPTIONAL'
         numberPublicExternalIPAddresses: 1
         restrictedSrcAddress: !Ref restrictedSrcAddress
