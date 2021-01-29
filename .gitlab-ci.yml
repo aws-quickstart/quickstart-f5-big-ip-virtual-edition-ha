@@ -19,9 +19,9 @@ run_taskcat_tests:
   image: ${ARTIFACTORY_SERVER}/dockerhub-remote/python:3
   script:
     - pip install taskcat
-    - curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
-    - unzip awscli-bundle.zip
-    - ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+    - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    - unzip awscliv2.zip
+    - ./aws/install
     - taskcat test run -o taskcat_outputs/ -i ci/taskcat.yml
   tags:
     - cm-official-docker-executor
