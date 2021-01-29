@@ -40,7 +40,8 @@ Metadata:
       - Label:
           default: BIG-IP Configuration
         Parameters:
-          - bigipRuntimeInitConfig
+          - bigipRuntimeInitConfig01
+          - bigipRuntimeInitConfig02
           - customImageId
           - bigipInstanceType
           - bigipImage
@@ -63,8 +64,10 @@ Metadata:
         default: Application docker image name
       application:
         default: Application
-      bigipRuntimeInitConfig:
-        default: BIGIP Runtime Init config
+      bigipRuntimeInitConfig01:
+        default: BIGIP Runtime Init config for first BIGIP instance
+      bigipRuntimeInitConfig02:
+        default: BIGIP Runtime Init config for second BIGIP instance
       costcenter:
         default: Cost Center
       customImageId:
@@ -133,8 +136,12 @@ Parameters:
       - PerAppVeLtm25Mbps
       - PerAppVeLtm200Mbps
     ConstraintDescription: Select the BIG-IP Image you want to use
-  bigipRuntimeInitConfig:
-    Default: 'https://f5-cft.s3.amazonaws.com/quickstarts-v2/v0.0.0.1/bigip-configurations/runtime-init-conf-2nic-payg.yaml'
+  bigipRuntimeInitConfig01:
+    Default: 'https://ak-metadata-package-poc.s3.amazonaws.com/runtime-init-conf-2nic-payg_instance01.yaml'
+    Description: URL for BIGIP Runtime Init config
+    Type: String
+  bigipRuntimeInitConfig02:
+    Default: 'https://ak-metadata-package-poc.s3.amazonaws.com/runtime-init-conf-2nic-payg_instance02.yaml'
     Description: URL for BIGIP Runtime Init config
     Type: String
   costcenter:
@@ -363,7 +370,8 @@ Resources:
         publicSubnet2ID: !GetAtt 'VPCStack.Outputs.PublicSubnet2ID'
         sshKey: !Ref keyPairName
         numNics: 2
-        bigipRuntimeInitConfig: !Ref bigipRuntimeInitConfig
+        bigipRuntimeInitConfig01: !Ref bigipRuntimeInitConfig01
+        bigipRuntimeInitConfig02: !Ref bigipRuntimeInitConfig02
         customImageId: 'OPTIONAL'
         numberPublicExternalIPAddresses: 1
         restrictedSrcAddress: !Ref restrictedSrcAddress

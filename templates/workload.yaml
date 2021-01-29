@@ -589,7 +589,8 @@ Metadata:
       - Label:
           default: BIG-IP Configuration
         Parameters:
-          - bigipRuntimeInitConfig
+          - bigipRuntimeInitConfig01
+          - bigipRuntimeInitConfig02
           - customImageId
           - imageName
           - licenseType
@@ -611,7 +612,9 @@ Metadata:
         default: Application docker image name
       application:
         default: Application
-      bigipRuntimeInitConfig:
+      bigipRuntimeInitConfig01:
+        default: BIGIP Runtime Init config
+      bigipRuntimeInitConfig02:
         default: BIGIP Runtime Init config
       costcenter:
         default: Cost Center
@@ -661,8 +664,12 @@ Parameters:
     Default: f5app
     Description: Name of the Application Tag
     Type: String
-  bigipRuntimeInitConfig:
-    Default: 'https://f5-cft.s3.amazonaws.com/quickstarts-v2/v0.0.0.1/bigip-configurations/runtime-init-conf-2nic-payg.yaml'
+  bigipRuntimeInitConfig01:
+    Default: 'https://ak-metadata-package-poc.s3.amazonaws.com/runtime-init-conf-2nic-payg_instance01.yaml'
+    Description: URL for BIGIP Runtime Init config
+    Type: String
+  bigipRuntimeInitConfig02:
+    Default: 'https://ak-metadata-package-poc.s3.amazonaws.com/runtime-init-conf-2nic-payg_instance02.yaml'
     Description: URL for BIGIP Runtime Init config
     Type: String
   costcenter:
@@ -868,7 +875,7 @@ Resources:
         externalPrimaryPublicId: !GetAtt [Dag, Outputs.BigipExternalEipAllocationId00]
         externalPublicIpIds: !GetAtt [Dag, Outputs.BigipExternalEipAllocationId01]
         internalSubnetId: !Ref 'AWS::NoValue'
-        bigipRuntimeInitConfig: !Ref bigipRuntimeInitConfig
+        bigipRuntimeInitConfig: !Ref bigipRuntimeInitConfig01
         bigipInstanceProfile: !GetAtt [Access, Outputs.BigipInstanceProfile]
         numSecondaryPrivateIpAddress: 1
   BigipInstance02:
@@ -895,7 +902,7 @@ Resources:
         externalPrimaryPublicId: !GetAtt [Dag, Outputs.BigipExternalEipAllocationId02]
         externalPublicIpIds: !GetAtt [Dag, Outputs.BigipExternalEipAllocationId03]
         internalSubnetId:  !Ref 'AWS::NoValue'
-        bigipRuntimeInitConfig: !Ref bigipRuntimeInitConfig
+        bigipRuntimeInitConfig: !Ref bigipRuntimeInitConfig02
         bigipInstanceProfile: !GetAtt [Access, Outputs.BigipInstanceProfile]
         numSecondaryPrivateIpAddress: 1
 Outputs:
