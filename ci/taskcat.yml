@@ -2,7 +2,7 @@
 general:
   tags:
     delete: 'True'
-  s3Bucket: ak-tcat-working
+  s3_bucket: ak-tcat-working
 project:
   owner: a.kashcheev@f5.com
   name: quickstart-f5-big-ip-virtual-edition-ha
