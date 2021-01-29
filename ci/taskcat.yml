@@ -6,7 +6,7 @@ project:
   owner: a.kashcheev@f5.com
   name: quickstart-f5-big-ip-virtual-edition-ha
   regions:
-    - us-west-2
+    - us-east-2
   tags:
     delete: 'True'
 tests:
@@ -21,5 +21,6 @@ tests:
       restrictedSrcAddressApp: 0.0.0.0/0
       keyPairName: dewpt
       notificationEmail: a.kashcheev@f5.com
+      bigipRuntimeInitConfig: https://ak-metadata-package-poc.s3.amazonaws.com/runtime-init-conf-2nic-payg.yaml
     regions:
-      - us-west-2
+      - us-east-2

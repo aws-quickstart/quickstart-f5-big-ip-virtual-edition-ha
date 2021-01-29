@@ -362,7 +362,6 @@ Resources:
         publicSubnet1ID: !GetAtt 'VPCStack.Outputs.PublicSubnet1ID'
         publicSubnet2ID: !GetAtt 'VPCStack.Outputs.PublicSubnet2ID'
         sshKey: !Ref keyPairName
-        usePublicMgmtAddress: 'true'
         numNics: 2
         customImageId: 'OPTIONAL'
         numberPublicExternalIPAddresses: 1
