@@ -2,20 +2,19 @@
 general:
   tags:
     delete: 'True'
-  s3_bucket: ak-tcat-working
 project:
   owner: a.kashcheev@f5.com
   name: quickstart-f5-big-ip-virtual-edition-ha
   regions:
-    - us-west-2
+    - us-west-1
   tags:
     delete: 'True'
 tests:
   f5ve-ha-defaults:
     template: templates/main.yaml
     parameters:
-      qss3BucketName: ak-tcat-working
-      qss3Region: us-west-2
+      qss3BucketName: $[taskcat_autobucket]
+      qss3Region: us-east-1
       bigipInstanceType: m5.xlarge
       availabilityZones: $[taskcat_genaz_2]
       remoteAccessCIDR: 0.0.0.0/0
@@ -25,4 +24,4 @@ tests:
       notificationEmail: a.kashcheev@f5.com
       bigipRuntimeInitConfig: https://ak-metadata-package-poc.s3.amazonaws.com/runtime-init-conf-2nic-payg.yaml
     regions:
-      - us-west-2
+      - us-west-1
