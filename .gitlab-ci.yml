@@ -22,6 +22,6 @@ run_taskcat_tests:
     - curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
     - unzip awscli-bundle.zip
     - ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
-    - aws s3 ls
+    - taskcat test run -o taskcat_outputs/ -i ci/taskcat.yml
   tags:
     - cm-official-docker-executor
