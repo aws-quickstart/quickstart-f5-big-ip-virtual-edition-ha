@@ -755,6 +755,22 @@ Resources:
           Value: !Ref owner
       VpcId: !Ref vpc
     Type: 'AWS::EC2::SecurityGroup'
+  bigipSecurityGroupIngressConfigSync:
+    Properties:
+      FromPort: 4353
+      GroupId: !Ref BigipExternalSecurityGroup
+      IpProtocol: tcp
+      SourceSecurityGroupId: !Ref BigipExternalSecurityGroup
+      ToPort: 4353
+    Type: 'AWS::EC2::SecurityGroupIngress'
+  bigipSecurityGroupIngressHa:
+    Properties:
+      FromPort: 1026
+      GroupId: !Ref BigipExternalSecurityGroup
+      IpProtocol: udp
+      SourceSecurityGroupId: !Ref BigipExternalSecurityGroup
+      ToPort: 1026
+    Type: 'AWS::EC2::SecurityGroupIngress'
   BigipSecurityGroupIngressManagementGuiPort:
     Properties:
       FromPort: !Ref restrictedSrcPort
