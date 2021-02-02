@@ -22,8 +22,7 @@ run_taskcat_tests:
     - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
     - unzip awscliv2.zip
     - ./aws/install
-    - aws s3 ls
-    - ls -la
-    - taskcat test run -o taskcat_outputs/ -i ci/taskcat.yml --no-delete
+    - git submodule update --init --recursive
+    - taskcat test run -o taskcat_outputs/ -i ci/taskcat.yml
   tags:
     - cm-official-docker-executor
