@@ -24,6 +24,6 @@ run_taskcat_tests:
     - ./aws/install
     - aws s3 ls
     - ls -la
-    - taskcat test run -o taskcat_outputs/ -i ci/taskcat.yml
+    - taskcat test run -o taskcat_outputs/ -i ci/taskcat.yml --no-delete
   tags:
     - cm-official-docker-executor
