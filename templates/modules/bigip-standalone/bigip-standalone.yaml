@@ -802,6 +802,10 @@ Resources:
             - |+
 
             - |
+              source /usr/lib/bigstart/bigip-ready-functions
+            - |
+              wait_bigip_ready
+            - |
               # Execute Runtime-init
             - |
               for i in {1..5}; do

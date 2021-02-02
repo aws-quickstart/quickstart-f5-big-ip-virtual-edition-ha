@@ -84,11 +84,6 @@ pre_onboard_enabled:
     type: inline
     commands:
       - /usr/bin/setdb provision.1nicautoconfig disable
-  - name: wait_bigip_ready
-    type: inline
-    commands:
-      - source /usr/lib/bigstart/bigip-ready-functions
-      - wait_bigip_ready
   - name: route_az_external
     type: inline
     commands:
