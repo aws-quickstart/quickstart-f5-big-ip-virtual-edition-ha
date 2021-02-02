@@ -19,19 +19,22 @@ extension_services:
             class: NTP
             servers:
               - 0.pool.ntp.org
+              - 1.pool.ntp.org
             timezone: UTC
           myDns:
             class: DNS
             nameServers:
-              - 169.254.169.253
+              - 8.8.8.8
+            search:
+              - f5.com
           mySystem:
             autoPhonehome: true
             class: System
-            hostname: '{{{ HOST_NAME }}}.local'
+            hostname: 'failover0.local'
           admin:
             class: User
             userType: regular
-            password: 'QuickStart12345+'
+            password: StrongPassword12345+
             shell: bash
           external:
             class: VLAN
@@ -40,7 +43,7 @@ extension_services:
             interfaces:
               - name: '1.1'
                 tagged: false
-          external-self:
+          externalSelf:
             class: SelfIp
             address: '{{{ SELF_IP_EXTERNAL }}}'
             vlan: external
@@ -56,8 +59,8 @@ extension_services:
             class: DeviceGroup
             type: sync-failover
             members:
-              - 10.0.21.218
-              - 10.0.11.180
+              - failover0.local
+              - failover1.local
             owner: /Common/failoverGroup/members/0
             autoSync: true
             saveOnAutoSync: false
@@ -67,16 +70,23 @@ extension_services:
           trust:
             class: DeviceTrust
             localUsername: admin
-            localPassword: 'QuickStart12345+'
-            remoteHost: 10.0.11.180
+            localPassword: StrongPassword12345+
+            remoteHost: 10.0.10.89
             remoteUsername: admin
-            remotePassword: 'QuickStart12345+'
+            remotePassword: StrongPassword12345+
+          dbVars:
+            class: DbVariables
+            config.allow.rfc3927: enable
+            tm.tcpudptxchecksum: Software-only
 post_onboard_enabled: []
 pre_onboard_enabled:
-  - name: provision_modules
+  - name: route_az_external
     type: inline
     commands:
-      - echo 'sys provision asm { level nominal }' >> bigip_base.conf
+      - tmsh create sys folder /LOCAL_ONLY device-group none traffic-group traffic-group-local-only
+      - tmsh create net vlan external interfaces replace-all-with { 1.1 }
+      - tmsh create net self externalSelf address 10.0.10.89/24 vlan external allow-service default traffic-group traffic-group-local-only
+      - tmsh create net route /LOCAL_ONLY/internal network 10.0.20.158/24 gw 10.0.10.1
 runtime_parameters:
   - name: HOST_NAME
     type: metadata

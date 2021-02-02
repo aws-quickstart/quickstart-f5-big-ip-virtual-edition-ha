@@ -324,6 +324,7 @@ Resources:
           - !Ref 'availabilityZones'
         KeyPairName: !Ref 'keyPairName'
         NumberOfAZs: '2'
+        CreateAdditionalPrivateSubnets: 'true'
         PrivateSubnet1ACIDR: !Ref 'privateSubnet1ACIDR'
         PrivateSubnet1BCIDR: !Ref 'privateSubnet1BCIDR'
         PrivateSubnet2ACIDR: !Ref 'privateSubnet2ACIDR'
