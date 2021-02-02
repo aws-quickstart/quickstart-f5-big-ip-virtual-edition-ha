@@ -77,6 +77,15 @@ extension_services:
             tm.tcpudptxchecksum: Software-only
 post_onboard_enabled: []
 pre_onboard_enabled:
+  - name: disable_1nic_config
+    type: inline
+    commands:
+      - /usr/bin/setdb provision.1nicautoconfig disable
+  - name: wait_bigip_ready
+    type: inline
+    commands:
+      - source /usr/lib/bigstart/bigip-ready-functions
+      - wait_bigip_ready
   - name: route_az_external
     type: inline
     commands:
@@ -84,6 +93,10 @@ pre_onboard_enabled:
       - tmsh create net vlan external interfaces replace-all-with { 1.1 }
       - tmsh create net self externalSelf address 10.0.20.158/24 vlan external allow-service default traffic-group traffic-group-local-only
       - tmsh create net route /LOCAL_ONLY/internal network 10.0.10.0/24 gw 10.0.20.1
+  - name: save_config
+    type: inline
+    commands:
+      - tmsh save sys config
 runtime_parameters:
   - name: HOST_NAME
     type: metadata
