@@ -47,7 +47,7 @@ Metadata:
         default: Cloud Solution type
       s3Bucket:
         default: S3 bucket used as BIGIP storage for Failover solution
-      createBigIqRoles: 
+      createBigIqRoles:
         default: Creates IAM roles for BIG-IQ
       bigIqSecretArn:
         default: ARN of Secrets Manager secret
@@ -67,7 +67,7 @@ Outputs:
     Value: !If
       - BigIq
       - !GetAtt LambdaAccessRole.Arn
-      - OPTIONAL 
+      - OPTIONAL
   CopyZipsRole:
     Description: IAM policy for BIG-IQ lambda function
     Value: !If
@@ -79,7 +79,7 @@ Outputs:
     Value: !If
       - BigIq
       - !GetAtt BigIqNotificationRole.Arn
-      - OPTIONAL  
+      - OPTIONAL
 Parameters:
   solutionType:
     Description: Defines solution type to select provision correct IAM role
@@ -225,11 +225,11 @@ Resources:
     Properties:
       AssumeRolePolicyDocument:
         Statement:
-        - Action: 
+        - Action:
             - 'sts:AssumeRole'
           Effect: Allow
           Principal:
-            Service: 
+            Service:
               - autoscaling.amazonaws.com
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AutoScalingNotificationAccessRole
@@ -306,6 +306,8 @@ Resources:
             Statement:
               - Action:
                   - 's3:ListBucket'
+                  - 's3:GetBucketLocation'
+                  - 's3:GetBucketTagging'
                 Effect: Allow
                 Resource: !Join
                   - ''
@@ -322,25 +324,18 @@ Resources:
                     - !Ref s3Bucket
                     - /*
               - Action:
-                  - 'autoscaling:DescribeAutoScalingGroups'
-                  - 'autoscaling:DescribeAutoScalingInstances'
-                  - 'autoscaling:SetInstanceProtection'
                   - 'ec2:DescribeInstances'
                   - 'ec2:DescribeInstanceStatus'
                   - 'ec2:DescribeAddresses'
-                  - 'ec2:AssociateAddress'
-                  - 'ec2:DisassociateAddress'
                   - 'ec2:DescribeNetworkInterfaces'
                   - 'ec2:DescribeNetworkInterfaceAttribute'
                   - 'ec2:DescribeRouteTables'
-                  - 'ec2:ReplaceRoute'
-                  - 'ec2:assignprivateipaddresses'
-                  - 'ec2:DescribeTags'
-                  - 'ec2:CreateTags'
-                  - 'ec2:DeleteTags'
-                  - 'sts:AssumeRole'
-                  - 'cloudformation:ListStackResources'
-                  - 'cloudformation:SignalResource'
+                  - 's3:ListAllMyBuckets'
+                  - 's3:GetBucketLocation'
+                  - 'ec2:AssociateAddress'
+                  - 'ec2:DisassociateAddress'
+                  - 'ec2:AssignPrivateIpAddresses'
+                  - 'ec2:UnassignPrivateIpAddresses'
                 Effect: Allow
                 Resource:
                   - '*'

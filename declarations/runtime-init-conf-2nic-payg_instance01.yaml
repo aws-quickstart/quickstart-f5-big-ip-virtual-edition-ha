@@ -4,8 +4,28 @@ extension_packages:
     - extensionHash: a359aa8aa14dc565146d4ccc413f169f1e8d02689559c5e4a652f91609a55fbb
       extensionType: do
       extensionVersion: 1.17.0
+    - extensionHash: 5eb0256c8bd1248f40f53fb31074bffb2f1ecbec46b903d8872438cea64b3ea9
+      extensionType: cf
+      extensionVersion: 1.6.1
 extension_services:
   service_operations:
+    - extensionType: cf
+      type: inline
+      value:
+        schemaVersion: 1.6.1
+        class: Cloud_Failover
+        environment: aws
+        controls:
+          class: Controls
+          logLevel: info
+        externalStorage:
+          scopingTags:
+            f5_cloud_failover_label: aws_quickstart
+        failoverAddresses:
+          enabled: true
+          scopingTags:
+            f5_cloud_failover_label: aws_quickstart
+          requireScopingTags: false
     - extensionType: do
       type: inline
       value:
@@ -84,6 +104,7 @@ pre_onboard_enabled:
     type: inline
     commands:
       - /usr/bin/setdb provision.1nicautoconfig disable
+bigip_ready_enabled:
   - name: route_az_external
     type: inline
     commands:

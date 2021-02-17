@@ -42,6 +42,7 @@ Metadata:
         Parameters:
           - bigipRuntimeInitConfig01
           - bigipRuntimeInitConfig02
+          - cfeS3Bucket
           - customImageId
           - bigipInstanceType
           - bigipImage
@@ -65,9 +66,11 @@ Metadata:
       application:
         default: Application
       bigipRuntimeInitConfig01:
-        default: BIGIP Runtime Init config for first BIGIP instance
+        default: BIG-IP Runtime Init config for first BIG-IP instance
       bigipRuntimeInitConfig02:
-        default: BIGIP Runtime Init config for second BIGIP instance
+        default: BIG-IP Runtime Init config for second BIG-IP instance
+      cfeS3Bucket:
+        default: S3 bucket used as BIG-IP storage for Failover solution
       costcenter:
         default: Cost Center
       customImageId:
@@ -137,12 +140,16 @@ Parameters:
       - PerAppVeLtm200Mbps
     ConstraintDescription: Select the BIG-IP Image you want to use
   bigipRuntimeInitConfig01:
-    Default: 'https://ak-metadata-package-poc.s3.amazonaws.com/runtime-init-conf-2nic-payg_instance01.yaml'
-    Description: URL for BIGIP Runtime Init config
+    Description: URL for BIG-IP Runtime Init config
     Type: String
   bigipRuntimeInitConfig02:
-    Default: 'https://ak-metadata-package-poc.s3.amazonaws.com/runtime-init-conf-2nic-payg_instance02.yaml'
-    Description: URL for BIGIP Runtime Init config
+    Description: URL for BIG-IP Runtime Init config
+    Type: String
+  cfeS3Bucket:
+    AllowedPattern: '^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$'
+    ConstraintDescription: 'S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).'
+    Default: aws-quickstart-cfe
+    Description: 'S3 bucket used as BIG-IP storage for Failover solution'
     Type: String
   costcenter:
     Default: f5costcenter
@@ -204,7 +211,7 @@ Parameters:
       - byol
       - bigiq
     Default: payg
-    Description: Specifies licence type used for BIGIP VE
+    Description: Specifies licence type used for BIG-IP VE
     Type: String
   owner:
     Default: f5owner
@@ -364,6 +371,7 @@ Resources:
       Parameters:
         s3BucketName: !Ref qss3BucketName
         s3KeyPrefix: !Ref qss3KeyPrefix
+        cfeS3Bucket: !Ref cfeS3Bucket
         vpc: !GetAtt 'VPCStack.Outputs.VPCID'
         privateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
         privateSubnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'

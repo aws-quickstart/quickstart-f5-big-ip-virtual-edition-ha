@@ -24,5 +24,22 @@ run_taskcat_tests:
     - ./aws/install
     - git submodule update --init --recursive
     - taskcat test run -o taskcat_outputs/ -i ci/taskcat.yml
+  only:
+    variables:
+      - $RUN_FUNCTIONAL_TESTS == "true"
+  tags:
+    - cm-official-docker-executor
+
+
+run_taskcat_lint:
+  stage: tcat-tests
+  image: ${ARTIFACTORY_SERVER}/dockerhub-remote/python:3
+  script:
+    - pip install taskcat
+    - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    - unzip awscliv2.zip
+    - ./aws/install
+    - git submodule update --init --recursive
+    - taskcat lint -i ci/taskcat.yml
   tags:
     - cm-official-docker-executor
