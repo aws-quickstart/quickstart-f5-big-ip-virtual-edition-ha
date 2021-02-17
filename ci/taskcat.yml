@@ -21,7 +21,9 @@ tests:
       restrictedSrcAddress: 0.0.0.0/0
       restrictedSrcAddressApp: 0.0.0.0/0
       keyPairName: dewpt
+      cfeS3Bucket: tcat-quickstart-cfe-$[taskcat_random-string]
+      bigipRuntimeInitConfig01: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance01.yaml
+      bigipRuntimeInitConfig02: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance01.yaml
       notificationEmail: a.kashcheev@f5.com
-      bigipRuntimeInitConfig: https://ak-metadata-package-poc.s3.amazonaws.com/runtime-init-conf-2nic-payg.yaml
     regions:
       - us-west-2

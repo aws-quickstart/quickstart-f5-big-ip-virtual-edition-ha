@@ -178,12 +178,17 @@ Conditions:
     - !Equals
       - !Ref mgmtSelfIp
       - DYNAMIC
+  createS3Bucket: !Not
+    - !Equals
+      - !Ref cfeS3Bucket
+      - OPTIONAL
 Metadata:
   'AWS::CloudFormation::Interface':
     ParameterGroups:
       - Label:
           default: Access
         Parameters:
+          - s3Bucket
           - bigipInstanceProfile
       - Label:
           default: BIG-IP Configuration
@@ -253,6 +258,8 @@ Metadata:
         default: External Subnet Id
       group:
         default: Group
+      cfeS3Bucket:
+        default: S3 bucket used as BIGIP storage for Failover solution
       instanceType:
         default: AWS instance type
       internalSecurityGroupId:
@@ -391,6 +398,10 @@ Parameters:
     Description: The number of dynamic secondary private IP's to associate to external nic.
     MinValue: 0
     Type: Number
+  cfeS3Bucket:
+    Description: Provides BIG-IP S3 Bucket name
+    Type: String
+    Default: OPTIONAL
   owner:
     Default: f5owner
     Description: Name of the Owner Tag
@@ -399,6 +410,15 @@ Parameters:
     Description: EC2 KeyPair to enable SSH access to the BIG-IP instance
     Type: 'AWS::EC2::KeyPair::KeyName'
 Resources:
+  S3Bucket:
+    Condition: createS3Bucket
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Ref cfeS3Bucket
+      AccessControl: BucketOwnerFullControl
+      Tags:
+        - Key: f5_cloud_failover_label
+          Value: aws_quickstart
   BigipInternalInterface:
     Condition: useDynamicInternalIpAddr
     Properties:

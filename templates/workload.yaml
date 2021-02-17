@@ -591,6 +591,7 @@ Metadata:
         Parameters:
           - bigipRuntimeInitConfig01
           - bigipRuntimeInitConfig02
+          - cfeS3Bucket
           - customImageId
           - imageName
           - licenseType
@@ -613,9 +614,11 @@ Metadata:
       application:
         default: Application
       bigipRuntimeInitConfig01:
-        default: BIGIP Runtime Init config
+        default: BIG-IP Runtime Init config
       bigipRuntimeInitConfig02:
-        default: BIGIP Runtime Init config
+        default: BIG-IP Runtime Init config
+      cfeS3Bucket:
+        default: CFE S3 bucket
       costcenter:
         default: Cost Center
       customImageId:
@@ -665,12 +668,16 @@ Parameters:
     Description: Name of the Application Tag
     Type: String
   bigipRuntimeInitConfig01:
-    Default: 'https://ak-metadata-package-poc.s3.amazonaws.com/runtime-init-conf-2nic-payg_instance01.yaml'
-    Description: URL for BIGIP Runtime Init config
+    Description: URL for BIG-IP Runtime Init config
     Type: String
   bigipRuntimeInitConfig02:
-    Default: 'https://ak-metadata-package-poc.s3.amazonaws.com/runtime-init-conf-2nic-payg_instance02.yaml'
-    Description: URL for BIGIP Runtime Init config
+    Description: URL for BIG-IP Runtime Init config
+    Type: String
+  cfeS3Bucket:
+    AllowedPattern: '^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$'
+    ConstraintDescription: 'S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).'
+    Default: aws-quickstart-cfe
+    Description: 'S3 bucket name used by Cloud Failover Extension'
     Type: String
   costcenter:
     Default: f5costcenter
@@ -732,7 +739,7 @@ Parameters:
       - byol
       - bigiq
     Default: payg
-    Description: Specifies licence type used for BIGIP VE
+    Description: Specifies licence type used for BIG-IP VE
     Type: String
   numNics:
     Default: 2
@@ -827,7 +834,8 @@ Resources:
         - https://${s3BucketName}.${s3Region}.amazonaws.com/${s3KeyPrefix}templates/modules/access/access.yaml
         - { s3Region: !If [govCloudCondition, s3-us-gov-west-1, s3] }
       Parameters:
-        solutionType: standalone
+        solutionType: failover
+        s3Bucket: !Ref cfeS3Bucket
         application: !Ref application
         costcenter: !Ref costcenter
         environment: !Ref environment
@@ -863,6 +871,7 @@ Resources:
         - { s3Region: !If [govCloudCondition, s3-us-gov-west-1, s3] }
       Parameters:
         sshKey: !Ref sshKey
+        cfeS3Bucket: !Ref cfeS3Bucket
         customImageId: !If [noCustomImageId, !FindInMap [!FindInMap [VERSION, !Ref version, REGIONMAP], !Ref 'AWS::Region', !FindInMap [AWSBigipThroughput, !Ref throughput, !Ref imageName]], !Ref customImageId]
         instanceType: !Ref instanceType
         mgmtSubnetId: !Ref privateSubnet1ID
