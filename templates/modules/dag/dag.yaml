@@ -3,6 +3,9 @@ Description: >-
   DAG/Ingress Template is intended to deploy Load Balancers, Public Ip addresses
   for all BIGIP Cloud Solutions (i.e. High-Availability or Autoscale)
 Conditions:
+  Failover: !Equals
+    - !Ref createFailoverIngress
+    - 'Yes'
   externalLB: !Equals
     - 'Yes'
     - !Ref provisionExternalBigipLoadBalancer
@@ -274,35 +277,35 @@ Outputs:
 Parameters:
   application:
     Default: f5app
-    Description: Name of the Application Tag.
+    Description: Application Tag.
     Type: String
   costcenter:
     Default: f5costcenter
-    Description: Name of the Cost Center Tag.
+    Description: Cost Center Tag.
     Type: String
   environment:
     Default: f5env
-    Description: Name of the Environment Tag.
+    Description: Environment Tag.
     Type: String
   externalSubnetAz1:
     Default: UNDEFINED
-    Description: Availability Zone 1 External Subnet Id.
+    Description: Availability Zone 1 External Subnet ID.
     Type: String
   externalSubnetAz2:
     Default: UNDEFINED
-    Description: Availability Zone 2 External Subnet Id.
+    Description: Availability Zone 2 External Subnet ID.
     Type: String
   group:
     Default: f5group
-    Description: Name of the Group Tag.
+    Description: Group Tag.
     Type: String
   internalSubnetAz1:
     Default: UNDEFINED
-    Description: Availability Zone 1 Internal Subnet Id.
+    Description: Availability Zone 1 Internal Subnet ID.
     Type: String
   internalSubnetAz2:
     Default: UNDEFINED
-    Description: Availability Zone 2 Internal Subnet Id.
+    Description: Availability Zone 2 Internal Subnet ID.
     Type: String
   numberPublicExternalIPAddresses:
     Default: 1
@@ -312,13 +315,13 @@ Parameters:
     Type: Number
   numberPublicMgmtIPAddresses:
     Default: 1
-    Description: Number of public management ip addresses to create.
+    Description: Number of external public ip address to create.
     MaxValue: 4
     MinValue: 0
     Type: Number
   owner:
     Default: f5owner
-    Description: Name of the Owner Tag.
+    Description: Owner Tag.
     Type: String
   provisionExternalBigipLoadBalancer:
     AllowedValues:
@@ -358,11 +361,18 @@ Parameters:
   restrictedSrcPort:
     ConstraintDescription: Must be a valid integer.
     Default: 8443
-    Description: The management port used for BIGIP management GUI.
+    Description: The management port used for BIG-IP management GUI.
     Type: Number
   vpc:
-    Description: VPC Id.
+    Description: VPC ID.
+    Type: AWS::EC2::VPC::Id
+  createFailoverIngress:
+    Description: Select Yes if you want to create a failover solution.
     Type: String
+    Default: 'No'
+    AllowedValues:
+      - 'Yes'
+      - 'No'
 Resources:
   ExternalBigIpLoadBalancer:
     Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
@@ -760,6 +770,7 @@ Resources:
       VpcId: !Ref vpc
     Type: 'AWS::EC2::SecurityGroup'
   bigipSecurityGroupIngressConfigSync:
+    Condition: Failover
     Properties:
       FromPort: 4353
       GroupId: !Ref BigipExternalSecurityGroup
@@ -768,6 +779,7 @@ Resources:
       ToPort: 4353
     Type: 'AWS::EC2::SecurityGroupIngress'
   bigipSecurityGroupIngressHa:
+    Condition: Failover
     Properties:
       FromPort: 1026
       GroupId: !Ref BigipExternalSecurityGroup
