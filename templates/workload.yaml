@@ -853,6 +853,7 @@ Resources:
         restrictedSrcAddress: !Ref restrictedSrcAddress
         restrictedSrcPort: 443
         createAppSecurityGroup: 'Yes'
+        createFailoverIngress: 'Yes'
         application: !Ref application
         costcenter: !Ref costcenter
         environment: !Ref environment
@@ -913,7 +914,7 @@ Resources:
         internalSubnetId:  !Ref 'AWS::NoValue'
         bigipRuntimeInitConfig: !Ref bigipRuntimeInitConfig02
         bigipInstanceProfile: !GetAtt [Access, Outputs.BigipInstanceProfile]
-        numSecondaryPrivateIpAddress: 1
+        numSecondaryPrivateIpAddress: 0
 Outputs:
   access:
     Description: access nested stack name

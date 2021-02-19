@@ -261,7 +261,7 @@ Metadata:
       cfeS3Bucket:
         default: S3 bucket used as BIGIP storage for Failover solution
       instanceType:
-        default: AWS instance type
+        default: Enter valid instance type.
       internalSecurityGroupId:
         default: Internal Security Group Id
       internalSelfIp:
@@ -282,8 +282,6 @@ Metadata:
         default: Number of Secondary Private Ips
       owner:
         default: Owner
-      provisionPublicIP:
-        default: Provision Public IP addresses
       sshKey:
         default: EC2 KeyPair
   Version: 1.0.0
@@ -306,31 +304,31 @@ Outputs:
 Parameters:
   application:
     Default: f5app
-    Description: Name of the Application Tag
+    Description: Application Tag.
     Type: String
   bigipInstanceProfile:
-    Description: BIGIP instance profile with applied IAM policy
+    Description: BIG-IP instance profile with applied IAM policy.
     Type: String
   bigipRuntimeInitConfig:
-    Description: URL to BIG-IP Runtime Init configuration or json for BIG-IP Runtime Init config.
+    Description: Supply a URL to the bigip-runtime-init configuration file in YAML or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.
     Type: String
   bigipRuntimeUrl:
     Default: 'https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/develop/develop/dist/f5-bigip-runtime-init-1.1.0-1.gz.run'
-    Description: URL for BIGIP Runtime Init package.
+    Description: URL for BIG-IP Runtime Init package.
     Type: String
   costcenter:
     Default: f5costcenter
-    Description: Name of the Cost Center Tag
+    Description: Cost Center Tag.
     Type: String
   customImageId:
-    ConstraintDescription: Must be a valid AMI Id
-    Description: 'Provide BIG-IP AMI Id you wish to deploy.'
+    ConstraintDescription: Must be a valid AMI ID
+    Description: 'Provide BIG-IP AMI ID you wish to deploy.'
     MaxLength: 255
     MinLength: 1
     Type: String
   environment:
     Default: f5env
-    Description: Name of the Environment Tag
+    Description: Environment Tag.
     Type: String
   externalPrimaryPublicId:
     Default: OPTIONAL
@@ -354,16 +352,17 @@ Parameters:
     Type: CommaDelimitedList
   externalSubnetId:
     Default: OPTIONAL
-    Description: 'The resource ID of the external subnet. ***Note:*** SubnetId parameters used for identifying number of network interfaces. Example: 1NIC - only Mgmt subnet id provided, 2NIC - Mgmt and Externa subnets id providedl, 3NIC - Mgmt, External and Internal subnets id provided).'
+    Description: 'The resource ID of the external subnet. ***Note:*** Subnet ID parameters used for identifying number of network interfaces. Example: 1NIC - only Mgmt
+      subnet id provided, 2NIC - Mgmt and Externa subnets id providedl, 3NIC - Mgmt, External and Internal subnets id provided).'
     Type: String
   group:
     Default: f5group
-    Description: Name of the Group Tag
+    Description: Group Tag.
     Type: String
   instanceType:
     ConstraintDescription: Must be a valid EC2 instance type for BIG-IP
     Default: m5.2xlarge
-    Description: Supply AWS instance type to use for BIG-IP deployment. AMI supplied must support instance type supplied.
+    Description: Enter valid instance type.
     Type: String
   internalSecurityGroupId:
     Default: OPTIONAL
@@ -391,7 +390,7 @@ Parameters:
   mgmtSubnetId:
     ConstraintDescription: Must be populated.
     Default: UNDEFINED
-    Description: 'The resource ID of the management subnet. ***Note:*** SubnetId parameters used for identifying number of network interfaces. Example: 1NIC - only Mgmt subnet id provided, 2NIC - Mgmt and External subnets id provided, 3NIC - Mgmt, External and Internal subnets id provided).'
+    Description: 'The resource ID of the management subnet. ***Note:*** SubnetId parameters used for identifying number of network interfaces. Example: 1NIC - only Mgmt subnet id provided, 2NIC - Mgmt and Externa subnets id providedl, 3NIC - Mgmt, External and Internal subnets id provided).'
     Type: String
   numSecondaryPrivateIpAddress:
     Default: 1
@@ -404,10 +403,10 @@ Parameters:
     Default: OPTIONAL
   owner:
     Default: f5owner
-    Description: Name of the Owner Tag
+    Description: Owner Tag.
     Type: String
   sshKey:
-    Description: EC2 KeyPair to enable SSH access to the BIG-IP instance
+    Description: Supply the public key that will be used for SSH authentication to the BIG-IP and application virtual machines.
     Type: 'AWS::EC2::KeyPair::KeyName'
 Resources:
   S3Bucket:
@@ -423,7 +422,7 @@ Resources:
     Condition: useDynamicInternalIpAddr
     Properties:
       Description: Internal Interface for the BIG-IP
-      GroupSet:
+      GroupSet: 
         - !If
           - useInternalSecurityGroupId
           - !Ref internalSecurityGroupId
@@ -1131,6 +1130,10 @@ Resources:
               aws'
             - |+
 
+            - |
+              source /usr/lib/bigstart/bigip-ready-functions
+            - |
+              wait_bigip_ready
             - |
               # Execute Runtime-init
             - |
