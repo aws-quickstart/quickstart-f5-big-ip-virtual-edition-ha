@@ -834,12 +834,12 @@ Resources:
         - https://${s3BucketName}.${s3Region}.amazonaws.com/${s3KeyPrefix}templates/modules/access/access.yaml
         - { s3Region: !If [govCloudCondition, s3-us-gov-west-1, s3] }
       Parameters:
-        solutionType: failover
-        s3Bucket: !Ref cfeS3Bucket
         application: !Ref application
         costcenter: !Ref costcenter
         environment: !Ref environment
         group: !Ref group
+        s3Bucket: !Ref cfeS3Bucket
+        solutionType: failover
   Dag:
     Type: 'AWS::CloudFormation::Stack'
     Properties:
@@ -848,18 +848,18 @@ Resources:
         - https://${s3BucketName}.${s3Region}.amazonaws.com/${s3KeyPrefix}templates/modules/dag/dag.yaml
         - { s3Region: !If [govCloudCondition, s3-us-gov-west-1, s3] }
       Parameters:
-        vpc: !Ref vpc
-        restrictedSrcAddressApp: !Ref restrictedSrcAddressApp
-        restrictedSrcAddress: !Ref restrictedSrcAddress
-        restrictedSrcPort: 443
-        createAppSecurityGroup: 'Yes'
-        createFailoverIngress: 'Yes'
         application: !Ref application
         costcenter: !Ref costcenter
+        createAppSecurityGroup: 'Yes'
+        createFailoverIngress: 'Yes'
         environment: !Ref environment
         group: !Ref group
         numberPublicExternalIPAddresses: 3
         numberPublicMgmtIPAddresses: 0
+        restrictedSrcAddress: !Ref restrictedSrcAddress
+        restrictedSrcAddressApp: !Ref restrictedSrcAddressApp
+        restrictedSrcPort: 443
+        vpc: !Ref vpc
   BigipInstance01:
     DependsOn:
       - Access
@@ -871,23 +871,23 @@ Resources:
         - https://${s3BucketName}.${s3Region}.amazonaws.com/${s3KeyPrefix}templates/modules/bigip-standalone/bigip-standalone.yaml
         - { s3Region: !If [govCloudCondition, s3-us-gov-west-1, s3] }
       Parameters:
-        sshKey: !Ref sshKey
+        bigipInstanceProfile: !GetAtt [Access, Outputs.BigipInstanceProfile]
+        bigipRuntimeInitConfig: !Ref bigipRuntimeInitConfig01
         cfeS3Bucket: !Ref cfeS3Bucket
         customImageId: !If [noCustomImageId, !FindInMap [!FindInMap [VERSION, !Ref version, REGIONMAP], !Ref 'AWS::Region', !FindInMap [AWSBigipThroughput, !Ref throughput, !Ref imageName]], !Ref customImageId]
-        instanceType: !Ref instanceType
-        mgmtSubnetId: !Ref privateSubnet1ID
-        mgmtSecurityGroupId: !GetAtt [Dag, Outputs.BigipExternalSecurityGroup]
-        mgmtSelfIp: 10.0.11.180
-        externalSubnetId: !Ref publicSubnet1ID
-        externalSelfIp: 10.0.10.89
-        externalServiceIPs: 10.0.10.90
-        externalSecurityGroupId: !GetAtt [Dag, Outputs.BigipExternalSecurityGroup]
         externalPrimaryPublicId: !GetAtt [Dag, Outputs.BigipExternalEipAllocationId00]
         externalPublicIpIds: !GetAtt [Dag, Outputs.BigipExternalEipAllocationId01]
+        externalSecurityGroupId: !GetAtt [Dag, Outputs.BigipExternalSecurityGroup]
+        externalSelfIp: 10.0.10.89
+        externalServiceIPs: 10.0.10.90
+        externalSubnetId: !Ref publicSubnet1ID
+        instanceType: !Ref instanceType
         internalSubnetId: !Ref 'AWS::NoValue'
-        bigipRuntimeInitConfig: !Ref bigipRuntimeInitConfig01
-        bigipInstanceProfile: !GetAtt [Access, Outputs.BigipInstanceProfile]
+        mgmtSecurityGroupId: !GetAtt [Dag, Outputs.BigipExternalSecurityGroup]
+        mgmtSelfIp: 10.0.11.180
+        mgmtSubnetId: !Ref privateSubnet1ID
         numSecondaryPrivateIpAddress: 1
+        sshKey: !Ref sshKey
   BigipInstance02:
     DependsOn:
       - Access
@@ -899,22 +899,22 @@ Resources:
         - https://${s3BucketName}.${s3Region}.amazonaws.com/${s3KeyPrefix}templates/modules/bigip-standalone/bigip-standalone.yaml
         - { s3Region: !If [govCloudCondition, s3-us-gov-west-1, s3] }
       Parameters:
-        sshKey: !Ref sshKey
+        bigipInstanceProfile: !GetAtt [Access, Outputs.BigipInstanceProfile]
+        bigipRuntimeInitConfig: !Ref bigipRuntimeInitConfig02
         customImageId: !If [noCustomImageId, !FindInMap [!FindInMap [VERSION, !Ref version, REGIONMAP], !Ref 'AWS::Region', !FindInMap [AWSBigipThroughput, !Ref throughput, !Ref imageName]], !Ref customImageId]
-        instanceType: !Ref instanceType
-        mgmtSubnetId: !Ref privateSubnet2ID
-        mgmtSecurityGroupId: !GetAtt [Dag, Outputs.BigipExternalSecurityGroup]
-        mgmtSelfIp: 10.0.21.218
-        externalSubnetId: !Ref publicSubnet2ID
-        externalSelfIp: 10.0.20.158
-        externalServiceIPs: 10.0.20.157
-        externalSecurityGroupId: !GetAtt [Dag, Outputs.BigipExternalSecurityGroup]
         externalPrimaryPublicId: !GetAtt [Dag, Outputs.BigipExternalEipAllocationId02]
         externalPublicIpIds: !GetAtt [Dag, Outputs.BigipExternalEipAllocationId03]
+        externalSecurityGroupId: !GetAtt [Dag, Outputs.BigipExternalSecurityGroup]
+        externalSelfIp: 10.0.20.158
+        externalServiceIPs: 10.0.20.157
+        externalSubnetId: !Ref publicSubnet2ID
+        instanceType: !Ref instanceType
         internalSubnetId:  !Ref 'AWS::NoValue'
-        bigipRuntimeInitConfig: !Ref bigipRuntimeInitConfig02
-        bigipInstanceProfile: !GetAtt [Access, Outputs.BigipInstanceProfile]
+        mgmtSecurityGroupId: !GetAtt [Dag, Outputs.BigipExternalSecurityGroup]
+        mgmtSelfIp: 10.0.21.218
+        mgmtSubnetId: !Ref privateSubnet2ID
         numSecondaryPrivateIpAddress: 0
+        sshKey: !Ref sshKey
 Outputs:
   access:
     Description: access nested stack name
@@ -928,3 +928,6 @@ Outputs:
   dag:
     Description: dag nested stack name
     Value: !GetAtt [Dag, Outputs.StackName]
+  stackName:
+    Description: workload nested stack name
+    Value: !Ref "AWS::StackName"

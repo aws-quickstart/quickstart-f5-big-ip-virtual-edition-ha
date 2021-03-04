@@ -22,11 +22,14 @@ extension_services:
             class: NTP
             servers:
               - 0.pool.ntp.org
+              - 1.pool.ntp.org
             timezone: UTC
           myDns:
             class: DNS
             nameServers:
               - 169.254.169.253
+            search:
+              - f5.com
           mySystem:
             autoPhonehome: true
             class: System
@@ -45,16 +48,22 @@ extension_services:
                 tagged: false
           externalSelf:
             class: SelfIp
-            address: '{{{ SELF_IP_EXTERNAL }}}'
+            address: '{{{SELF_IP_EXTERNAL}}}'
             vlan: external
             allowService: 'default'
             trafficGroup: traffic-group-local-only
+          default:
+            class: Route
+            gw: '{{{DEFAULT_ROUTE}}}'
+            network: default
+            mtu: 1500
+            localOnly: true
           configSync:
             class: ConfigSync
-            configsyncIp: 10.0.20.158
+            configsyncIp: /Common/externalSelf/address
           failoverAddress:
             class: FailoverUnicast
-            address: 10.0.20.158
+            address: /Common/externalSelf/address
           failoverGroup:
             class: DeviceGroup
             type: sync-failover
@@ -101,18 +110,6 @@ pre_onboard_enabled:
     type: inline
     commands:
       - /usr/bin/setdb provision.1nicautoconfig disable
-bigip_ready_enabled:
-  - name: route_az_external
-    type: inline
-    commands:
-      - tmsh create sys folder /LOCAL_ONLY device-group none traffic-group traffic-group-local-only
-      - tmsh create net vlan external interfaces replace-all-with { 1.1 }
-      - tmsh create net self externalSelf address 10.0.20.158/24 vlan external allow-service default traffic-group traffic-group-local-only
-      - tmsh create net route /LOCAL_ONLY/internal network 10.0.10.0/24 gw 10.0.20.1
-  - name: save_config
-    type: inline
-    commands:
-      - tmsh save sys config
 runtime_parameters:
   - name: HOST_NAME
     type: metadata
@@ -127,7 +124,10 @@ runtime_parameters:
       type: network
       field: local-ipv4s
       index: 1
-  - name: REGION
-    type: url
-    value: http://169.254.169.254/latest/dynamic/instance-identity/document
-    query: region
+  - name: DEFAULT_ROUTE
+    type: metadata
+    metadataProvider:
+      environment: aws
+      type: network
+      field: subnet-ipv4-cidr-block
+      index: 1
