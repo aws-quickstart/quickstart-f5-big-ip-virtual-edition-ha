@@ -6,7 +6,7 @@ project:
   owner: a.kashcheev@f5.com
   name: quickstart-f5-big-ip-virtual-edition-ha
   regions:
-    - us-west-2
+    - us-west-1
   tags:
     delete: 'True'
 tests:
@@ -23,7 +23,7 @@ tests:
       keyPairName: dewpt
       cfeS3Bucket: tcat-quickstart-cfe-$[taskcat_random-string]
       bigipRuntimeInitConfig01: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance01.yaml
-      bigipRuntimeInitConfig02: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance01.yaml
+      bigipRuntimeInitConfig02: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance02.yaml
       notificationEmail: a.kashcheev@f5.com
     regions:
-      - us-west-2
+      - us-west-1

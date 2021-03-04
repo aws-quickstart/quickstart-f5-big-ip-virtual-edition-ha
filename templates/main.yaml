@@ -376,7 +376,7 @@ Resources:
         bigipRuntimeInitConfig02: !Ref bigipRuntimeInitConfig02
         cfeS3Bucket: !Ref cfeS3Bucket
         costcenter: !Ref costCenter 
-        customImageId: 'OPTIONAL'
+        customImageId: !Ref customImageId
         environment: !Ref environment
         group: !Ref group
         imageName: !Ref bigipImageName
@@ -414,3 +414,25 @@ Resources:
         PublicSubnet1CIDR: !Ref 'publicSubnet1CIDR'
         PublicSubnet2CIDR: !Ref 'publicSubnet2CIDR'
         VPCCIDR: !Ref 'vpcCIDR'
+Outputs:
+  access:
+    Description: access nested stack name
+    Value: !GetAtt [WorkLoadStack, Outputs.access]
+  bastionHost:
+    Description: bastion host public ip
+    Value: !GetAtt [BastionStack, Outputs.EIP1] 
+  bigipInstance01:
+    Description: bigip instance 1 nested stack name
+    Value: !GetAtt [WorkLoadStack, Outputs.bigipInstance01]
+  bigipInstance02:
+    Description: bigip instance 2 nested stack name
+    Value: !GetAtt [WorkLoadStack, Outputs.bigipInstance02]
+  cfeS3Bucket:
+    Description: cfe s3 bucket created and used for cloud-failover-extension
+    Value: !Ref cfeS3Bucket 
+  dag:
+    Description: dag nested stack name
+    Value: !GetAtt [WorkLoadStack, Outputs.dag]
+  workLoadStack:
+    Description: workload nested stack name
+    Value: !GetAtt [WorkLoadStack, Outputs.stackName]
