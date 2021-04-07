@@ -315,7 +315,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub
-        - https://${qss3BucketName}.${qss3Region}.amazonaws.com/${qss3KeyPrefix}submodules/quickstart-aws-vpc/templates/aws-vpc.template
+        - https://${qss3BucketName}.${qss3Region}.amazonaws.com/${qss3KeyPrefix}submodules/quickstart-aws-vpc/templates/aws-vpc.template.yaml
         - qss3Region: !If
             - GovCloudCondition
             - s3-us-gov-west-1
@@ -324,7 +324,6 @@ Resources:
         AvailabilityZones: !Join
           - ','
           - !Ref 'availabilityZones'
-        KeyPairName: !Ref 'keyPairName'
         NumberOfAZs: '2'
         PrivateSubnet1ACIDR: !Ref 'privateSubnet1CIDR'
         PrivateSubnet2ACIDR: !Ref 'privateSubnet2CIDR'
