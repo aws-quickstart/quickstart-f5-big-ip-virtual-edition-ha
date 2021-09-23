@@ -422,12 +422,17 @@ Resources:
     Condition: useDynamicInternalIpAddr
     Properties:
       Description: Internal Interface for the BIG-IP
-      GroupSet: 
+      GroupSet:
         - !If
           - useInternalSecurityGroupId
           - !Ref internalSecurityGroupId
           - !Ref AWS::NoValue
       SubnetId: !Ref internalSubnetId
+      Tags:
+        - Key: f5_cloud_failover_label
+          Value: aws_quickstart
+        - Key: f5_cloud_failover_nic_map
+          Value: internal
     Type: 'AWS::EC2::NetworkInterface'
   BigipManagementInterface:
     Condition: useDynamicManagementIpAddr
@@ -449,6 +454,11 @@ Resources:
       GroupSet:
         - !Ref externalSecurityGroupId
       SubnetId: !Ref externalSubnetId
+      Tags:
+        - Key: f5_cloud_failover_label
+          Value: aws_quickstart
+        - Key: f5_cloud_failover_nic_map
+          Value: external
     Type: 'AWS::EC2::NetworkInterface'
   BigipStaticInternalInterface:
     Condition: useStaticInternalIpAddr
@@ -461,6 +471,11 @@ Resources:
           - !Ref AWS::NoValue
       PrivateIpAddress: !Ref internalSelfIp
       SubnetId: !Ref internalSubnetId
+      Tags:
+        - Key: f5_cloud_failover_label
+          Value: aws_quickstart
+        - Key: f5_cloud_failover_nic_map
+          Value: internal
     Type: 'AWS::EC2::NetworkInterface'
   BigipStaticManagementInterface:
     Condition: useStaticManagementIpAddr
@@ -489,6 +504,11 @@ Resources:
             - '0'
             - !Ref externalServiceIPs
       SubnetId: !Ref externalSubnetId
+      Tags:
+        - Key: f5_cloud_failover_label
+          Value: aws_quickstart
+        - Key: f5_cloud_failover_nic_map
+          Value: external
     Type: 'AWS::EC2::NetworkInterface'
   BigipVipEipAssociation:
     Condition: bigipVipEipAssociation
