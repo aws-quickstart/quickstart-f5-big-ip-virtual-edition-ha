@@ -1,0 +1,5 @@
+---
+CONFIG FILE: taskcat2.yml
+REGION: us-west-1
+SECRET VALUE: StrongPassword12345+
+STACK TYPE: defaults

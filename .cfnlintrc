@@ -1,0 +1,6 @@
+templates:
+  - templates/**/*.yaml
+  - templates/*.yaml
+ignore_checks:
+  - W1001
+  - W2506
