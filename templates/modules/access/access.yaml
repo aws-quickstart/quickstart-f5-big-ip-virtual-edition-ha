@@ -3,11 +3,6 @@ Description: >-
   Access Template is intended to deploy IAM roles for all BIGIP Cloud Solutions
   (i.e. High-Availability or Autoscale)
   Secret Manager service.
-Mappings:
-  Transformations:
-    Boolean:
-      'No': 'false'
-      'Yes': 'true'
 Conditions:
   Failover: !Equals
     - !Ref solutionType

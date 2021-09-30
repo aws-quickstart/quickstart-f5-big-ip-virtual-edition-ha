@@ -21,7 +21,7 @@ run_taskcat_lint:
     GIT_SUBMODULE_STRATEGY: recursive
   script:
     - pip install taskcat
-    - taskcat lint -i ci/taskcat.yml
+    - taskcat lint -i ci/taskcat1.yml
   tags:
     - cm-official-docker-executor
   except:

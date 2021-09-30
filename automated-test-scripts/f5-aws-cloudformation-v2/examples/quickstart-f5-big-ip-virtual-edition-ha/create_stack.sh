@@ -3,4 +3,4 @@
 #  replayEnabled = false
 #  replayTimeout = 0
 
-taskcat test run -n -o taskcat_outputs/ -i ci/taskcat.yml
+taskcat test run -n -o taskcat_outputs/ -i ci/<CONFIG FILE>

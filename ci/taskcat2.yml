@@ -1,0 +1,36 @@
+---
+general:
+  tags:
+    delete: 'True'
+project:
+  owner: a.kashcheev@f5.com
+  name: quickstart-f5-big-ip-virtual-edition-ha
+  regions:
+    - us-west-1
+  tags:
+    delete: 'True'
+tests:
+  f5ve-ha-prod:
+    template: templates/main.yaml
+    parameters:
+      qss3BucketName: $[taskcat_autobucket]
+      qss3Region: us-east-1
+      bigipInstanceType: m5.xlarge
+      availabilityZones: $[taskcat_genaz_2]
+      provisionPublicIpMgmt: 'No'
+      provisionPublicIpVip: 'Yes'
+      privateSubnet1ASelfAddress: 10.0.11.180
+      privateSubnet2ASelfAddress: 10.0.21.218
+      publicSubnet1SelfAddress: 10.0.10.89
+      publicSubnet1VipAddress: 10.0.10.90
+      publicSubnet2SelfAddress: 10.0.20.158
+      publicSubnet2VipAddress: 10.0.20.157
+      remoteAccessCIDR: 0.0.0.0/0
+      restrictedSrcAddress: 0.0.0.0/0
+      restrictedSrcAddressApp: 0.0.0.0/0
+      keyPairName: dewpt
+      cfeS3Bucket: tcat-quickstart-cfe-$[taskcat_random-string]
+      bigipRuntimeInitConfig01: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance01.yaml
+      bigipRuntimeInitConfig02: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance02.yaml
+    regions:
+      - us-west-1

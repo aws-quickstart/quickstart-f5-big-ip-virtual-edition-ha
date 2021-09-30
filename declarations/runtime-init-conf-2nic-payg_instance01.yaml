@@ -1,12 +1,12 @@
 ---
 extension_packages:
   install_operations:
-    - extensionHash: a359aa8aa14dc565146d4ccc413f169f1e8d02689559c5e4a652f91609a55fbb
+    - extensionHash: bfe88c7cf3fdb24adc4070590c27488e203351fc808d57ae6bbb79b615d66d27
       extensionType: do
-      extensionVersion: 1.17.0
-    - extensionHash: 5eb0256c8bd1248f40f53fb31074bffb2f1ecbec46b903d8872438cea64b3ea9
+      extensionVersion: 1.23.0
+    - extensionHash: da3118eacc4fe9ff925d95d4bf8d1993810560e07260825306cb0721862defdf
       extensionType: cf
-      extensionVersion: 1.6.1
+      extensionVersion: 1.9.0
 extension_services:
   service_operations:
     - extensionType: do
@@ -52,10 +52,10 @@ extension_services:
             vlan: external
             allowService: 'default'
             trafficGroup: traffic-group-local-only
-          default:
+          internal:
             class: Route
             gw: '{{{DEFAULT_ROUTE}}}'
-            network: default
+            network: 10.0.0.0/16
             mtu: 1500
             localOnly: true
           configSync:
@@ -90,7 +90,7 @@ extension_services:
     - extensionType: cf
       type: inline
       value:
-        schemaVersion: 1.6.1
+        schemaVersion: 1.0.0
         class: Cloud_Failover
         environment: aws
         controls:

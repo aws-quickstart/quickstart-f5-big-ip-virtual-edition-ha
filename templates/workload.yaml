@@ -519,45 +519,12 @@ Mappings:
       PerAppVeAwaf25Mbps: ami-07122e9684d899eec
       AllTwoBootLocations: ami-0ff28d6bcc8f04c28
 Conditions:
-  1nic: !Equals
-    - 1
-    - !Ref numNics
-  2nic: !Or
-    - !Condition 3nic
-    - !Equals
-      - 2
-      - !Ref numNics
-  3nic: !Equals
-    - 3
-    - !Ref numNics
-  externalIpAddresses0: !Equals
-    - 0
-    - !Ref numberPublicExternalIPAddresses
-  externalIpAddresses1: !Equals
-    - 1
-    - !Ref numberPublicExternalIPAddresses
-  externalIpAddresses2: !Equals
-    - 2
-    - !Ref numberPublicExternalIPAddresses
-  externalIpAddresses3: !Equals
-    - 3
-    - !Ref numberPublicExternalIPAddresses
-  externalIpAddresses4: !Equals
-    - 4
-    - !Ref numberPublicExternalIPAddresses
-  appUrl1: !Or
-    - !Condition externalIpAddresses1
-    - !Condition appUrl2
-  appUrl2: !Or
-    - !Condition externalIpAddresses2
-    - !Condition appUrl3
-  appUrl3: !Or
-    - !Condition externalIpAddresses3
-    - !Condition appUrl4
-  appUrl4: !Condition externalIpAddresses4
-  isPaygLicensing: !Equals
-    - payg
-    - !Ref licenseType
+  usePublicIpMgmt: !Equals
+    - 'Yes'
+    - !Ref provisionPublicIpMgmt
+  usePublicIpVip: !Equals
+    - 'Yes'
+    - !Ref provisionPublicIpVip
   noCustomImageId: !Equals
     - OPTIONAL
     - !Ref customImageId
@@ -573,18 +540,15 @@ Metadata:
       - Label:
           default: Network Configuration
         Parameters:
-          - vpcCidr
           - vpc
       - Label:
           default: Amazon EC2 Configuration
         Parameters:
           - instanceType
-          - numberPublicExternalIPAddresses
-          - numNics
-          - provisionPublicIP
+          - provisionPublicIpMgmt
+          - provisionPublicIpMgmt
           - restrictedSrcAddress
           - restrictedSrcAddressApp
-          - setAppPublicIP
           - sshKey
       - Label:
           default: BIG-IP Configuration
@@ -594,12 +558,7 @@ Metadata:
           - cfeS3Bucket
           - customImageId
           - imageName
-          - licenseType
           - throughput
-      - Label:
-          default: Application Configuration
-        Parameters:
-          - appDockerImageName
       - Label:
           default: Resources Tags
         Parameters:
@@ -609,8 +568,6 @@ Metadata:
           - group
           - owner
     ParameterLabels:
-      appDockerImageName:
-        default: Application docker image name
       application:
         default: Application
       bigipRuntimeInitConfig01:
@@ -631,16 +588,12 @@ Metadata:
         default: F5 BIG-IP Performance Type (PAYG)
       instanceType:
         default: AWS instance type
-      licenseType:
-        default: Licence type
-      numNics:
-        default: Number of interfaces to create
-      numberPublicExternalIPAddresses:
-        default: Number of external public ip address to create
       owner:
         default: Owner
-      provisionPublicIP:
-        default: Provision Public IP addresses for the BIG-IP interfaces
+      provisionPublicIpMgmt:
+        default: Provision Public IP addresses for the BIG-IP management interfaces
+      provisionPublicIpVip:
+        default: Provision Public IP addresses for the BIG-IP external interfaces
       restrictedSrcAddress:
         default: Restricted source address to BIG-IP
       restrictedSrcAddressApp:
@@ -655,14 +608,8 @@ Metadata:
         default: BIG-IP VE throughput (PAYG)
       vpc:
         default: VPC ID
-      vpcCidr:
-        default: VPC CIDR
   Version: 1.0.0
 Parameters:
-  appDockerImageName:
-    Default: 'f5devcentral/f5-demo-app:1.0.1'
-    Description: Application docker image name
-    Type: String
   application:
     Default: f5app
     Description: Name of the Application Tag
@@ -733,26 +680,6 @@ Parameters:
     Default: m5.2xlarge
     Description: AWS instance type
     Type: String
-  licenseType:
-    AllowedValues:
-      - payg
-      - byol
-      - bigiq
-    Default: payg
-    Description: Specifies licence type used for BIG-IP VE
-    Type: String
-  numNics:
-    Default: 2
-    Description: Number of interfaces to create on BIG-IP instance. Maximum of 3 allowed. Minimum of 1 allowed.
-    MaxValue: 3
-    MinValue: 1
-    Type: Number
-  numberPublicExternalIPAddresses:
-    Default: 1
-    Description: Number of external public ip address to create and associate to external interface. Maximum of 4 allowed. Minimum of 0 allowed.
-    MaxValue: 4
-    MinValue: 1
-    Type: Number
   owner:
     Default: f5owner
     Description: Owner Tag
@@ -760,15 +687,59 @@ Parameters:
   privateSubnet1ID:
     Description: Private Subnet1 ID.
     Type: AWS::EC2::Subnet::Id
+  privateSubnet1SelfAddress:
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
+    ConstraintDescription: IP address parameter must be in the form x.x.x.x
+    Description: Private Subnet1 IP Address.
+    Type: String
   privateSubnet2ID:
     Description: Private Subnet2 ID.
     Type: AWS::EC2::Subnet::Id
+  privateSubnet2SelfAddress:
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
+    ConstraintDescription: IP address parameter must be in the form x.x.x.x
+    Description: Private Subnet2 IP Address.
+    Type: String
+  provisionPublicIpMgmt:
+    AllowedValues:
+      - 'No'
+      - 'Yes'
+    Default: 'No'
+    Description: Choose True to provision public IP addresses for the BIG-IP management network interfaces. By default, no public IP addresses are provisioned.
+    Type: String
+  provisionPublicIpVip:
+    AllowedValues:
+      - 'No'
+      - 'Yes'
+    Default: 'No'
+    Description: Choose True to provision public IP addresses for the BIG-IP external network interfaces. By default, no public IP addresses are provisioned.
+    Type: String
   publicSubnet1ID:
     Description: Public Subnet1 ID.
     Type: AWS::EC2::Subnet::Id
+  publicSubnet1SelfAddress:
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
+    ConstraintDescription: IP address parameter must be in the form x.x.x.x
+    Description: Public Subnet1 IP Address.
+    Type: String
+  publicSubnet1VipAddress:
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
+    ConstraintDescription: IP address parameter must be in the form x.x.x.x
+    Description: Public Subnet1 External Service IP Address.
+    Type: String
   publicSubnet2ID:
     Description: Public Subnet2 ID.
     Type: AWS::EC2::Subnet::Id
+  publicSubnet2SelfAddress:
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
+    ConstraintDescription: IP address parameter must be in the form x.x.x.x
+    Description: Private Subnet2 IP Address.
+    Type: String
+  publicSubnet2VipAddress:
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
+    ConstraintDescription: IP address parameter must be in the form x.x.x.x
+    Description: Public Subnet2 External Service IP Address.
+    Type: String
   restrictedSrcAddress:
     AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})'
     ConstraintDescription: Must be a valid IP CIDR range of the form x.x.x.x/x.
@@ -819,12 +790,6 @@ Parameters:
   vpc:
     Description: VPC Id for the deployment.
     Type: AWS::EC2::VPC::Id
-  vpcCidr:
-    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$'
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    Default: 10.0.0.0/16
-    Description: CIDR block for the VPC
-    Type: String
 Resources:
   Access:
     Type: 'AWS::CloudFormation::Stack'
@@ -838,6 +803,7 @@ Resources:
         costcenter: !Ref costcenter
         environment: !Ref environment
         group: !Ref group
+        owner: !Ref owner
         s3Bucket: !Ref cfeS3Bucket
         solutionType: failover
   Dag:
@@ -854,16 +820,14 @@ Resources:
         createFailoverIngress: 'Yes'
         environment: !Ref environment
         group: !Ref group
-        numberPublicExternalIPAddresses: 3
-        numberPublicMgmtIPAddresses: 0
+        numberPublicExternalIPAddresses: !If [usePublicIpVip, 3, 0]
+        numberPublicMgmtIPAddresses: !If [usePublicIpMgmt, 2, 0]
+        owner: !Ref owner
         restrictedSrcAddress: !Ref restrictedSrcAddress
         restrictedSrcAddressApp: !Ref restrictedSrcAddressApp
         restrictedSrcPort: 443
         vpc: !Ref vpc
   BigipInstance01:
-    DependsOn:
-      - Access
-      - Dag
     Type: 'AWS::CloudFormation::Stack'
     Properties:
       TemplateURL:
@@ -875,23 +839,21 @@ Resources:
         bigipRuntimeInitConfig: !Ref bigipRuntimeInitConfig01
         cfeS3Bucket: !Ref cfeS3Bucket
         customImageId: !If [noCustomImageId, !FindInMap [!FindInMap [VERSION, !Ref version, REGIONMAP], !Ref 'AWS::Region', !FindInMap [AWSBigipThroughput, !Ref throughput, !Ref imageName]], !Ref customImageId]
-        externalPrimaryPublicId: !GetAtt [Dag, Outputs.BigipExternalEipAllocationId00]
-        externalPublicIpIds: !GetAtt [Dag, Outputs.BigipExternalEipAllocationId01]
+        externalPrimaryPublicId: !If [usePublicIpVip, !GetAtt [Dag, Outputs.BigipExternalEipAllocationId00], 'OPTIONAL']
+        externalPublicIpIds: !If [usePublicIpVip, !GetAtt [Dag, Outputs.BigipExternalEipAllocationId01], 'OPTIONAL']
         externalSecurityGroupId: !GetAtt [Dag, Outputs.BigipExternalSecurityGroup]
-        externalSelfIp: 10.0.10.89
-        externalServiceIPs: 10.0.10.90
+        externalSelfIp: !Ref publicSubnet1SelfAddress
+        externalServiceIPs: !Ref publicSubnet1VipAddress
         externalSubnetId: !Ref publicSubnet1ID
         instanceType: !Ref instanceType
         internalSubnetId: !Ref 'AWS::NoValue'
+        mgmtPublicIpId: !If [usePublicIpMgmt, !GetAtt [Dag, Outputs.BigipManagementEipAllocationId01], 'OPTIONAL']
         mgmtSecurityGroupId: !GetAtt [Dag, Outputs.BigipExternalSecurityGroup]
-        mgmtSelfIp: 10.0.11.180
+        mgmtSelfIp: !Ref privateSubnet1SelfAddress
         mgmtSubnetId: !Ref privateSubnet1ID
         numSecondaryPrivateIpAddress: 1
         sshKey: !Ref sshKey
   BigipInstance02:
-    DependsOn:
-      - Access
-      - Dag
     Type: 'AWS::CloudFormation::Stack'
     Properties:
       TemplateURL:
@@ -902,16 +864,17 @@ Resources:
         bigipInstanceProfile: !GetAtt [Access, Outputs.BigipInstanceProfile]
         bigipRuntimeInitConfig: !Ref bigipRuntimeInitConfig02
         customImageId: !If [noCustomImageId, !FindInMap [!FindInMap [VERSION, !Ref version, REGIONMAP], !Ref 'AWS::Region', !FindInMap [AWSBigipThroughput, !Ref throughput, !Ref imageName]], !Ref customImageId]
-        externalPrimaryPublicId: !GetAtt [Dag, Outputs.BigipExternalEipAllocationId02]
-        externalPublicIpIds: !GetAtt [Dag, Outputs.BigipExternalEipAllocationId03]
+        externalPrimaryPublicId: !If [usePublicIpVip, !GetAtt [Dag, Outputs.BigipExternalEipAllocationId02], 'OPTIONAL']
+        externalPublicIpIds: !If [usePublicIpVip, !GetAtt [Dag, Outputs.BigipExternalEipAllocationId03], 'OPTIONAL']
         externalSecurityGroupId: !GetAtt [Dag, Outputs.BigipExternalSecurityGroup]
-        externalSelfIp: 10.0.20.158
-        externalServiceIPs: 10.0.20.157
+        externalSelfIp: !Ref publicSubnet2SelfAddress
+        externalServiceIPs: !Ref publicSubnet2VipAddress
         externalSubnetId: !Ref publicSubnet2ID
         instanceType: !Ref instanceType
         internalSubnetId:  !Ref 'AWS::NoValue'
+        mgmtPublicIpId: !If [usePublicIpMgmt, !GetAtt [Dag, Outputs.BigipManagementEipAllocationId02], 'OPTIONAL']
         mgmtSecurityGroupId: !GetAtt [Dag, Outputs.BigipExternalSecurityGroup]
-        mgmtSelfIp: 10.0.21.218
+        mgmtSelfIp: !Ref privateSubnet2SelfAddress
         mgmtSubnetId: !Ref privateSubnet2ID
         numSecondaryPrivateIpAddress: 0
         sshKey: !Ref sshKey
