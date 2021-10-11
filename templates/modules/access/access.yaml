@@ -30,7 +30,7 @@ Metadata:
     ParameterLabels:
       application:
         default: Application
-      costcenter:
+      cost:
         default: Cost Center
       environment:
         default: Environment
@@ -48,28 +48,28 @@ Metadata:
         default: ARN of Secrets Manager secret
   Version: 1.0.0
 Outputs:
-  StackName:
+  stackName:
     Description: access nested stack name
     Value: !Ref "AWS::StackName"
-  BigipInstanceProfile:
+  bigipInstanceProfile:
     Description: BIGIP instance profile with applied IAM policy.
     Value: !If
       - Standard
       - !Ref BigipStandardInstanceProfile
       - !Ref BigipHighAvailabilityInstanceProfile
-  LambdaAccessRole:
+  lambdaAccessRole:
     Description: IAM policy for BIG-IQ lambda function
     Value: !If
       - BigIq
       - !GetAtt LambdaAccessRole.Arn
       - OPTIONAL
-  CopyZipsRole:
+  copyZipsRole:
     Description: IAM policy for BIG-IQ lambda function
     Value: !If
       - BigIq
       - !GetAtt CopyZipsRole.Arn
       - OPTIONAL
-  BigIqNotificationRole:
+  bigIqNotificationRole:
     Description: IAM policy for Lifecycle Hook notifications
     Value: !If
       - BigIq
@@ -116,8 +116,8 @@ Parameters:
     Default: f5owner
     Description: Name of the Owner Tag
     Type: String
-  costcenter:
-    Default: f5costcenter
+  cost:
+    Default: f5cost
     Description: Name of the Cost Center Tag
     Type: String
 Resources:
@@ -150,8 +150,8 @@ Resources:
       Tags:
         - Key: Application
           Value: !Ref application
-        - Key: Costcenter
-          Value: !Ref costcenter
+        - Key: Cost
+          Value: !Ref cost
         - Key: Environment
           Value: !Ref environment
         - Key: Group
@@ -206,8 +206,8 @@ Resources:
       Tags:
         - Key: Application
           Value: !Ref application
-        - Key: Costcenter
-          Value: !Ref costcenter
+        - Key: Cost
+          Value: !Ref cost
         - Key: Environment
           Value: !Ref environment
         - Key: Group
@@ -220,12 +220,12 @@ Resources:
     Properties:
       AssumeRolePolicyDocument:
         Statement:
-        - Action:
-            - 'sts:AssumeRole'
-          Effect: Allow
-          Principal:
-            Service:
-              - autoscaling.amazonaws.com
+          - Action:
+              - 'sts:AssumeRole'
+            Effect: Allow
+            Principal:
+              Service:
+                - autoscaling.amazonaws.com
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AutoScalingNotificationAccessRole
       Path: /
@@ -274,8 +274,8 @@ Resources:
       Tags:
         - Key: Application
           Value: !Ref application
-        - Key: Costcenter
-          Value: !Ref costcenter
+        - Key: Cost
+          Value: !Ref cost
         - Key: Environment
           Value: !Ref environment
         - Key: Group
@@ -299,6 +299,20 @@ Resources:
       Policies:
         - PolicyDocument:
             Statement:
+              - Action:
+                  - 'cloudwatch:PutMetricData'
+                  - 'logs:DescribeLogGroups'
+                  - 'logs:DescribeLogStreams'
+                  - 'logs:PutLogEvents'
+                Effect: Allow
+                Resource:
+                  - '*'
+              - Action:
+                  - 'cloudformation:ListStackResources'
+                  - 'cloudformation:SignalResource'
+                Effect: Allow
+                Resource:
+                  - '*'
               - Action:
                   - 's3:ListBucket'
                   - 's3:GetBucketLocation'
@@ -326,11 +340,14 @@ Resources:
                   - 'ec2:DescribeNetworkInterfaceAttribute'
                   - 'ec2:DescribeRouteTables'
                   - 's3:ListAllMyBuckets'
+                  - 'ec2:DescribeSubnets'
                   - 's3:GetBucketLocation'
                   - 'ec2:AssociateAddress'
                   - 'ec2:DisassociateAddress'
                   - 'ec2:AssignPrivateIpAddresses'
                   - 'ec2:UnassignPrivateIpAddresses'
+                  - 'ec2:AssignIpv6Addresses'
+                  - 'ec2:UnassignIpv6Addresses'
                 Effect: Allow
                 Resource:
                   - '*'
@@ -339,8 +356,8 @@ Resources:
       Tags:
         - Key: Application
           Value: !Ref application
-        - Key: Costcenter
-          Value: !Ref costcenter
+        - Key: Cost
+          Value: !Ref cost
         - Key: Environment
           Value: !Ref environment
         - Key: Group

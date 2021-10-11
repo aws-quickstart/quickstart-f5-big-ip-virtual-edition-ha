@@ -3,3 +3,4 @@ CONFIG FILE: taskcat1.yml
 REGION: us-east-1
 SECRET VALUE: StrongPassword12345+
 STACK TYPE: prod
+PROVISION_WEB_APP: 'false'
