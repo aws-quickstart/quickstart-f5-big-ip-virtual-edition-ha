@@ -18,11 +18,12 @@ tests:
       bigipInstanceType: m5.xlarge
       availabilityZones: $[taskcat_genaz_2]
       remoteAccessCIDR: 0.0.0.0/0
-      restrictedSrcAddress: 0.0.0.0/0
+      restrictedSrcAddressMgmt: 0.0.0.0/0
       restrictedSrcAddressApp: 0.0.0.0/0
       keyPairName: dewpt
       cfeS3Bucket: tcat-quickstart-cfe-$[taskcat_random-string]
       bigipRuntimeInitConfig01: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance01.yaml
       bigipRuntimeInitConfig02: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance02.yaml
+      uniqueString: $[taskcat_genpass_8]
     regions:
       - us-east-1

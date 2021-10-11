@@ -17,20 +17,22 @@ tests:
       qss3Region: us-east-1
       bigipInstanceType: m5.xlarge
       availabilityZones: $[taskcat_genaz_2]
-      provisionPublicIpMgmt: 'No'
-      provisionPublicIpVip: 'Yes'
-      privateSubnet1ASelfAddress: 10.0.11.180
-      privateSubnet2ASelfAddress: 10.0.21.218
-      publicSubnet1SelfAddress: 10.0.10.89
-      publicSubnet1VipAddress: 10.0.10.90
-      publicSubnet2SelfAddress: 10.0.20.158
-      publicSubnet2VipAddress: 10.0.20.157
+      provisionPublicIpMgmt: 'false'
+      provisionPublicIpVip: 'true'
+      privateSubnet1ASelfAddress: 10.0.11.11
+      privateSubnet2ASelfAddress: 10.0.21.11
+      publicSubnet1SelfAddress: 10.0.10.11
+      publicSubnet1VipAddress: 10.0.10.101
+      publicSubnet2SelfAddress: 10.0.20.11
+      publicSubnet2VipAddress: 10.0.20.101
       remoteAccessCIDR: 0.0.0.0/0
-      restrictedSrcAddress: 0.0.0.0/0
+      restrictedSrcAddressMgmt: 0.0.0.0/0
       restrictedSrcAddressApp: 0.0.0.0/0
       keyPairName: dewpt
       cfeS3Bucket: tcat-quickstart-cfe-$[taskcat_random-string]
-      bigipRuntimeInitConfig01: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance01.yaml
-      bigipRuntimeInitConfig02: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance02.yaml
+      bigipRuntimeInitConfig01: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance01_with_app.yaml
+      bigipRuntimeInitConfig02: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance02_with_app.yaml
+      uniqueString: $[taskcat_genpass_8]
+      provisionExampleApp: 'true'
     regions:
       - us-west-1
