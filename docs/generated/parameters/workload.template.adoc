@@ -1,0 +1,71 @@
+
+.Deployment Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|unique string value which gets append to cloud resources names
+(`uniqueString`)|`myUniqStr`|Unique String used when creating object names or Tags.
+|===
+.Network Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|VPC ID
+(`vpc`)|`**__Requires input__**`|VPC Id for the deployment.|**NO_LABEL**
+(`publicSubnet1ID`)|`**__Requires input__**`|Public Subnet1 ID.|BIG-IP address for public subnet in AZ1
+(`publicSubnet1SelfAddress`)|`**__Requires input__**`|Public Subnet1 IP Address.|Private Subnet AZ1
+(`privateSubnet1ID`)|`**__Requires input__**`|Private Subnet1 ID.|**NO_LABEL**
+(`privateSubnet1SelfAddress`)|`**__Requires input__**`|Private Subnet1 IP Address.|**NO_LABEL**
+(`publicSubnet2ID`)|`**__Requires input__**`|Public Subnet2 ID.|BIG-IP address for public subnet in AZ2
+(`publicSubnet2SelfAddress`)|`**__Requires input__**`|Private Subnet2 IP Address.|Private Subnet AZ2
+(`privateSubnet2ID`)|`**__Requires input__**`|Private Subnet2 ID.|**NO_LABEL**
+(`privateSubnet2SelfAddress`)|`**__Requires input__**`|Private Subnet2 IP Address.|Private Subnet AZ1
+(`privateSubnet3ID`)|`**__Requires input__**`|Private Subnet2 ID.|Private Subnet AZ2
+(`privateSubnet4ID`)|`**__Requires input__**`|Private Subnet2 ID.|Provision Public IP addresses for the BIG-IP management interfaces
+(`provisionPublicIpMgmt`)|`false`|Choose True to provision public IP addresses for the BIG-IP management network interfaces. By default, no public IP addresses are provisioned.
+|===
+.Amazon EC2 Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|EC2 KeyPair to enable SSH access to the BIG-IP instance
+(`sshKey`)|`**__Requires input__**`|EC2 KeyPair to enable SSH access to the BIG-IP instance|Restricted source address to BIG-IP management
+(`restrictedSrcAddressMgmt`)|`**__Requires input__**`| The IP address range used to SSH and access management GUI on the EC2 instances|Restricted source address to application
+(`restrictedSrcAddressApp`)|`**__Requires input__**`|The IP address range that can be used to access web traffic (80/443) to the EC2 instances.
+|===
+.BIG-IP Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|AWS instance type
+(`instanceType`)|`m5.2xlarge`|AWS instance type|Image Id
+(`imageId`)|`**__Blank string__**`|If you would like to deploy using a custom BIG-IP image, provide the AMI Id.  **Note**: Unless specifically required, leave the default of **OPTIONAL**|F5 BIG-IP Performance Type (PAYG)
+(`imageName`)|`Best`|F5 BIG-IP Performance Type|BIG-IP VE throughput (PAYG)
+(`throughput`)|`1000Mbps`|Maximum amount of throughput for BIG-IP VE|BIG-IP Runtime Init config
+(`bigipRuntimeInitConfig01`)|`**__Requires input__**`|URL for BIG-IP Runtime Init config|BIG-IP Runtime Init config
+(`bigipRuntimeInitConfig02`)|`**__Requires input__**`|URL for BIG-IP Runtime Init config|CFE S3 bucket
+(`cfeS3Bucket`)|`aws-quickstart-cfe`|S3 bucket name used by Cloud Failover Extension|CFE VIP tag value
+(`cfeVipTag`)|`**__Requires input__**`|Cloud Failover VIP tag value; provides private ip addresses to be assigned to VIP public ip.
+|===
+.Resources Tags
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|Application
+(`application`)|`f5app`|Name of the Application Tag|Cost Center
+(`cost`)|`f5cost`|Cost Center Tag.|Environment
+(`environment`)|`f5env`|Environment Tag.|Group
+(`group`)|`f5group`|Group Tag.|Owner
+(`owner`)|`f5owner`|Owner Tag
+|===
+.Provision Example App
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|Provision Example App
+(`provisionExampleApp`)|`false`|This is used to deploy the demo WebApps.|Application docker image name
+(`appDockerImageName`)|`f5devcentral/f5-demo-http:nginx`|Application docker image name|**NO_LABEL**
+(`publicSubnet1VipAddress`)|`**__Requires input__**`|Public Subnet1 External Service IP Address.|**NO_LABEL**
+(`publicSubnet2VipAddress`)|`**__Requires input__**`|Public Subnet2 External Service IP Address.
+|===
+.Templates Location
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|S3 bucket where Templates are Located
+(`s3BucketName`)|`aws-quickstart`|S3 bucket name for the modules. S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).|S3 key prefix
+(`s3KeyPrefix`)|`quickstart-f5-big-ip-virtual-edition-ha/`|S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).
+|===

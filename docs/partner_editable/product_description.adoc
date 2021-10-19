@@ -1,0 +1,13 @@
+// Replace the content in <>
+// Briefly describe the software. Use consistent and clear branding. 
+// Include the benefits of using the software on AWS, and provide details on usage scenarios.
+
+This Quick Start deploys a pair of BIG-IP VE instances provisioned with:
+
+* *Local Traffic Manager (LTM)* - which performs uniform resource identifier (URI)
+routing, Secure Sockets Layer (SSL) encryption, and automatic discovery of automatically
+scaled web applications)
+* *Application Security Manager (ASM)* - web application firewall 
+
+You can customize this Quick Start by changing the configuration parameters. The Quick
+Start deploys a full working stack that you can inspect and use as a reference. 

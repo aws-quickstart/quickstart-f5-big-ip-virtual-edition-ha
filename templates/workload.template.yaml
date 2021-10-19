@@ -533,6 +533,8 @@ Conditions:
     - 'true'
   govCloudCondition: !Or [!Equals [!Ref 'AWS::Region', us-gov-west-1], !Equals [!Ref 'AWS::Region', us-gov-east-1]]
 Metadata:
+  QuickStartDocumentation:
+    EntrypointName: "Launch into an existing VPC"
   'AWS::CloudFormation::Interface':
     ParameterGroups:
       - Label:

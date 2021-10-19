@@ -1,0 +1,9 @@
+// Replace the <n> in each row to specify the number of resources used in this deployment. Remove the rows for resources that aren’t used.
+|===
+|Resource |This deployment uses
+|VPCs | 1
+|Elastic IP addresses | 2 (3 when provisionDemoApp = true)
+|AWS Identity and Access Management (IAM) security groups | 
+|IAM roles | 1
+|ec2 instances | 2 (3 when provisionDemoApp = true)
+|===

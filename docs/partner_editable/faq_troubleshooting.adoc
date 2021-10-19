@@ -1,0 +1,60 @@
+// Add any tips or answers to anticipated questions. This could include the following troubleshooting information. If you don’t have any other Q&A to add, change “FAQ” to “Troubleshooting.”
+
+== FAQ
+
+*Q.* I encountered a *CREATE_FAILED* error when I launched the Quick Start.
+
+*A.* If AWS CloudFormation fails to create the stack, we recommend that you relaunch the template with *Rollback on failure* set to *No*. (This setting is under *Advanced* in the AWS CloudFormation console, *Options* page.) With this setting, the stack’s state is retained and the instance is left running, so you can troubleshoot the issue. (For Windows, look at the log files in %ProgramFiles%\Amazon\EC2ConfigService and C:\cfn\log.)
+// If you’re deploying on Linux instances, provide the location for log files on Linux, or omit this sentence.
+
+*Important:* When you set *Rollback on failure* to *No*, you continue to incur AWS charges for this stack. Please make sure to delete the stack when you finish troubleshooting.
+
+For additional information, see https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/troubleshooting.html[Troubleshooting AWS CloudFormation] on the AWS website.
+
+*Q.* I encountered a size limitation error when I deployed the AWS CloudFormation templates.
+
+*A.* We recommend that you launch the Quick Start templates from the links in this guide or from another S3 bucket. If you deploy the templates from a local copy on your computer or from a location other than an S3 bucket, you might encounter template size limitations. For more information about AWS CloudFormation quotas, see the http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html[AWS documentation].
+
+
+== Troubleshooting
+
+There are generally two classes of issues:
+
+. Stack creation itself failed
+. Resource(s) within the stack failed to deploy
+
+In the even that a template in the stack failed, click on the name of a failed stack and then click `Events`. Check the `Status Reason` column for the failed event for details about the cause. 
+
+**When creating a GitHub issue for a template, please include as much information as possible from the failed CloudFormation stack events.**
+
+Common deployment failure causes include:
+
+- Required fields were left empty or contained incorrect values (input type mismatch, prohibited characters, etc) causing template validation failure
+- Insufficient permissions to create the deployment or resources created by a deployment (IAM roles, etc)
+- Resource limitations (exceeded limit of IP addresses or compute resources, etc)
+- AWS service issues (service health can be checked from the AWS [Service Health Dashboard](https://status.aws.amazon.com/)
+
+If all stacks were created "successfully" but maybe the BIG-IP or Service is not reachable, then log in to the BIG-IP instance via SSH to confirm BIG-IP deployment was successful (for example, if startup scripts completed as expected on the BIG-IP). To verify BIG-IP deployment, perform the following steps:
+
+- Obtain the IP address of the BIG-IP instance. See instructions [above](#accessing-the-bigip-ip)
+- Check startup-script to make sure was installed/interpolated correctly:
+  * ```cat /opt/cloud/instance/user-data.txt```
+- Check the logs (in order of invocation):
+  * cloud-init Logs:
+    ** */var/log/boot.log*
+    ** */var/log/cloud-init.log*
+    ** */var/log/cloud-init-output.log*
+  * runtime-init Logs:
+    ** */var/log/cloud/startup-script.log*: This file contains events that happen prior to execution of f5-bigip-runtime-init. If the files required by the deployment fail to download, for example, you will see those events logged here.
+    ** */var/log/cloud/bigipRuntimeInit.log*: This file contains events logged by the f5-bigip-runtime-init onboarding utility. If the configuration is invalid causing onboarding to fail, you will see those events logged here. If deployment is successful, you will see an event with the body "All operations completed successfully".
+  * Automation Tool Chain Logs:
+    ** */var/log/restnoded/restnoded.log*: This file contains events logged by the F5 Automation Toolchain components. If an Automation Toolchain declaration fails to deploy, you will see more details for those events logged here.
+
+**GENERAL LOG TIP**: Search most critical error level errors first (for example, egrep -i err /var/log/<Logname>).
+
+If you are unable to login to the BIG-IP instance, you can navigate to **EC2 > Instances**, select the check box next to the instance you want to troubleshoot, and then click **Actions > Monitor and Troubleshoot > Get System Log** or **Get Instance Screenshot** for potential logging to serial console.
+
+[source,shell]
+----
+aws ec2 get-console-output --region ${REGION}  --instance-id <ID>
+----
