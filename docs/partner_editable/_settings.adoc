@@ -1,0 +1,9 @@
+:quickstart-project-name: quickstart-f5-big-ip-virtual-edition-ha
+:partner-product-name: F5 BIG-IP Virtual Edition
+:partner-company-name: F5
+:doc-month: Oct
+:doc-year: 2021
+:partner-contributors: ? Alex Applebaum, Andrey Kashcheev, Michael Shimkus, Greg Crosby, Nitin Khanna, Yossi Rosenboim
+:quickstart-contributors: N/A
+:deployment_time: 30 minutes / 1 hour
+:default_deployment_region: us-east-1

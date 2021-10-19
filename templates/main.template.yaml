@@ -16,6 +16,8 @@ Conditions:
     - !Ref provisionPublicIpMgmt
   govCloudCondition: !Or [!Equals [!Ref 'AWS::Region', us-gov-west-1], !Equals [!Ref 'AWS::Region', us-gov-east-1]]
 Metadata:
+  QuickStartDocumentation:
+    EntrypointName: "Launch into a new VPC"
   'AWS::CloudFormation::Interface':
     ParameterGroups:
       - Label:
@@ -411,7 +413,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub
-        - https://${qss3BucketName}.${qss3Region}.amazonaws.com/${qss3KeyPrefix}templates/workload.yaml
+        - https://${qss3BucketName}.${qss3Region}.amazonaws.com/${qss3KeyPrefix}templates/workload.template.yaml
         - { qss3Region: !If [govCloudCondition, s3-us-gov-west-1, s3] }
       Parameters:
         appDockerImageName: !Ref appDockerImageName

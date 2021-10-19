@@ -1,0 +1,14 @@
+
+.BIG-IP VE on AWS
+
+BIG-IP VE is an application delivery and security services platform that is built to ensure
+speed, availability, and security for business-critical applications and networks. It enables
+intelligent L4-L7 load balancing and traffic management, robust network and web
+application firewalls, simplified application access, Domain Name System (DNS) services,
+and much more. For more information about BIG-IP VE, see the F5 website.
+
+//{empty} +
+
+This Quick Start reference deployment guide discusses architectural considerations and configuration steps for deploying a failover cluster of F5 BIG-IP instances on the Amazon Web Services (AWS) Cloud. It also provides links for viewing and launching AWS CloudFormation templates that automate the deployment.
+
+The guide is for IT infrastructure architects, administrators, and NetOps professionals who are planning to implement or extend their web application proxy and firewall workloads on the AWS Cloud.

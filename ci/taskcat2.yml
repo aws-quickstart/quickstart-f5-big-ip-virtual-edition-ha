@@ -11,7 +11,7 @@ project:
     delete: 'True'
 tests:
   f5ve-ha-prod:
-    template: templates/main.yaml
+    template: templates/main.template.yaml
     parameters:
       qss3BucketName: $[taskcat_autobucket]
       qss3Region: us-east-1
