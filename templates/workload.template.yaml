@@ -575,6 +575,7 @@ Metadata:
           - cfeS3Bucket
           - cfeVipTag
           - cfeTag
+          - secretArn
       - Label:
           default: Resources Tags
         Parameters:
@@ -648,6 +649,8 @@ Metadata:
         default: S3 bucket where Templates are Located
       s3KeyPrefix:
         default: S3 key prefix
+      secretArn:
+        default: ARN of Secrets Manager secret
       sshKey:
         default: EC2 KeyPair to enable SSH access to the BIG-IP instance
       throughput:
@@ -846,6 +849,10 @@ Parameters:
     Default: quickstart-f5-big-ip-virtual-edition-ha/
     Description: 'S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).'
     Type: String
+  secretArn:
+    Default: ''
+    Description: ARN of Secrets Manager secret
+    Type: String
   sshKey:
     Description: EC2 KeyPair to enable SSH access to EC2 instances which include BIG-IP, Bastion, and demo application instances.
     Type: 'AWS::EC2::KeyPair::KeyName'
@@ -891,6 +898,7 @@ Resources:
         group: !Ref group
         owner: !Ref owner
         s3Bucket: !Ref cfeS3Bucket
+        secretArn: !Ref secretArn
         solutionType: failover
   Dag:
     Type: 'AWS::CloudFormation::Stack'
@@ -924,7 +932,7 @@ Resources:
         - https://${s3BucketName}.${s3Region}.amazonaws.com/${s3KeyPrefix}templates/modules/bigip-standalone/bigip-standalone.yaml
         - { s3Region: !If [govCloudCondition, s3-us-gov-west-1, s3] }
       Parameters:
-        bigIpInstanceProfile: !GetAtt [Access, Outputs.bigipInstanceProfile]
+        bigIpInstanceProfile: !GetAtt [Access, Outputs.bigIpInstanceProfile]
         bigIpRuntimeInitConfig: !Ref bigipRuntimeInitConfig01
         cfeS3Bucket: !Ref cfeS3Bucket
         imageId: !If [noCustomImageId, !FindInMap [!FindInMap [VERSION, !Ref version, REGIONMAP], !Ref 'AWS::Region', !FindInMap [AWSBigipThroughput, !Ref throughput, !Ref imageName]], !Ref imageId]
@@ -951,7 +959,7 @@ Resources:
         - https://${s3BucketName}.${s3Region}.amazonaws.com/${s3KeyPrefix}templates/modules/bigip-standalone/bigip-standalone.yaml
         - { s3Region: !If [govCloudCondition, s3-us-gov-west-1, s3] }
       Parameters:
-        bigIpInstanceProfile: !GetAtt [Access, Outputs.bigipInstanceProfile]
+        bigIpInstanceProfile: !GetAtt [Access, Outputs.bigIpInstanceProfile]
         bigIpRuntimeInitConfig: !Ref bigipRuntimeInitConfig02
         imageId: !If [noCustomImageId, !FindInMap [!FindInMap [VERSION, !Ref version, REGIONMAP], !Ref 'AWS::Region', !FindInMap [AWSBigipThroughput, !Ref throughput, !Ref imageName]], !Ref imageId]
         externalPrimaryPublicId: ''

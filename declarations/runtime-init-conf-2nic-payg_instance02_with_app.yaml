@@ -40,7 +40,7 @@ extension_services:
           admin:
             class: User
             userType: regular
-            password: StrongPassword12345+
+            password: '{{{BIGIP_PASSWORD}}}'
             shell: bash
           external:
             class: VLAN
@@ -82,10 +82,10 @@ extension_services:
           trust:
             class: DeviceTrust
             localUsername: admin
-            localPassword: StrongPassword12345+
+            localPassword: '{{{BIGIP_PASSWORD}}}'
             remoteHost: 10.0.10.11
             remoteUsername: admin
-            remotePassword: StrongPassword12345+
+            remotePassword: '{{{BIGIP_PASSWORD}}}'
           dbVars:
             class: DbVariables
             config.allow.rfc3927: enable
@@ -189,6 +189,13 @@ pre_onboard_enabled:
     commands:
       - /usr/bin/setdb provision.1nicautoconfig disable
 runtime_parameters:
+  - name: BIGIP_PASSWORD
+    type: secret
+    secretProvider:
+      environment: aws
+      secretId: mySecretId
+      type: SecretsManager
+      version: AWSCURRENT
   - name: HOST_NAME
     type: metadata
     metadataProvider:
@@ -207,8 +214,7 @@ runtime_parameters:
     metadataProvider:
       environment: aws
       type: network
-      field: local-ipv4s
-      ipcalc: first
+      field: subnet-ipv4-cidr-block
       index: 1
   - name: REGION
     type: url

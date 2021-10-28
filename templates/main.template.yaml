@@ -58,6 +58,7 @@ Metadata:
           - cfeS3Bucket
           - cfeTag
           - cfeVipTag
+          - secretArn
       - Label:
           default: Resources Tags
         Parameters:
@@ -149,6 +150,8 @@ Metadata:
         default: Restricted source address to BIG-IP management
       restrictedSrcAddressApp:
         default: Restricted source address to application
+      secretArn:
+        default: ARN of Secrets Manager secret
       vpcCIDR:
         default: VPC CIDR
       uniqueString:
@@ -370,6 +373,10 @@ Parameters:
     MaxLength: '18'
     MinLength: '9'
     Type: String
+  secretArn:
+    Default: ''
+    Description: ARN of Secrets Manager secret
+    Type: String
   vpcCIDR:
     AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$'
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
@@ -448,6 +455,7 @@ Resources:
         restrictedSrcAddressApp: !Ref restrictedSrcAddressApp
         s3BucketName: !Ref qss3BucketName
         s3KeyPrefix: !Ref qss3KeyPrefix
+        secretArn: !Ref secretArn
         sshKey: !Ref keyPairName
         vpc: !GetAtt 'VPCStack.Outputs.VPCID'
         uniqueString: !Ref uniqueString

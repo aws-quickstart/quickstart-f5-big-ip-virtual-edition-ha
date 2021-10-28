@@ -31,4 +31,13 @@ if [[ -z $region ]]; then
     aws s3 rb s3://${cfe_bucket} --region $region --force
 else aws s3 rb s3://${cfe_bucket} --force
 fi
+
+echo "Delete declatations bucket created for deployment"
+declaration_bucket_name=`echo dd-<DEWPOINT JOB ID>|cut -c -60|tr '[:upper:]' '[:lower:]'| sed 's:-*$::'`
+echo "Deleting $declaration_bucket_name"
+region=$(aws s3api get-bucket-location --bucket $declaration_bucket_name  | jq -r .LocationConstraint)
+if [[ -z $region ]]; then
+    aws s3 rb s3://${declaration_bucket_name} --region $region --force
+else aws s3 rb s3://${declaration_bucket_name} --force
+fi
 echo "PASS"

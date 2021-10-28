@@ -4,6 +4,9 @@ extension_packages:
     - extensionHash: bfe88c7cf3fdb24adc4070590c27488e203351fc808d57ae6bbb79b615d66d27
       extensionType: do
       extensionVersion: 1.23.0
+    - extensionHash: 47cc7bb6962caf356716e7596448336302d1d977715b6147a74a142dc43b391b
+      extensionType: as3
+      extensionVersion: 3.30.0
     - extensionHash: da3118eacc4fe9ff925d95d4bf8d1993810560e07260825306cb0721862defdf
       extensionType: cf
       extensionVersion: 1.9.0
@@ -37,7 +40,7 @@ extension_services:
           admin:
             class: User
             userType: regular
-            password: StrongPassword12345+
+            password: '{{{BIGIP_PASSWORD}}}'
             shell: bash
           external:
             class: VLAN
@@ -79,10 +82,10 @@ extension_services:
           trust:
             class: DeviceTrust
             localUsername: admin
-            localPassword: StrongPassword12345+
+            localPassword: '{{{BIGIP_PASSWORD}}}'
             remoteHost: /Common/failoverGroup/members/0
             remoteUsername: admin
-            remotePassword: StrongPassword12345+
+            remotePassword: '{{{BIGIP_PASSWORD}}}'
           dbVars:
             class: DbVariables
             config.allow.rfc3927: enable
@@ -111,6 +114,13 @@ pre_onboard_enabled:
     commands:
       - /usr/bin/setdb provision.1nicautoconfig disable
 runtime_parameters:
+  - name: BIGIP_PASSWORD
+    type: secret
+    secretProvider:
+      environment: aws
+      secretId: mySecretId
+      type: SecretsManager
+      version: AWSCURRENT
   - name: HOST_NAME
     type: metadata
     metadataProvider:
