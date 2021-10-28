@@ -1,6 +1,8 @@
 ---
 name: AWS Examples - HA QuickStart
 onStart:
+  - ../quickstart-f5-big-ip-virtual-edition-ha/common/create_secret.sh
+  - ../quickstart-f5-big-ip-virtual-edition-ha/common/create_s3_and_configs.sh
   - ./create_stack.sh
   - ../quickstart-f5-big-ip-virtual-edition-ha/common/verify_login.sh
   - ../quickstart-f5-big-ip-virtual-edition-ha/common/verify_failover.sh
@@ -15,7 +17,9 @@ onStart:
   - ../quickstart-f5-big-ip-virtual-edition-ha/common/delete_s3_bucket.sh
   - ../quickstart-f5-big-ip-virtual-edition-ha/common/delete_stack.sh
   - ../quickstart-f5-big-ip-virtual-edition-ha/common/verify_delete.sh
+  - ../quickstart-f5-big-ip-virtual-edition-ha/common/delete_secret.sh
 onFail:
   - ../quickstart-f5-big-ip-virtual-edition-ha/common/delete_s3_bucket.sh
   - ../quickstart-f5-big-ip-virtual-edition-ha/common/delete_stack.sh
   - ../quickstart-f5-big-ip-virtual-edition-ha/common/verify_delete.sh
+  - ../quickstart-f5-big-ip-virtual-edition-ha/common/delete_secret.sh

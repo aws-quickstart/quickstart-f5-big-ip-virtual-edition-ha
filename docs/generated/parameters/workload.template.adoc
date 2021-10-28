@@ -41,7 +41,8 @@
 (`bigipRuntimeInitConfig01`)|`**__Requires input__**`|URL for BIG-IP Runtime Init config|BIG-IP Runtime Init config
 (`bigipRuntimeInitConfig02`)|`**__Requires input__**`|URL for BIG-IP Runtime Init config|CFE S3 bucket
 (`cfeS3Bucket`)|`aws-quickstart-cfe`|S3 bucket name used by Cloud Failover Extension|CFE VIP tag value
-(`cfeVipTag`)|`**__Requires input__**`|Cloud Failover VIP tag value; provides private ip addresses to be assigned to VIP public ip.
+(`cfeVipTag`)|`10.0.20.101,10.0.10.101`|Cloud Failover VIP tag value; provides private ip addresses to be assigned to VIP public ip.|BIG-IP password for both BIG-IP instances.
+(`secretArn`)|`**__Requires input__**`|Secret ARN where password for BIG-IP instances is stored.
 |===
 .Resources Tags
 [width="100%",cols="16%,11%,73%",options="header",]
