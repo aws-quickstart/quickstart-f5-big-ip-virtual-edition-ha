@@ -151,7 +151,7 @@ Conditions:
       - !Equals
         - !Ref 'mgmtSubnetId'
         - ''
-  bigipVipEipAssociation: !And
+  bigIpVipEipAssociation: !And
     - !Condition 'useExternalPublicIP'
     - !Not
       - !Condition 'is1Nic'
@@ -608,7 +608,7 @@ Resources:
           Value: aws_quickstart
     Type: 'AWS::EC2::NetworkInterface'
   BigipVipEipAssociation:
-    Condition: bigipVipEipAssociation
+    Condition: bigIpVipEipAssociation
     Properties:
       AllocationId: !Ref 'externalPrimaryPublicId'
       NetworkInterfaceId: !If

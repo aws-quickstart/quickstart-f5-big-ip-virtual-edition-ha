@@ -132,7 +132,7 @@ Outputs:
     Value: !Ref AppInstance
 Parameters:
   appDockerImageName:
-    Default: f5devcentral/f5-demo-app:latest
+    Default: f5devcentral/f5-demo-httpd:latest
     Description: Application docker image name
     Type: String
   appSecurityGroupId:

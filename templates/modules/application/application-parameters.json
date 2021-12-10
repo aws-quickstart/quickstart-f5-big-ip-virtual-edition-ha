@@ -1,7 +1,7 @@
 [
   {
     "ParameterKey": "appContainerName",
-    "ParameterValue": "f5devcentral/f5-demo-app:latest"
+    "ParameterValue": "f5devcentral/f5-demo-httpd:latest"
   },
   {
     "ParameterKey": "appSecurityGroupId",

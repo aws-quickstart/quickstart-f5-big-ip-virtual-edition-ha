@@ -37,6 +37,10 @@ extension_services:
             autoPhonehome: true
             class: System
             hostname: 'failover1.local'
+          myLicense:
+            class: License
+            licenseType: regKey
+            regKey: REPLACE_WITH_VALID_REGKEY
           admin:
             class: User
             userType: regular

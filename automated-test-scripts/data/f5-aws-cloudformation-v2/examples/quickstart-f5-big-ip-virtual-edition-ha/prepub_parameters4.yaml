@@ -1,0 +1,9 @@
+---
+CONFIG FILE: taskcat4.yml
+REGION: us-west-2
+SECRET VALUE: StrongPassword12345+
+STACK TYPE: defaults
+PROVISION_WEB_APP: 'true'
+AUTOFILL EVAL LICENSE KEY: null
+AUTOFILL EVAL LICENSE KEY 2: null
+LICENSE TYPE: byol

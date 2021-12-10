@@ -5,7 +5,7 @@ project:
   name: quickstart-f5-big-ip-virtual-edition-ha
   owner: a.kashcheev@f5.com
   regions:
-    - us-east-1
+    - us-east-2
   tags:
     delete: 'True'
 tests:
@@ -13,17 +13,17 @@ tests:
     parameters:
       availabilityZones: $[taskcat_genaz_2]
       bigIpInstanceType: m5.xlarge
-      bigIpRuntimeInitConfig01: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance01.yaml
-      bigIpRuntimeInitConfig02: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance02.yaml
+      bigIpRuntimeInitConfig01: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-byol_instance01.yaml
+      bigIpRuntimeInitConfig02: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-byol_instance02.yaml
       cfeS3Bucket: tcat-quickstart-cfe-$[taskcat_random-string]
       keyPairName: dewpt
       qss3BucketName: $[taskcat_autobucket]
-      qss3Region: us-east-1
+      qss3Region: us-east-2
       remoteAccessCIDR: 0.0.0.0/0
       restrictedSrcAddressApp: 0.0.0.0/0
       restrictedSrcAddressMgmt: 0.0.0.0/0
-      secretArn: arn:aws:secretsmanager:us-east-1:089591600128:secret:b596d098-secret-kXyT2d
+      secretArn: arn:aws:secretsmanager:us-east-2:089591600128:secret:b596d098-secret-kXyT2d
       uniqueString: $[taskcat_genpass_8]
     regions:
-      - us-east-1
+      - us-east-2
     template: templates/main.template.yaml

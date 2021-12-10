@@ -21,15 +21,15 @@ bigip2_private_ip=$(aws ec2 describe-instances --region  <REGION> --instance-ids
 echo "BIGIP2 PRIVATE IP: $bigip2_private_ip"
 
 
-BIGIP1_SSH_RESPONSE=$(sshpass -p ${PASSWORD} ssh -o "StrictHostKeyChecking no" -o ProxyCommand="ssh -o 'StrictHostKeyChecking no' -i /etc/ssl/private/dewpt_private.pem -W %h:%p ubuntu@$bastion" admin@${bigip1_private_ip} "tmsh list auth user admin")
+BIGIP1_SSH_RESPONSE=$(sshpass -p ${PASSWORD} ssh -o "StrictHostKeyChecking no" -o ProxyCommand="ssh -o 'StrictHostKeyChecking no' -i /etc/ssl/private/dewpt_private.pem -W %h:%p ec2-user@$bastion" admin@${bigip1_private_ip} "tmsh list auth user admin")
 echo "BIGIP1_RESPONSE: ${BIGIP1_SSH_RESPONSE}"
-BIGIP2_SSH_RESPONSE=$(sshpass -p ${PASSWORD} ssh -o "StrictHostKeyChecking no" -o ProxyCommand="ssh -o 'StrictHostKeyChecking no' -i /etc/ssl/private/dewpt_private.pem -W %h:%p ubuntu@$bastion" admin@${bigip2_private_ip} "tmsh list auth user admin")
+BIGIP2_SSH_RESPONSE=$(sshpass -p ${PASSWORD} ssh -o "StrictHostKeyChecking no" -o ProxyCommand="ssh -o 'StrictHostKeyChecking no' -i /etc/ssl/private/dewpt_private.pem -W %h:%p ec2-user@$bastion" admin@${bigip2_private_ip} "tmsh list auth user admin")
 echo "BIGIP2_RESPONSE: ${BIGIP2_SSH_RESPONSE}"
 
-BIGIP1_RESPONSE=$(ssh -i /etc/ssl/private/dewpt_private.pem ubuntu@$bastion "curl -sku admin:${PASSWORD} https://${bigip1_private_ip}:443/mgmt/tm/auth/user/admin" | jq -r .description)
+BIGIP1_RESPONSE=$(ssh -i /etc/ssl/private/dewpt_private.pem ec2-user@$bastion "curl -sku admin:${PASSWORD} https://${bigip1_private_ip}:443/mgmt/tm/auth/user/admin" | jq -r .description)
 echo "BIGIP1_RESPONSE: ${BIGIP1_RESPONSE}"
 
-BIGIP2_RESPONSE=$(ssh -i /etc/ssl/private/dewpt_private.pem ubuntu@$bastion "curl -sku admin:${PASSWORD} https://${bigip2_private_ip}:443/mgmt/tm/auth/user/admin" | jq -r .description)
+BIGIP2_RESPONSE=$(ssh -i /etc/ssl/private/dewpt_private.pem ec2-user@$bastion "curl -sku admin:${PASSWORD} https://${bigip2_private_ip}:443/mgmt/tm/auth/user/admin" | jq -r .description)
 echo "BIGIP2_RESPONSE: ${BIGIP2_RESPONSE}"
 
 # evaluate responses
