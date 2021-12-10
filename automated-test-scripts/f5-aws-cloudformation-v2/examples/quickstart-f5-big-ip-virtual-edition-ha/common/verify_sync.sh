@@ -22,9 +22,9 @@ bigip2_private_ip=$(aws ec2 describe-instances --region  <REGION> --instance-ids
 echo "BIGIP2 PRIVATE IP: $bigip2_private_ip"
 
 
-BIGIP1_SSH_RESPONSE=$(sshpass -p ${PASSWORD} ssh -o "StrictHostKeyChecking no" -o ProxyCommand="ssh -o 'StrictHostKeyChecking no' -i /etc/ssl/private/dewpt_private.pem -W %h:%p ubuntu@$bastion" admin@${bigip1_private_ip} "tmsh show cm sync-status")
+BIGIP1_SSH_RESPONSE=$(sshpass -p ${PASSWORD} ssh -o "StrictHostKeyChecking no" -o ProxyCommand="ssh -o 'StrictHostKeyChecking no' -i /etc/ssl/private/dewpt_private.pem -W %h:%p ec2-user@$bastion" admin@${bigip1_private_ip} "tmsh show cm sync-status")
 echo "BIGIP1_RESPONSE: ${BIGIP1_SSH_RESPONSE}"
-BIGIP2_SSH_RESPONSE=$(sshpass -p ${PASSWORD} ssh -o "StrictHostKeyChecking no" -o ProxyCommand="ssh -o 'StrictHostKeyChecking no' -i /etc/ssl/private/dewpt_private.pem -W %h:%p ubuntu@$bastion" admin@${bigip2_private_ip} "tmsh show cm sync-status")
+BIGIP2_SSH_RESPONSE=$(sshpass -p ${PASSWORD} ssh -o "StrictHostKeyChecking no" -o ProxyCommand="ssh -o 'StrictHostKeyChecking no' -i /etc/ssl/private/dewpt_private.pem -W %h:%p ec2-user@$bastion" admin@${bigip2_private_ip} "tmsh show cm sync-status")
 echo "BIGIP2_RESPONSE: ${BIGIP2_SSH_RESPONSE}"
 
 

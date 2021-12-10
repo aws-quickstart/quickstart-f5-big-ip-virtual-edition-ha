@@ -4,3 +4,4 @@ REGION: us-west-1
 SECRET VALUE: StrongPassword12345+
 STACK TYPE: defaults
 PROVISION_WEB_APP: 'true'
+LICENSE TYPE: payg

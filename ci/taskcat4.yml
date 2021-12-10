@@ -5,7 +5,7 @@ project:
   name: quickstart-f5-big-ip-virtual-edition-ha
   owner: a.kashcheev@f5.com
   regions:
-    - us-west-1
+    - us-west-2
   tags:
     delete: 'True'
 tests:
@@ -13,8 +13,8 @@ tests:
     parameters:
       availabilityZones: $[taskcat_genaz_2]
       bigIpInstanceType: m5.xlarge
-      bigIpRuntimeInitConfig01: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance01_with_app.yaml
-      bigIpRuntimeInitConfig02: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance02_with_app.yaml
+      bigIpRuntimeInitConfig01: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-byol_instance01_with_app.yaml
+      bigIpRuntimeInitConfig02: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-byol_instance02_with_app.yaml
       cfeS3Bucket: tcat-quickstart-cfe-$[taskcat_random-string]
       keyPairName: dewpt
       privateSubnet1ASelfAddress: 10.0.11.11
@@ -27,12 +27,12 @@ tests:
       publicSubnet2SelfAddress: 10.0.20.11
       publicSubnet2VipAddress: 10.0.20.101
       qss3BucketName: $[taskcat_autobucket]
-      qss3Region: us-west-1
+      qss3Region: us-west-2
       remoteAccessCIDR: 0.0.0.0/0
       restrictedSrcAddressApp: 0.0.0.0/0
       restrictedSrcAddressMgmt: 0.0.0.0/0
-      secretArn: arn:aws:secretsmanager:us-west-1:089591600128:secret:b596d098-secret-kXyT2d
+      secretArn: arn:aws:secretsmanager:us-west-2:089591600128:secret:b596d098-secret-kXyT2d
       uniqueString: $[taskcat_genpass_8]
     regions:
-      - us-west-1
+      - us-west-2
     template: templates/main.template.yaml

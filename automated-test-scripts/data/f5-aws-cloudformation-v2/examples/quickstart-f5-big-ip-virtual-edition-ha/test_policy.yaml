@@ -2,5 +2,9 @@ aws-ha-quickstart-test:
     test-url: "file://automated-test-scripts/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/daily_test.yaml"
     run: "all"
     parameters-files:
+        # PAYG
         - "automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/prepub_parameters1.yaml"
         - "automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/prepub_parameters2.yaml"
+        # BYOL
+        - "automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/prepub_parameters3.yaml"
+        - "automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/prepub_parameters4.yaml"

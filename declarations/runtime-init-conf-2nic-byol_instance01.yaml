@@ -36,7 +36,11 @@ extension_services:
           mySystem:
             autoPhonehome: true
             class: System
-            hostname: 'failover1.local'
+            hostname: 'failover0.local'
+          myLicense:
+            class: License
+            licenseType: regKey
+            regKey: REPLACE_WITH_VALID_REGKEY
           admin:
             class: User
             userType: regular
@@ -83,7 +87,7 @@ extension_services:
             class: DeviceTrust
             localUsername: admin
             localPassword: '{{{BIGIP_PASSWORD}}}'
-            remoteHost: 10.0.10.11
+            remoteHost: /Common/failoverGroup/members/0
             remoteUsername: admin
             remotePassword: '{{{BIGIP_PASSWORD}}}'
           dbVars:

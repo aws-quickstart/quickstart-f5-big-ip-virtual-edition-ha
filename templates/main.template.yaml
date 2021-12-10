@@ -50,11 +50,12 @@ Metadata:
       - Label:
           default: BIG-IP Configuration
         Parameters:
-          - bigipInstanceType
-          - imageId
-          - bigipImageName
-          - bigipRuntimeInitConfig01
-          - bigipRuntimeInitConfig02
+          - bigIpInstanceType
+          - bigIpImageId
+          - bigIpImageName
+          - bigIpThroughput
+          - bigIpRuntimeInitConfig01
+          - bigIpRuntimeInitConfig02
           - cfeS3Bucket
           - cfeTag
           - cfeVipTag
@@ -86,14 +87,16 @@ Metadata:
         default: Application
       availabilityZones:
         default: Availability Zones
-      bigipImageName:
+      bigIpImageName:
         default: BIG-IP performance type
-      bigipInstanceType:
+      bigIpInstanceType:
         default: AWS instance type
-      bigipRuntimeInitConfig01:
+      bigIpRuntimeInitConfig01:
         default: BIG-IP Runtime Init config for first BIG-IP instance
-      bigipRuntimeInitConfig02:
+      bigIpRuntimeInitConfig02:
         default: BIG-IP Runtime Init config for second BIG-IP instance
+      bigIpThroughput:
+        default: BIG-IP VE throughput (PAYG)
       cfeS3Bucket:
         default: S3 bucket used as BIG-IP storage for failover solution
       cfeTag:
@@ -102,7 +105,7 @@ Metadata:
         default: VIP tag value used for cloud failover
       cost:
         default: Cost Center
-      imageId:
+      bigIpImageId:
         default: Image Id
       environment:
         default: Environment
@@ -159,7 +162,7 @@ Metadata:
   Version: 1.0.0
 Parameters:
   appDockerImageName:
-    Default: f5devcentral/f5-demo-app:latest
+    Default: f5devcentral/f5-demo-httpd:latest
     Description: Application docker image name.
     Type: String
   application:
@@ -169,7 +172,7 @@ Parameters:
   availabilityZones:
     Description: 'List of Availability Zones to use for the subnets in the VPC. Note: The logical order is preserved and only 2 AZs are used for this deployment.'
     Type: 'List<AWS::EC2::AvailabilityZone::Name>'
-  bigipImageName:
+  bigIpImageName:
     AllowedValues:
       - Best
       - AdvancedWaf
@@ -178,7 +181,7 @@ Parameters:
     Default: Best
     Description: F5 BIG-IP Performance Type.
     Type: String
-  bigipInstanceType:
+  bigIpInstanceType:
     AllowedValues:
       - m3.2xlarge
       - m4.xlarge
@@ -204,12 +207,23 @@ Parameters:
     Default: m5.2xlarge
     Description: AWS instance type.
     Type: String
-  bigipRuntimeInitConfig01:
+  bigIpThroughput:
+    AllowedValues:
+      - 25Mbps
+      - 200Mbps
+      - 1000Mbps
+      - 5000Mbps
+      - 10000Mbps
+    ConstraintDescription: Select the BIG-IP throughput you want to use
+    Default: 1000Mbps
+    Description: Maximum amount of throughput for BIG-IP VE
+    Type: String
+  bigIpRuntimeInitConfig01:
     Description: 'Supply a URL to the bigip-runtime-init configuration file in YAML
       or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.'
     Type: String
     Default: 'https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance01.yaml'
-  bigipRuntimeInitConfig02:
+  bigIpRuntimeInitConfig02:
     Description: 'Supply a URL to the bigip-runtime-init configuration file in YAML
      or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.'
     Type: String
@@ -239,7 +253,7 @@ Parameters:
     Default: f5cost
     Description: Cost Center Tag.
     Type: String
-  imageId:
+  bigIpImageId:
     ConstraintDescription: Must be a valid AMI Id.
     Default: ''
     Description: 'If you would like to deploy using a custom BIG-IP image, provide the AMI Id.  **Note**: Unless specifically required, leave the default of **OPTIONAL**'
@@ -402,7 +416,7 @@ Resources:
           - ''
           - - !Ref 'uniqueString'
             - '-linux-bastion'
-        BastionAMIOS: Ubuntu-Server-20.04-LTS-HVM
+        BastionAMIOS: Amazon-Linux2-HVM
         BastionBanner: ''
         BastionInstanceType: t2.micro
         EnableBanner: 'false'
@@ -425,17 +439,18 @@ Resources:
       Parameters:
         appDockerImageName: !Ref appDockerImageName
         application: !Ref application
-        bigipRuntimeInitConfig01: !Ref bigipRuntimeInitConfig01
-        bigipRuntimeInitConfig02: !Ref bigipRuntimeInitConfig02
+        bigIpImageId: !Ref bigIpImageId
+        bigIpImageName: !Ref bigIpImageName
+        bigIpInstanceType: !Ref bigIpInstanceType
+        bigIpThroughput: !Ref bigIpThroughput
+        bigIpRuntimeInitConfig01: !Ref bigIpRuntimeInitConfig01
+        bigIpRuntimeInitConfig02: !Ref bigIpRuntimeInitConfig02
         cfeS3Bucket: !Ref cfeS3Bucket
         cfeVipTag: !Ref cfeVipTag
         cfeTag: !Ref cfeTag
         cost: !Ref cost
-        imageId: !Ref imageId
         environment: !Ref environment
         group: !Ref group
-        imageName: !Ref bigipImageName
-        instanceType: !Ref bigipInstanceType
         owner: !Ref owner
         privateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
         privateSubnet1SelfAddress: !Ref privateSubnet1ASelfAddress
