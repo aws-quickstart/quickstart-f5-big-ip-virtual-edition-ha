@@ -15,6 +15,8 @@ tests:
       bigIpInstanceType: m5.xlarge
       bigIpRuntimeInitConfig01: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-byol_instance01_with_app.yaml
       bigIpRuntimeInitConfig02: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-byol_instance02_with_app.yaml
+      bigIpRuntimeInitPackageUrl: https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/develop/develop/dist/f5-bigip-runtime-init-1.4.0-1.gz.run
+      cfeTag: aws_quickstart_$[taskcat_random-string]
       cfeS3Bucket: tcat-quickstart-cfe-$[taskcat_random-string]
       keyPairName: dewpt
       privateSubnet1ASelfAddress: 10.0.11.11

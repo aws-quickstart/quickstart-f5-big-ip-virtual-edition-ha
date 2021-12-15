@@ -572,6 +572,7 @@ Metadata:
           - bigIpThroughput
           - bigIpRuntimeInitConfig01
           - bigIpRuntimeInitConfig02
+          - bigIpRuntimeInitPackageUrl
           - cfeS3Bucket
           - cfeVipTag
           - cfeTag
@@ -611,6 +612,8 @@ Metadata:
         default: BIG-IP Runtime Init config
       bigIpRuntimeInitConfig02:
         default: BIG-IP Runtime Init config
+      bigIpRuntimeInitPackageUrl:
+        default: BIG-IP Runtime Init Package URL
       bigIpThroughput:
         default: BIG-IP VE throughput (PAYG)
       bigIpVersion:
@@ -734,6 +737,10 @@ Parameters:
      or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.'
     Type: String
     Default: 'https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance02.yaml'
+  bigIpRuntimeInitPackageUrl:
+    Description: 'Supply a URL for the F5 BIG-IP Runtime Init Package install script.'
+    Type: String
+    Default: 'https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.3.2/dist/f5-bigip-runtime-init-1.3.2-1.gz.run'
   bigIpVersion:
     AllowedValues:
       - 15-1-2-009
@@ -935,6 +942,7 @@ Resources:
       Parameters:
         bigIpInstanceProfile: !GetAtt [Access, Outputs.bigIpInstanceProfile]
         bigIpRuntimeInitConfig: !Ref bigIpRuntimeInitConfig01
+        bigIpRuntimeInitPackageUrl: !Ref bigIpRuntimeInitPackageUrl
         cfeS3Bucket: !Ref cfeS3Bucket
         imageId: !If [noCustomImageId, !FindInMap [!FindInMap [VERSION, !Ref bigIpVersion, REGIONMAP], !Ref 'AWS::Region', !FindInMap [AWSBigipThroughput, !Ref bigIpThroughput, !Ref bigIpImageName]], !Ref bigIpImageId]
         externalPrimaryPublicId: !If [usePublicIpVip, !GetAtt [Dag, Outputs.bigIpExternalEipAllocationId02], '']

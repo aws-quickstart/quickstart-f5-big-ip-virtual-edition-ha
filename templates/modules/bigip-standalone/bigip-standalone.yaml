@@ -936,7 +936,7 @@ Resources:
             - |
               # Run
             - |
-              bash "/var/config/rest/downloads/${PACKAGE_URL##*/}" -- '--cloud aws'
+              bash "/var/config/rest/downloads/${PACKAGE_URL##*/}" -- '--cloud aws --telemetry-params templateName:quickstart-f5-bigip-virtual-edition-ha/templates/modules/bigip-standalone/bigip-standalone.yaml'
             - |2+
 
             - |
@@ -1238,7 +1238,7 @@ Resources:
             - |
               # Run
             - |
-              bash "/var/config/rest/downloads/${PACKAGE_URL##*/}" -- '--cloud aws'
+              bash "/var/config/rest/downloads/${PACKAGE_URL##*/}" -- '--cloud aws --telemetry-params templateName:quickstart-f5-bigip-virtual-edition-ha/templates/modules/bigip-standalone/bigip-standalone.yaml'
             - |2+
 
             - |

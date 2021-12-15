@@ -20,5 +20,6 @@ You can also use the AWS CloudFormation templates as a starting point for your o
 For architectural details, best practices, step-by-step instructions, and customization options, see 
 [clouddocs.f5.com](https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/userguide/aws.html).
 
+## Note on IMDSv2
 
-
+This template now uses IMDSv2 to access AWS metadata from within instances. IMDSv2 uses session-oriented requests instead of the request/response model used by IMDSv1. Please read more about [IMDSv2 here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html). This does not affect how the template is deployed but makes your deployments secure against various types of attacks. Please read more on the topic [here](https://aws.amazon.com/blogs/security/defense-in-depth-open-firewalls-reverse-proxies-ssrf-vulnerabilities-ec2-instance-metadata-service/).
