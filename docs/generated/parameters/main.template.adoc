@@ -29,27 +29,30 @@
 |Parameter label (name) |Default value|Description|EC2 KeyPair to enable SSH access to EC2 instances
 (`keyPairName`)|`**__Requires input__**`|EC2 KeyPair to enable SSH access to EC2 instances which include BIG-IP, Bastion, and demo application instances.|Restricted source address to bastion
 (`remoteAccessCIDR`)|`**__Requires input__**`|Allowed CIDR block for external SSH access to the bastions.|Restricted source address to BIG-IP management
-(`restrictedSrcAddressMgmt`)|`**__Requires input__**`| The IP address range used to SSH and access management GUI on the EC2 instances|Restricted source address to application
-(`restrictedSrcAddressApp`)|`**__Requires input__**`|The IP address range that can be used to access web traffic (80/443) to the EC2 instances.
+(`restrictedSrcAddressMgmt`)|`**__Requires input__**`|REQUIRED - The IP address range used to SSH and access BIG-IP management port. Restrict to your client IP. Ex. X.X.X.X/32. WARNING - For eval purposes only. Production should never have Management interface exposed to Internet.|Restricted source address to application
+(`restrictedSrcAddressApp`)|`**__Requires input__**`|REQUIRED - The IP address range that can be used to access web traffic (80/443) to the EC2 instances.
 |===
 .BIG-IP Configuration
 [width="100%",cols="16%,11%,73%",options="header",]
 |===
 |Parameter label (name) |Default value|Description|AWS instance type
-(`bigipInstanceType`)|`m5.2xlarge`|AWS instance type|Image Id
-(`imageId`)|`**__Blank string__**`|If you would like to deploy using a custom BIG-IP image, provide the AMI Id.  **Note**: Unless specifically required, leave the default of **OPTIONAL**|BIG-IP Runtime Init config for first BIG-IP instance
-(`bigipRuntimeInitConfig01`)|`**__Requires input__**`|URL for BIG-IP Runtime Init config|BIG-IP Runtime Init config for second BIG-IP instance
-(`bigipRuntimeInitConfig02`)|`**__Requires input__**`|URL for BIG-IP Runtime Init config|S3 bucket used as BIG-IP storage for failover solution
-(`cfeS3Bucket`)|`aws-quickstart-cfe`|S3 bucket used as BIG-IP storage for Failover solution|Deployment tag value used for cloud failover
+(`bigIpInstanceType`)|`m5.2xlarge`|AWS instance type.|Image Id
+(`bigIpImageId`)|`**__Blank string__**`|If you would like to deploy using a custom BIG-IP image, provide the AMI Id.  **Note**: Unless specifically required, leave the default of **OPTIONAL**|BIG-IP performance type
+(`bigIpImageName`)|`Best`|F5 BIG-IP Performance Type.|BIG-IP VE throughput (PAYG)
+(`bigIpThroughput`)|`1000Mbps`|Maximum amount of throughput for BIG-IP VE|BIG-IP Runtime Init config for first BIG-IP instance
+(`bigIpRuntimeInitConfig01`)|`https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance01.yaml`|Supply a URL to the bigip-runtime-init configuration file in YAML or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.|BIG-IP Runtime Init config for second BIG-IP instance
+(`bigIpRuntimeInitConfig02`)|`https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance02.yaml`|Supply a URL to the bigip-runtime-init configuration file in YAML or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.|BIG-IP Runtime Init Package URL to install a specific version.
+(`bigIpRuntimeInitPackageUrl`)|`https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.3.2/dist/f5-bigip-runtime-init-1.3.2-1.gz.run`|Supply a URL for the F5 BIG-IP Runtime Init Package install script.|S3 bucket used as BIG-IP storage for failover solution
+(`cfeS3Bucket`)|`aws-quickstart-cfe`|S3 bucket used as BIG-IP storage for Failover solution.|Deployment tag value used for cloud failover
 (`cfeTag`)|`aws_quickstart`|Cloud Failover deployment tag value.|VIP tag value used for cloud failover
-(`cfeVipTag`)|`10.0.20.101,10.0.10.101`|Cloud Failover VIP tag value; provides private ip addresses to be assigned to VIP public ip.|BIG-IP password for both BIG-IP instances.
-(`secretArn`)|`**__Requires input__**`|Secret ARN where password for BIG-IP instances is stored.
+(`cfeVipTag`)|`10.0.20.101,10.0.10.101`|Cloud Failover VIP tag value; provides private ip addresses to be assigned to VIP public ip.|ARN of Secrets Manager secret
+(`secretArn`)|`**__Blank string__**`|ARN of Secrets Manager secret
 |===
 .Resources Tags
 [width="100%",cols="16%,11%,73%",options="header",]
 |===
 |Parameter label (name) |Default value|Description|Application
-(`application`)|`f5app`|Name of the Application Tag|Cost Center
+(`application`)|`f5app`|Name of the Application Tag.|Cost Center
 (`cost`)|`f5cost`|Cost Center Tag.|Environment
 (`environment`)|`f5env`|Environment Tag.|Group
 (`group`)|`f5group`|Group Tag.|Owner
@@ -59,8 +62,8 @@
 [width="100%",cols="16%,11%,73%",options="header",]
 |===
 |Parameter label (name) |Default value|Description|Provision Example App
-(`provisionExampleApp`)|`false`|This is used to deploy the demo WebApps.|Application Docker image name
-(`appDockerImageName`)|`f5devcentral/f5-demo-app:latest`|Application docker image name|Static VIP IP address for public subnet 1 in AZ1.
+(`provisionExampleApp`)|`false`|Flag to deploy the demo web application.|Application Docker image name
+(`appDockerImageName`)|`f5devcentral/f5-demo-httpd:latest`|Application docker image name.|Static VIP IP address for public subnet 1 in AZ1.
 (`publicSubnet1VipAddress`)|`10.0.10.101`|Required. Type the static external service IP address here.|Static VIP IP address for public subnet 2 in AZ1.
 (`publicSubnet2VipAddress`)|`10.0.20.101`|Required. Type the static external service IP address here.
 |===

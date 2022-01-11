@@ -1,13 +1,19 @@
 // Include details about the license and how they can sign up. If no license is required, clarify that. 
 
-These two paragraphs provide an example of the details you can provide. Provide links as appropriate.
-
-
-Example content below:
-
-_<license information>This Quick Start requires a license for {partner-product-name}. To use the Quick Start in your production environment, sign up for a license at <link>. When you launch the Quick Start, place the license key in an S3 bucket and specify its location._
-
-_If you don’t have a license, the Quick Start deploys with a trial license. The trial license gives you <n> days of free usage in a non-production environment. After this time, you can upgrade to a production license by following the instructions at <link>._
-
 // Or, if the deployment uses an AMI, update this paragraph. If it doesn’t, remove the paragraph.
-_<AMI information>The Quick Start requires a subscription to the Amazon Machine Image (AMI) for {partner-product-name}, which is available from https://aws.amazon.com/marketplace/[AWS Marketplace]. Additional pricing, terms, and conditions may apply. For instructions, see link:#step-2.-subscribe-to-the-software-ami[step 2] in the deployment section._
+The Quick Start requires a subscription to the Amazon Machine Image (AMI) for {partner-product-name}, which is available from https://aws.amazon.com/marketplace/[AWS Marketplace]. 
+
+By default, this Quick Start deploys https://aws.amazon.com/marketplace/pp/prodview-v2lgyijcawiti[F5 BIG-IP Virtual Edition - BEST (PAYG, 25Mbps)] instances. 
+
+If you would like to deploy other types of BIG-IP instances, accept the terms for the desired offering and obtain the AMI ID for that offering. For example, to get the list of BIG-IP AMI IDs in us-east-1.
+
+
+[source,yaml]
+----
+aws ec2 describe-images --filters 'Name=name,Values=*BIGIP*' --query 'Images[*].[ImageId,Name]' --region us-east-1
+----
+
+
+You can pass the desired AMI ID to the template's *bigIpImageId* parameter. 
+
+If deploying to production, you may want to leverage Bring Your Own License (BYOL) instances, for example https://aws.amazon.com/marketplace/pp/prodview-73utu5c5sfyyc[F5 BIG-IP VE - ALL (BYOL, 2 Boot Locations)], and will also need registration keys. If you do not have a registration keys, keys can be obtained via F5's https://www.f5.com/trials/big-ip-virtual-edition[website]. Additional pricing, terms, and conditions may apply. For instructions on customizing the deployment to use a BYOL image, see link:#_customizing_the_big_ip_configuration[Customizing the BIG-IP Configuraiton] in the deployment section.

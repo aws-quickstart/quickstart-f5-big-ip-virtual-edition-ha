@@ -2,10 +2,7 @@
 .BIG-IP VE on AWS
 
 BIG-IP VE is an application delivery and security services platform that is built to ensure
-speed, availability, and security for business-critical applications and networks. It enables
-intelligent L4-L7 load balancing and traffic management, robust network and web
-application firewalls, simplified application access, Domain Name System (DNS) services,
-and much more. For more information about BIG-IP VE, see the F5 website.
+speed, availability, and security for business-critical applications and networks. As an aggregation tier for your application portfolio, it can be used to standardize security, logging and telemetry policies. It enables intelligent L4-L7 traffic management, robust network and web application firewalls, simplified application access, and much more.  For more information about BIG-IP VE, see the https://www.f5.com/[F5 website].
 
 //{empty} +
 
