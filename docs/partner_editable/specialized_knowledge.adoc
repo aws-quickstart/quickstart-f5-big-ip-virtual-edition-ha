@@ -1,6 +1,16 @@
 // Replace the content in <>
 // Describe or link to specific knowledge requirements; for example: “familiarity with basic concepts in the areas of networking, database operations, and data encryption” or “familiarity with <software>.”
 
-This Quick Start assumes familiarity with <knowledge expectations>.
+This deployment requires a moderate level of familiarity with F5 BIG-IP concepts. If you’re new to F5 BIG-IP, F5 recommends first visiting:
+
+* https://f5.com[f5.com]
+* https://www.f5.com/services/certification[F5 Certification]
+
+
+This Quick Start assumes familiarity with basic concepts in the areas of 
+
+* AWS networking (vpcs, subnets, routes, security groups)
+* AWS services (S3, IAM roles).
+* BIG-IP concepts (application proxies, network and web application firewalls) 
 
 

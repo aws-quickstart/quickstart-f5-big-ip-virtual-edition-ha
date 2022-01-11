@@ -23,10 +23,13 @@ Shell (SSH) access to EC2 instances in public and private subnets.*
 
 In the private subnets:
 // Add bullet points for any additional components that are included in the deployment. Make sure that the additional components are also represented in the architecture diagram.
-* The management NICs of a clustered pair of BIG-IP instances (simulated out of band management network)
-* Example Application 
+
+* The management NICs of a clustered pair of BIG-IP instances (an out-of-band management network)
+* An example application 
 
 Additional Cloud Resources:
+
+* An IAM Role and Instance Profile
 * An S3 Bucket used to provide Failover State.
 
 The template that deploys the Quick Start into an existing VPC skips

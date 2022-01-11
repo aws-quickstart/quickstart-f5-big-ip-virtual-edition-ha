@@ -839,17 +839,32 @@ p.footer-text a{color:#d7d8d8}
 <li><a href="#_deployment_steps">Deployment steps</a>
 <ul class="sectlevel2">
 <li><a href="#_sign_in_to_your_aws_account">Sign in to your AWS account</a></li>
-<li><a href="#_create_a_key_pair_in_your_preferred_region">Create a key pair in your preferred Region.</a></li>
-<li><a href="#_if_necessary_request_a_service_limit_increase_for_the_amazon_ec2_m5_2xlarge_instance_type">If necessary, request a service limit increase for the Amazon EC2 <strong>m5.2xlarge</strong> instance type.</a></li>
+<li><a href="#_customizing_the_big_ip_configuration">Customizing the BIG-IP configuration</a></li>
 <li><a href="#_launch_into_a_new_vpc">Launch into a new VPC</a></li>
 <li><a href="#_launch_into_an_existing_vpc">Launch into an existing VPC</a></li>
 </ul>
 </li>
+<li><a href="#_accessing_the_big_ip">Accessing the BIG-IP</a>
+<ul class="sectlevel2">
+<li><a href="#_ssh">SSH</a></li>
+<li><a href="#_webui">WebUI</a></li>
+</ul>
+</li>
+<li><a href="#_further_exploring">Further Exploring</a>
+<ul class="sectlevel2">
+<li><a href="#_ssh_2">SSH</a></li>
+<li><a href="#_webui_2">WebUI</a></li>
+</ul>
+</li>
+<li><a href="#_testing_the_waf_service">Testing the WAF Service</a></li>
+<li><a href="#_testing_failover">Testing Failover</a></li>
 <li><a href="#_best_practices_for_using_f5_big_ip_virtual_edition_on_aws">Best practices for using F5 BIG-IP Virtual Edition on AWS</a></li>
+<li><a href="#_deleting_the_deployment">Deleting the Deployment</a></li>
 <li><a href="#_security">Security</a></li>
 <li><a href="#_other_useful_information">Other useful information</a></li>
 <li><a href="#_faq">FAQ</a></li>
 <li><a href="#_troubleshooting">Troubleshooting</a></li>
+<li><a href="#_support">Support</a></li>
 <li><a href="#_customer_responsibility">Customer responsibility</a></li>
 <li><a href="#_send_us_feedback">Send us feedback</a></li>
 <li><a href="#_quick_start_reference_deployments">Quick Start reference deployments</a></li>
@@ -870,7 +885,7 @@ p.footer-text a{color:#d7d8d8}
 </div>
 <div class="paragraph text-center">
 <p><strong>Oct 2021</strong><br>
-<em>? Alex Applebaum, Andrey Kashcheev, Michael Shimkus, Greg Crosby, Nitin Khanna, Yossi Rosenboim</em><br>
+<em>Alex Applebaum, Greg Crosby, Andrey Kashcheev, Nitin Khanna, Yossi Rosenboim, Michael Shimkus</em><br>
 <em>N/A</em></p>
 </div>
 <div class="admonitionblock tip text-left">
@@ -897,10 +912,7 @@ report bugs, or submit feature ideas for this Quick Start.
 <div class="paragraph">
 <div class="title">BIG-IP VE on AWS</div>
 <p>BIG-IP VE is an application delivery and security services platform that is built to ensure
-speed, availability, and security for business-critical applications and networks. It enables
-intelligent L4-L7 load balancing and traffic management, robust network and web
-application firewalls, simplified application access, Domain Name System (DNS) services,
-and much more. For more information about BIG-IP VE, see the F5 website.</p>
+speed, availability, and security for business-critical applications and networks. As an aggregation tier for your application portfolio, it can be used to standardize security, logging and telemetry policies. It enables intelligent L4-L7 traffic management, robust network and web application firewalls, simplified application access, and much more.  For more information about BIG-IP VE, see the <a href="https://www.f5.com/">F5 website</a>.</p>
 </div>
 <div class="paragraph">
 <p>This Quick Start reference deployment guide discusses architectural considerations and configuration steps for deploying a failover cluster of F5 BIG-IP instances on the Amazon Web Services (AWS) Cloud. It also provides links for viewing and launching AWS CloudFormation templates that automate the deployment.</p>
@@ -926,23 +938,45 @@ Amazon may share user-deployment information with the AWS Partner that collabora
 <h2 id="_f5_big_ip_virtual_edition_on_aws">F5 BIG-IP Virtual Edition on AWS</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This Quick Start deploys a pair of BIG-IP VE instances provisioned with:</p>
+<p>This Quick Start deploys a highly available cluster of two BIG-IP VE instances provisioned with:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Local Traffic Manager (LTM)</strong> - which performs uniform resource identifier (URI)
-routing, Secure Sockets Layer (SSL) encryption, and automatic discovery of automatically
-scaled web applications)</p>
+<p><strong><a href="https://www.f5.com/products/big-ip-services/local-traffic-manager">Local Traffic Manager (LTM)</a></strong> - which performs uniform resource identifier (URI)
+routing, Secure Sockets Layer (SSL) encryption, TCP optimization and automatic discovery of automatically
+scaled web applications</p>
 </li>
 <li>
-<p><strong>Application Security Manager (ASM)</strong> - web application firewall</p>
+<p><strong><a href="https://www.f5.com/products/security/advanced-waf">Application Security Manager (ASM)</a></strong> - a best of breed web application firewall to help protect against:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Automated attacks and bots</strong> - Automated attacks and bots can overwhelm application resources.</p>
+</li>
+<li>
+<p><strong>Credential theft</strong>  - Attacks that steal application credentials or take advantage of compromised accounts.</p>
+</li>
+<li>
+<p><strong>Attacks on mobile clients</strong> - Bots that target browser-based and mobile clients.</p>
+</li>
+<li>
+<p><strong>Application-layer attacks</strong> - Application-layer attacks can evade signature and reputation-based security solutions.</p>
+</li>
+<li>
+<p><strong>Web app and API attacks</strong> - New attack surfaces and threats due to the rapid adoption of APIs.</p>
+</li>
+<li>
+<p><strong>Targeted attack campaigns</strong> - Active attack campaigns are difficult to detect from singular attacks.</p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p>You can customize this Quick Start by changing the configuration parameters. The Quick
-Start deploys a full working stack that you can inspect and use as a reference.</p>
+Start deploys either a full working stack (network, bastion host and BIG-IP solution) or just the BIG-IP solution into an existing network that you can inspect and use as a reference.</p>
 </div>
 </div>
 </div>
@@ -977,19 +1011,24 @@ After you deploy the Quick Start, create <a href="https://docs.aws.amazon.com/aw
 <h2 id="_software_licenses">Software licenses</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>These two paragraphs provide an example of the details you can provide. Provide links as appropriate.</p>
+<p>The Quick Start requires a subscription to the Amazon Machine Image (AMI) for F5 BIG-IP Virtual Edition, which is available from <a href="https://aws.amazon.com/marketplace/">AWS Marketplace</a>.</p>
 </div>
 <div class="paragraph">
-<p>Example content below:</p>
+<p>By default, this Quick Start deploys <a href="https://aws.amazon.com/marketplace/pp/prodview-v2lgyijcawiti">F5 BIG-IP Virtual Edition - BEST (PAYG, 25Mbps)</a> instances.</p>
 </div>
 <div class="paragraph">
-<p><em>&lt;license information&gt;This Quick Start requires a license for F5 BIG-IP Virtual Edition. To use the Quick Start in your production environment, sign up for a license at &lt;link&gt;. When you launch the Quick Start, place the license key in an S3 bucket and specify its location.</em></p>
+<p>If you would like to deploy other types of BIG-IP instances, accept the terms for the desired offering and obtain the AMI ID for that offering. For example, to get the list of BIG-IP AMI IDs in us-east-1.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">aws ec2 describe-images --filters 'Name=name,Values=*BIGIP*' --query 'Images[*].[ImageId,Name]' --region us-east-1</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p><em>If you don’t have a license, the Quick Start deploys with a trial license. The trial license gives you &lt;n&gt; days of free usage in a non-production environment. After this time, you can upgrade to a production license by following the instructions at &lt;link&gt;.</em></p>
+<p>You can pass the desired AMI ID to the template&#8217;s <strong>bigIpImageId</strong> parameter.</p>
 </div>
 <div class="paragraph">
-<p><em>&lt;AMI information&gt;The Quick Start requires a subscription to the Amazon Machine Image (AMI) for F5 BIG-IP Virtual Edition, which is available from <a href="https://aws.amazon.com/marketplace/">AWS Marketplace</a>. Additional pricing, terms, and conditions may apply. For instructions, see <a href="#step-2.-subscribe-to-the-software-ami">step 2</a> in the deployment section.</em></p>
+<p>If deploying to production, you may want to leverage Bring Your Own License (BYOL) instances, for example <a href="https://aws.amazon.com/marketplace/pp/prodview-73utu5c5sfyyc">F5 BIG-IP VE - ALL (BYOL, 2 Boot Locations)</a>, and will also need registration keys. If you do not have a registration keys, keys can be obtained via F5&#8217;s <a href="https://www.f5.com/trials/big-ip-virtual-edition">website</a>. Additional pricing, terms, and conditions may apply. For instructions on customizing the deployment to use a BYOL image, see <a href="#_customizing_the_big_ip_configuration">Customizing the BIG-IP Configuraiton</a> in the deployment section.</p>
 </div>
 </div>
 </div>
@@ -1042,13 +1081,30 @@ Shell (SSH) access to EC2 instances in public and private subnets.*</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>In the private subnets:
-* The management NICs of a clustered pair of BIG-IP instances (simulated out of band management network)
-* Example Application</p>
+<p>In the private subnets:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The management NICs of a clustered pair of BIG-IP instances (an out-of-band management network)</p>
+</li>
+<li>
+<p>An example application</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>Additional Cloud Resources:
-* An S3 Bucket used to provide Failover State.</p>
+<p>Additional Cloud Resources:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>An IAM Role and Instance Profile</p>
+</li>
+<li>
+<p>An S3 Bucket used to provide Failover State.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>The template that deploys the Quick Start into an existing VPC skips
@@ -1069,7 +1125,33 @@ and <a href="https://aws.amazon.com/training/" target="_blank" rel="noopener">AW
 deploy, and operate your infrastructure and applications on the AWS Cloud.</p>
 </div>
 <div class="paragraph">
-<p>This Quick Start assumes familiarity with &lt;knowledge expectations&gt;.</p>
+<p>This deployment requires a moderate level of familiarity with F5 BIG-IP concepts. If you’re new to F5 BIG-IP, F5 recommends first visiting:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://f5.com">f5.com</a></p>
+</li>
+<li>
+<p><a href="https://www.f5.com/services/certification">F5 Certification</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This Quick Start assumes familiarity with basic concepts in the areas of</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>AWS networking (vpcs, subnets, routes, security groups)</p>
+</li>
+<li>
+<p>AWS services (S3, IAM roles).</p>
+</li>
+<li>
+<p>BIG-IP concepts (application proxies, network and web application firewalls)</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
@@ -1106,23 +1188,98 @@ deploy, and operate your infrastructure and applications on the AWS Cloud.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Elastic IP addresses</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2 (3 when provisionDemoApp = true)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Security Groups</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">AWS Identity and Access Management (IAM) security groups</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">IAM roles</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AWS Identity and Access Management (IAM) Role</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Elastic IP addresses</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2 to 6 <em>(see breakdown below)</em></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">ec2 instances</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2 (3 when provisionDemoApp = true)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2 to 5 <em>(see breakdown below)</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S3 buckets</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
 </tr>
 </tbody>
 </table>
+<div class="ulist">
+<div class="title">Instance Breakdown</div>
+<ul>
+<li>
+<p>New Network</p>
+<div class="ulist">
+<ul>
+<li>
+<p>1 Bastion Host</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Workload</p>
+<div class="ulist">
+<ul>
+<li>
+<p>2 BIG-IPs</p>
+</li>
+<li>
+<p>2 Example Applications (OPTIONAL)</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">EIP Breakdown</div>
+<ul>
+<li>
+<p>New Network</p>
+<div class="ulist">
+<ul>
+<li>
+<p>2 for NAT Gateways</p>
+</li>
+<li>
+<p>1 for Bastion Host</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Workload</p>
+<div class="ulist">
+<ul>
+<li>
+<p>2 for BIG-IPs (Unique Self-Ips)</p>
+</li>
+<li>
+<p>1 for the Example BIG-IP Virtual Service (OPTIONAL)</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+By default, this solution requires more than the default EIP resources allowed on an account so you will most likely need to increase your service limits per above.
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_supported_aws_regions">Supported AWS Regions</h4>
@@ -1173,13 +1330,56 @@ Certain Regions are available on an opt-in basis. For more information, see <a h
 <div class="sect3">
 <h4 id="_prepare_your_aws_account">Prepare your AWS account</h4>
 <div class="paragraph">
-<p><em>Describe any setup required in the AWS account prior to template launch</em></p>
+<p>This solution <strong>requires</strong> you to have:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>An <strong>SSH Key</strong> pair in AWS for management access to BIG-IP VE. For more information about creating and/or importing the key pair in AWS, see AWS SSH key <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html">documentation</a>.</p>
+</li>
+<li>
+<p>An <strong>AWS secret</strong> stored in AWS <a href="https://aws.amazon.com/secrets-manager/">Secrets Manager</a> containing the password used to access and cluster the HA Pair. For example, to create a secret using the AWS CLI:</p>
+<div class="literalblock">
+<div class="content">
+<pre>aws secretsmanager create-secret --region us-east-1 --name bigIpPassword --secret-string 'YOUR_BIGIP_PASSWORD'</pre>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_prepare_your_f5_account">Prepare your F5 account</h4>
-<div class="paragraph">
-<p><em>Describe any setup required in the partner portal/account prior to template launch</em></p>
+<div class="ulist">
+<ul>
+<li>
+<p><em>NOTE:</em></p>
+<div class="ulist">
+<ul>
+<li>
+<p>By default, the secret name must be <code>bigIpPassword</code> and created in the region where deploying the template. Otherwise, see <a href="#_customizing_the_big_ip_configuration">Customizing the BIG-IP Configuration</a> for more details.</p>
+</li>
+<li>
+<p>Obtain the secret ARN. The ARN format required for the input parameter will look like <em>arn:aws:secretsmanager:us-east-1:111111111111:secret:bigIpPassword-xdg0kdf</em> You will pass this value to the <strong>secretArn</strong> input parameter.</p>
+</li>
+<li>
+<p>In the example above, the <strong>--secret-string</strong> value is in single quotes to avoid bash special character interpolation. See the AWS CLI secretsmanager <a href="https://docs.aws.amazon.com/cli/latest/reference/secretsmanager/index.html#cli-aws-secretsmanager">documentation</a> for a more secure example using a file.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Accepted the EULA for the F5 image in the AWS marketplace. If you have not deployed BIG-IP VE in your environment before, search for F5 in the Marketplace and then click <strong>Accept Software Terms</strong>. This only appears the first time you attempt to launch an F5 image. See <a href="#_software_licenses">Licensing</a> section above.</p>
+</li>
+<li>
+<p>The appropriate permission in AWS to launch CloudFormation Templates (CFT). You must be using an IAM user with the Administrator Access policy attached and have permission to create the objects contained in this solution (VPCs, Routes, EIPs, EC2 Instances, etc.). For details on permissions and all AWS configuration, see AWS <a href="https://aws.amazon.com/documentation/">documentation</a>.</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Important Configuration Notes</div>
+<ul>
+<li>
+<p>This solution template provides an <strong>initial</strong> deployment only for an "infrastructure" use case (meaning that it does not support managing the entire deployment exclusively via the template&#8217;s "Update-Stack" function). This solution leverages cloud-init to send the instance <strong>user_data</strong>, which is only used to provide an initial BIG-IP configuration and not as the primary configuration API for a long-running platform. Although "Update-Stack" can be used to update some cloud resources, as the BIG-IP configuration needs to align with the cloud resources, like IPs to NICs, updating one without the other can result in inconsistent states, while updating other resources, like the <strong>bigIpImageId</strong> or <strong>bigIpInstanceType</strong>, can trigger an entire instance re-deloyment. For instance, to upgrade software versions, traditional in-place upgrades and config management are required. See <a href="#_best_practices_for_using_f5_big_ip_virtual_edition_on_aws">Best Practices</a> and <a href="#_support">Support</a> sections for more information.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -1202,37 +1402,177 @@ Certain Regions are available on an opt-in basis. For more information, see <a h
 </div>
 </div>
 <div class="sect2">
-<h3 id="_create_a_key_pair_in_your_preferred_region">Create a <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html">key pair</a> in your preferred Region.</h3>
+<h3 id="_customizing_the_big_ip_configuration">Customizing the BIG-IP configuration</h3>
 <div class="paragraph">
-<p>To do this, in the navigation pane of the Amazon EC2 console, choose <strong>Key Pairs</strong>, <strong>Create Key Pair</strong>, type a name, and then choose <strong>Create</strong>.</p>
+<p>The initial BIG-IP configurations are passed through the <a href="https://github.com/f5networks/f5-bigip-runtime-init">F5 BIG-IP Runtime Init</a> config files. As the potential amount of customization for the BIG-IP configuration is so large, these are the primary mechanisms to customize the initial BIG-IP configurations for your deployment. Customizing the BIG-IP configurations generally involves updating AND rehosting these files and passing their location through the <strong>bigIpRuntimeInitConfig</strong> template parameters.</p>
 </div>
-<div id="Deploy1" class="imageblock">
+<div class="paragraph">
+<p>By default, per the diagram above, this solution deploys a minimal 2NIC PAYG configuration into the default Quickstart network topology using the following configuration files in the
+<code>declarations</code> folder:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>runtime-init-conf-2nic-payg-instance01.yaml</code></p>
+</li>
+<li>
+<p><code>runtime-init-conf-2nic-payg-instance02.yaml</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This deploys a minimal baseline HA failover cluster <strong>without</strong> any services provisioned.</p>
+</div>
+<div class="paragraph">
+<p>Optionally, to illustrate how services work, you can deploy an <em>example</em> waf protected web service ( which will deploy web application instances and a waf protected virtual service on the BIG-IPs). To do this, set <strong>provisionExampleApp</strong> parameter to <strong>true</strong> and reference the following configuration files via <strong>bigIpRuntimeInitConfig</strong> parameters instead.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>runtime-init-conf-2nic-payg-instance01-with-app.yaml</code></p>
+</li>
+<li>
+<p><code>runtime-init-conf-2nic-payg-instance02-with-app.yaml</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Any further customizations require updating AND rehosting your configuration files at a <strong>custom</strong> URL.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<strong>IMPORTANT</strong> If hosting on git, any URLs pointing to git <strong>must</strong> use the raw file format
+(for example, <code>raw.githubusercontent.com</code>).
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The BIG-IP configurations must match the external environment in which they are deployed. Although the provided Runtime-Init config examples extract and templatize many common values, some values are still harcoded and need to be updated to match your specific environment or deployment first.</p>
+</div>
+<div class="sect3">
+<h4 id="_example_customization_1">Example Customization 1</h4>
+<div class="paragraph">
+<p>For example, to deploy a <strong>Bring Your Own License (BYOL)</strong> instance:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Edit/modify the Declarative Onboarding (DO) declaration in a
+corresponding example <code>byol</code> runtime-init config file with the new <code>regKey</code>
+value.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Example snippet:</p>
+</div>
+<div class="listingblock">
 <div class="content">
-<a class="image" href="images/create-key-pair.png"><img src="images/create-key-pair.png" alt="Deploy1" width="634" height="307"></a>
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">          My_License:
+            class: License
+            licenseType: regKey
+            regKey: AAAAA-BBBBB-CCCCC-DDDDD-EEEEEEE</code></pre>
 </div>
-<div class="title">Figure 1. Creating a key pair</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="2">
+<li>
+<p>Publish/host the customized runtime-init config file at a location
+reachable by the BIG-IP at deploy time (for example: git, S3, etc.).</p>
+</li>
+<li>
+<p>Update the <strong>bigIpRuntimeInitConfig</strong> input parameters to reference the
+new URLs of the updated configurations.</p>
+</li>
+<li>
+<p>Update the <strong>bigIpImageId</strong> input parameter to a valid byol image ID.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_example_customization_2">Example Customization 2</h4>
+<div class="paragraph">
+<p>For example, if deploying into an <strong>existing</strong> network, it will certainly have different network topologies, subnetting, etc.:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Edit/modify the Declarative Onboarding (DO) declaration in a
+corresponding example runtime-init configs file with your new
+values.</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
-<p>Amazon EC2 uses public-key cryptography to encrypt and decrypt login information. To be able to log in to your instances, you must create a key pair. With Windows instances, we use the key pair to obtain the administrator password via the Amazon EC2 console and then log in using Remote Desktop Protocol (RDP) as explained in the <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair">step-by-step instructions</a> in the <em>Amazon Elastic Compute Cloud User Guide</em>.</p>
+<p>Example snippet:</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_if_necessary_request_a_service_limit_increase_for_the_amazon_ec2_m5_2xlarge_instance_type">If necessary, <a href="https://console.aws.amazon.com/support/home#/case/create?issueType=service-limit-increase&amp;limitType=service-code-">request a service limit increase</a> for the Amazon EC2 <strong>m5.2xlarge</strong> instance type.</h3>
-<div class="paragraph">
-<p>To do this, in the AWS Support Center, choose <strong>Create Case</strong>, <strong>Service Limit Increase</strong>, <strong>EC2 instances</strong>, and then complete the fields in the limit increase form, as shown in Figure 4. The current default limit is 20 instances.</p>
-</div>
-<div class="paragraph">
-<p>+
-You might need to request an increase if you already have an existing deployment that uses this instance type, and you think you might exceed the default limit with this reference deployment. It might take a few days for the new service limit to become effective. For more information, see <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-resource-limits.html">Amazon EC2 Service Limits</a> in the AWS documentation.</p>
-</div>
-<div class="paragraph">
-<p><strong>Note</strong> The Quick Start uses five Elastic IP addresses by default: two for the NAT gateways, two for the proxies, and one for the RD Gateway instance. The default limit for Elastic IP addresses is five per AWS Region. If you’re planning to deploy multiple RD Gateway instances by configuring the <strong>Number of RDGW Hosts</strong> parameter, we recommend that you also request an increase in the Elastic IP address limit: In the <a href="https://console.aws.amazon.com/support/home#/case/create?issueType=service-limit-increase&amp;limitType=service-code-">AWS Support Center</a>, choose <strong>Create Case</strong>, <strong>Service Limit Increase</strong>, <strong>Elastic IPs</strong>, and then complete the fields.</p>
-</div>
-<div id="Deploy2" class="imageblock">
+<div class="listingblock">
 <div class="content">
-<a class="image" href="images/increase-service-limit.png"><img src="images/increase-service-limit.png" alt="Deploy2" width="648" height="425"></a>
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">...
+          internal:
+            class: Route
+            gw: '{{{DEFAULT_ROUTE}}}'
+            network: &lt;YOUR-NEW-NETWORK&gt;
+...
+          trust:
+            class: DeviceTrust
+            localUsername: admin
+            localPassword: '{{{BIGIP_PASSWORD}}}'
+            remoteHost: &lt;YOUR-NEW-HA-PEER-IP-HERE&gt;
+...</code></pre>
 </div>
-<div class="title">Figure 2. Requesting a service limit increase</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <strong>remoteHost</strong> attribute is only used in one of the peer&#8217;s configs (with <code>02</code> in the name). This should correspond the the value you pass for BIG-IP 01&#8217;s Management IP.
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="2">
+<li>
+<p>Publish/host the customized runtime-init config files at a location
+reachable by the BIG-IP at deploy time (for example: git, S3, etc.).</p>
+</li>
+<li>
+<p>Update the <strong>bigIpRuntimeInitConfig</strong> input parameters to reference the
+new URLs of the updated configurations.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><br>
+<br></p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+For additional information and examples, see <a href="https://github.com/f5networks/f5-bigip-runtime-init">F5 BIG-IP
+Runtime Init</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><br>
+<br></p>
 </div>
 <div class="paragraph">
 <p>+
@@ -1244,6 +1584,7 @@ NOTE: Unless you are customizing the Quick Start templates for your own deployme
 </div>
 <div class="paragraph">
 <p>+</p>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -1397,13 +1738,13 @@ NOTE: Unless you are customizing the Quick Start templates for your own deployme
 <td class="tableblock halign-left valign-top"><p class="tableblock">Restricted source address to BIG-IP management
 (<code>restrictedSrcAddressMgmt</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The IP address range used to SSH and access management GUI on the EC2 instances</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQUIRED - The IP address range used to SSH and access BIG-IP management port. Restrict to your client IP. Ex. X.X.X.X/32. WARNING - For eval purposes only. Production should never have Management interface exposed to Internet.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Restricted source address to application
 (<code>restrictedSrcAddressApp</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The IP address range that can be used to access web traffic (80/443) to the EC2 instances.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQUIRED - The IP address range that can be used to access web traffic (80/443) to the EC2 instances.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1424,33 +1765,51 @@ NOTE: Unless you are customizing the Quick Start templates for your own deployme
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">AWS instance type
-(<code>bigipInstanceType</code>)</p></td>
+(<code>bigIpInstanceType</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>m5.2xlarge</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">AWS instance type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AWS instance type.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Image Id
-(<code>imageId</code>)</p></td>
+(<code>bigIpImageId</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Blank string</em></strong></code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If you would like to deploy using a custom BIG-IP image, provide the AMI Id.  <strong>Note</strong>: Unless specifically required, leave the default of <strong>OPTIONAL</strong></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BIG-IP performance type
+(<code>bigIpImageName</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Best</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">F5 BIG-IP Performance Type.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BIG-IP VE throughput (PAYG)
+(<code>bigIpThroughput</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1000Mbps</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum amount of throughput for BIG-IP VE</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">BIG-IP Runtime Init config for first BIG-IP instance
-(<code>bigipRuntimeInitConfig01</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">URL for BIG-IP Runtime Init config</p></td>
+(<code>bigIpRuntimeInitConfig01</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance01.yaml" class="bare">https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance01.yaml</a></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Supply a URL to the bigip-runtime-init configuration file in YAML or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">BIG-IP Runtime Init config for second BIG-IP instance
-(<code>bigipRuntimeInitConfig02</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">URL for BIG-IP Runtime Init config</p></td>
+(<code>bigIpRuntimeInitConfig02</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance02.yaml" class="bare">https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance02.yaml</a></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Supply a URL to the bigip-runtime-init configuration file in YAML or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BIG-IP Runtime Init Package URL to install a specific version.
+(<code>bigIpRuntimeInitPackageUrl</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.3.2/dist/f5-bigip-runtime-init-1.3.2-1.gz.run" class="bare">https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.3.2/dist/f5-bigip-runtime-init-1.3.2-1.gz.run</a></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Supply a URL for the F5 BIG-IP Runtime Init Package install script.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">S3 bucket used as BIG-IP storage for failover solution
 (<code>cfeS3Bucket</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>aws-quickstart-cfe</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">S3 bucket used as BIG-IP storage for Failover solution</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S3 bucket used as BIG-IP storage for Failover solution.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Deployment tag value used for cloud failover
@@ -1465,10 +1824,10 @@ NOTE: Unless you are customizing the Quick Start templates for your own deployme
 <td class="tableblock halign-left valign-top"><p class="tableblock">Cloud Failover VIP tag value; provides private ip addresses to be assigned to VIP public ip.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">BIG-IP password for both BIG-IP instances.
+<td class="tableblock halign-left valign-top"><p class="tableblock">ARN of Secrets Manager secret
 (<code>secretArn</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Secret ARN where password for BIG-IP instances is stored.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Blank string</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ARN of Secrets Manager secret</p></td>
 </tr>
 </tbody>
 </table>
@@ -1491,7 +1850,7 @@ NOTE: Unless you are customizing the Quick Start templates for your own deployme
 <td class="tableblock halign-left valign-top"><p class="tableblock">Application
 (<code>application</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>f5app</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the Application Tag</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the Application Tag.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Cost Center
@@ -1538,13 +1897,13 @@ NOTE: Unless you are customizing the Quick Start templates for your own deployme
 <td class="tableblock halign-left valign-top"><p class="tableblock">Provision Example App
 (<code>provisionExampleApp</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">This is used to deploy the demo WebApps.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Flag to deploy the demo web application.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Application Docker image name
 (<code>appDockerImageName</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>f5devcentral/f5-demo-app:latest</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Application docker image name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>f5devcentral/f5-demo-httpd:latest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application docker image name.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Static VIP IP address for public subnet 1 in AZ1.
@@ -1645,7 +2004,7 @@ NOTE: Unless you are customizing the Quick Start templates for your own deployme
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">BIG-IP address for public subnet in AZ1
 (<code>publicSubnet1SelfAddress</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10.0.10.11</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Public Subnet1 IP Address.</p></td>
 </tr>
 <tr>
@@ -1657,7 +2016,7 @@ NOTE: Unless you are customizing the Quick Start templates for your own deployme
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>NO_LABEL</strong>
 (<code>privateSubnet1SelfAddress</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10.0.11.11</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Private Subnet1 IP Address.</p></td>
 </tr>
 <tr>
@@ -1669,7 +2028,7 @@ NOTE: Unless you are customizing the Quick Start templates for your own deployme
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">BIG-IP address for public subnet in AZ2
 (<code>publicSubnet2SelfAddress</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10.0.20.11</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Private Subnet2 IP Address.</p></td>
 </tr>
 <tr>
@@ -1681,7 +2040,7 @@ NOTE: Unless you are customizing the Quick Start templates for your own deployme
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>NO_LABEL</strong>
 (<code>privateSubnet2SelfAddress</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10.0.21.11</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Private Subnet2 IP Address.</p></td>
 </tr>
 <tr>
@@ -1723,19 +2082,19 @@ NOTE: Unless you are customizing the Quick Start templates for your own deployme
 <td class="tableblock halign-left valign-top"><p class="tableblock">EC2 KeyPair to enable SSH access to the BIG-IP instance
 (<code>sshKey</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">EC2 KeyPair to enable SSH access to the BIG-IP instance</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">EC2 KeyPair to enable SSH access to EC2 instances which include BIG-IP, Bastion, and demo application instances.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Restricted source address to BIG-IP management
 (<code>restrictedSrcAddressMgmt</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The IP address range used to SSH and access management GUI on the EC2 instances</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQUIRED - The IP address range used to SSH and access BIG-IP management port. Restrict to your client IP. Ex. X.X.X.X/32. WARNING - For eval purposes only. Production should never have Management interface exposed to Internet.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Restricted source address to application
 (<code>restrictedSrcAddressApp</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The IP address range that can be used to access web traffic (80/443) to the EC2 instances.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQUIRED - The IP address range that can be used to access web traffic (80/443) to the EC2 instances.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1756,45 +2115,57 @@ NOTE: Unless you are customizing the Quick Start templates for your own deployme
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">AWS instance type
-(<code>instanceType</code>)</p></td>
+(<code>bigIpInstanceType</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>m5.2xlarge</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">AWS instance type</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Image Id
-(<code>imageId</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BIGIP Image Id
+(<code>bigIpImageId</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Blank string</em></strong></code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If you would like to deploy using a custom BIG-IP image, provide the AMI Id.  <strong>Note</strong>: Unless specifically required, leave the default of <strong>OPTIONAL</strong></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BIG-IP VE version.
+(<code>bigIpVersion</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>15-1-2-009</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Select version of BIG-IP you wish to deploy.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">F5 BIG-IP Performance Type (PAYG)
-(<code>imageName</code>)</p></td>
+(<code>bigIpImageName</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Best</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">F5 BIG-IP Performance Type</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">BIG-IP VE throughput (PAYG)
-(<code>throughput</code>)</p></td>
+(<code>bigIpThroughput</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1000Mbps</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Maximum amount of throughput for BIG-IP VE</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">BIG-IP Runtime Init config
-(<code>bigipRuntimeInitConfig01</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">URL for BIG-IP Runtime Init config</p></td>
+(<code>bigIpRuntimeInitConfig01</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance01.yaml" class="bare">https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance01.yaml</a></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Supply a URL to the bigip-runtime-init configuration file in YAML or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">BIG-IP Runtime Init config
-(<code>bigipRuntimeInitConfig02</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">URL for BIG-IP Runtime Init config</p></td>
+(<code>bigIpRuntimeInitConfig02</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance02.yaml" class="bare">https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance02.yaml</a></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Supply a URL to the bigip-runtime-init configuration file in YAML or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BIG-IP Runtime Init Package URL
+(<code>bigIpRuntimeInitPackageUrl</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.3.2/dist/f5-bigip-runtime-init-1.3.2-1.gz.run" class="bare">https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.3.2/dist/f5-bigip-runtime-init-1.3.2-1.gz.run</a></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Supply a URL for the F5 BIG-IP Runtime Init Package install script.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CFE S3 bucket
 (<code>cfeS3Bucket</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>aws-quickstart-cfe</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">S3 bucket name used by Cloud Failover Extension</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S3 bucket name used by Cloud Failover Extension.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CFE VIP tag value
@@ -1803,10 +2174,16 @@ NOTE: Unless you are customizing the Quick Start templates for your own deployme
 <td class="tableblock halign-left valign-top"><p class="tableblock">Cloud Failover VIP tag value; provides private ip addresses to be assigned to VIP public ip.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">BIG-IP password for both BIG-IP instances.
+<td class="tableblock halign-left valign-top"><p class="tableblock">CFE Deployment tag value
+(<code>cfeTag</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>aws_quickstart</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cloud Failover deployment tag value.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ARN of Secrets Manager secret
 (<code>secretArn</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Secret ARN where password for BIG-IP instances is stored.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Blank string</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ARN of Secrets Manager secret</p></td>
 </tr>
 </tbody>
 </table>
@@ -1876,24 +2253,24 @@ NOTE: Unless you are customizing the Quick Start templates for your own deployme
 <td class="tableblock halign-left valign-top"><p class="tableblock">Provision Example App
 (<code>provisionExampleApp</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">This is used to deploy the demo WebApps.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Flag to deploy the demo web application.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Application docker image name
 (<code>appDockerImageName</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>f5devcentral/f5-demo-http:nginx</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>f5devcentral/f5-demo-httpd:latest</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Application docker image name</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>NO_LABEL</strong>
 (<code>publicSubnet1VipAddress</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10.0.10.101</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Public Subnet1 External Service IP Address.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>NO_LABEL</strong>
 (<code>publicSubnet2VipAddress</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10.0.20.101</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Public Subnet2 External Service IP Address.</p></td>
 </tr>
 </tbody>
@@ -1939,10 +2316,482 @@ NOTE: Unless you are customizing the Quick Start templates for your own deployme
 </div>
 </div>
 <div class="sect1">
+<h2 id="_accessing_the_big_ip">Accessing the BIG-IP</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Once the Stacks are <code>CREATE_COMPLETE</code>, you can access the BIG-IPs through the Bastion Host and if you&#8217;ve provisioned the example application, optionally test the waf service:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>From Parent Template Outputs:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Console</strong>: Navigate to <strong>CloudFormation &gt; <em>STACK_NAME</em> &gt; Outputs</strong>.</p>
+</li>
+<li>
+<p><strong>AWS CLI</strong>:</p>
+<div class="listingblock">
+<div class="content">
+<pre>aws --region ${REGION} cloudformation describe-stacks --stack-name ${STACK_NAME}  --query  "Stacks[0].Outputs"</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Obtain the Private IP address of the BIG-IP Management Port:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Console</strong>: Navigate to <strong>CloudFormation &gt; <em>STACK_NAME</em> &gt; Outputs &gt;
+<em>bigipInstance01MgmtPrivateIp</em></strong>.</p>
+</li>
+<li>
+<p><strong>AWS CLI</strong>:</p>
+<div class="listingblock">
+<div class="content">
+<pre>aws --region ${REGION} cloudformation describe-stacks --stack-name ${STACK_NAME} --query  "Stacks[0].Outputs[ OutputKey=='bigipInstance01MgmtPrivateIp'].OutputValue" --output text</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Obtain the Public IP address of the bastion host:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Console</strong>: <strong>*</strong> <strong>Console</strong>: Navigate to <strong>CloudFormation &gt; <em>STACK_NAME</em> &gt; Outputs &gt; <em>bastionHost</em></strong>.</p>
+</li>
+<li>
+<p><strong>AWS CLI</strong>:</p>
+<div class="listingblock">
+<div class="content">
+<pre>aws --region ${REGION} cloudformation describe-stacks --stack-name ${STACK_NAME} --query  "Stacks[0].Outputs[ OutputKey=='bastionHost'].OutputValue" --output text</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_ssh">SSH</h3>
+<div class="paragraph">
+<p>From your desktop client/shell, create an SSH tunnel:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>ssh -i [keyname-passed-to-template.pem] -o ProxyCommand='ssh -i [keyname-passed-to-template.pem] -W %h:%p ec2-user@[BASTION-HOST-PUBLIC-IP]' admin@[BIG-IP-MGMT-PRIVATE-IP]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Replace the variables in brackets before submitting the command.  For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>ssh -i ~/.ssh/mykey.pem -o ProxyCommand=`ssh -i ~/.ssh/mykey.pem -W %h:%p ec2-user@34.82.102.190' admin@10.0.1.11</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_webui">WebUI</h3>
+<div class="paragraph">
+<p>Obtain the URL address of the BIG-IP Management Port.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>NOTE</em>: Multi-NIC, will use <a href="https://host" class="bare">https://host</a>. Single NIC will use
+<a href="https://host:8443" class="bare">https://host:8443</a>.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>From your desktop client/shell, create an SSH tunnel through the Bastion Host:</p>
+<div class="listingblock">
+<div class="content">
+<pre>ssh -i [keyname-passed-to-template.pem] ec2-user@[BASTION-HOST-PUBLIC-IP] -L [DESKTOP_PORT]:[BIG-IP-MGMT-PRIVATE-IP]:[BIGIP-GUI-PORT]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>ssh -i ~/.ssh/mykey.pem ec2-user@34.82.102.190 -L 8443:10.0.1.11:443</pre>
+</div>
+</div>
+</li>
+<li>
+<p>You should now be able to open a browser to the BIG-IP UI from your desktop:</p>
+<div class="paragraph">
+<p><a href="https://localhost:8443" class="bare">https://localhost:8443</a></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>NOTE: By default, the BIG-IP system’s WebUI starts with a self-signed
+cert. Follow your browser’s instructions for accepting self-signed certs
+(for example, If using Firefox, click <code>Advanced</code> button, click
+<code>Accept Risk and Continue</code>, if using Chrome, click inside the page and type this
+<code>thisisunsafe</code>, etc.)</em></p>
+</li>
+<li>
+<p>To Login:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>username: <strong>admin</strong></p>
+</li>
+<li>
+<p>password: <strong>YOUR_AWS_SECRET</strong></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_exploring">Further Exploring</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_ssh_2">SSH</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>From tmsh shell, type <code>bash</code> and enter to enter the bash shell.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Examine the BIG-IP configuration file downloaded:</p>
+<div class="listingblock">
+<div class="content">
+<pre>cat /config/cloud/runtime-init.conf</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Examine the running BIG-IP configurations:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The BIG-IP
+<a href="https://www.f5.com/pdf/products/automation-toolchain-overview.pdf">F5
+Automation Toolchain</a> declarations:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">curl -su admin: http://localhost:8100/mgmt/shared/declarative-onboarding | jq .
+curl -su admin: http://localhost:8100/mgmt/shared/appsvcs/declare | jq .</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>The BIG-IP <a href="https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/">Cloud
+Failover Extension (CFE)</a> declaration:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">curl -su admin: http://localhost:8100/mgmt/shared/cloud-failover/declare | jq .</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_webui_2">WebUI</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>If you have provisioned the example application, navigate to <strong>Virtual Services</strong>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>From the drop down menu <strong>Partition</strong> (upper right), select Partition =
+<code>Tenant_1</code>.</p>
+</li>
+<li>
+<p>Navigate to <strong>Local Traffic &gt; Virtual Servers</strong>. You should see the
+Virtual Services (one for HTTP and one for HTTPS). This should show up
+as Green. Click on them to look at the configuration <em>(declared in the
+AS3 declaration)</em>.</p>
+</li>
+<li>
+<p>Navigate to <strong>Security &gt; Application Security</strong>. Click on the policy named <strong>CustomWAFPolicy</strong> to inspect.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_testing_the_waf_service">Testing the WAF Service</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you have provisioned the example application, to test the WAF service, perform the following steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Obtain the address of the WAF service:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Console</strong>: Navigate to <strong>CloudFormation &gt; <em>STACK_NAME</em> &gt; Outputs &gt;
+<em>applicationPublicIp</em></strong>.</p>
+</li>
+<li>
+<p><strong>AWS CLI</strong>:</p>
+<div class="listingblock">
+<div class="content">
+<pre>aws --region ${REGION}  cloudformation describe-stacks --stack-name ${STACK_NAME} --query  "Stacks[0].Outputs[?OutputKey=='applicationPublicIp'].OutputValue" --output text</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="2">
+<li>
+<p>Verify the application is responding:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Paste the IP address in a browser: <code><a href="https://${IP_ADDRESS_FROM_OUTPUT}" class="bare">https://${IP_ADDRESS_FROM_OUTPUT}</a></code></p>
+<div class="ulist">
+<ul>
+<li>
+<p><em>NOTE: By default, the Virtual Service starts with a self-signed
+cert. Follow your browsers instructions for accepting self-signed certs
+(for example, if using Chrome, click inside the page and type this
+<code>thisisunsafe''. If using Firefox, click </code>Advanced'' button, click
+``Accept Risk and Continue'', etc.).</em></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Use curl:</p>
+<div class="listingblock">
+<div class="content">
+<pre>curl -sko /dev/null -w '%{response_code}\n' https://${IP_ADDRESS_FROM_OUTPUT}</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="3">
+<li>
+<p>Verify the WAF is configured to block illegal requests:</p>
+<div class="listingblock">
+<div class="content">
+<pre>curl -sk -X DELETE https://${IP_ADDRESS_FROM_OUTPUT}</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The response should include a message that the request was blocked,
+and a reference support ID. Example:</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ curl -sko /dev/null -w '%{response_code}\n' https://55.55.55.55
+200
+$ curl -sk -X DELETE https://55.55.55.55
+&lt;html&gt;&lt;head&gt;&lt;title&gt;Request Rejected&lt;/title&gt;&lt;/head&gt;&lt;body&gt;The requested URL was rejected.
+Please consult with your administrator.&lt;br&gt;&lt;br&gt;Your support ID is:
+2394594827598561347&lt;br&gt;&lt;br&gt;&lt;a href='javascript:history.back();'&gt;[Go Back]&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_testing_failover">Testing Failover</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you have deployed the example application, to test failover, perform the following steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Log on the BIG-IPs per instructions above:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Console</strong>: Go to Device Management of Active Instance &#8594; Traffic-Groups &#8594; Select box next to <strong>traffic-group-1</strong> &#8594; Click the "Force to Standby" button *.</p>
+</li>
+<li>
+<p><strong>BIG-IP CLI</strong>:</p>
+<div class="listingblock">
+<div class="content">
+<pre>tmsh run sys failover standby</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="2">
+<li>
+<p>Verify the EIP associated w/ the Virtual Service (applicationPublicIp) is remapped to the peer BIG-IP (ex. from 10.0.10.11 in AZ1 to 10.0.20.11 in AZ2).</p>
+</li>
+</ol>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="2">
+<li>
+<p>Verify the application is responding:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Paste the IP address in a browser: <code><a href="https://${IP_ADDRESS_FROM_OUTPUT}" class="bare">https://${IP_ADDRESS_FROM_OUTPUT}</a></code></p>
+<div class="ulist">
+<ul>
+<li>
+<p><em>NOTE: By default, the Virtual Service starts with a self-signed
+cert. Follow your browsers instructions for accepting self-signed certs
+(for example, if using Chrome, click inside the page and type this
+<code>thisisunsafe''. If using Firefox, click </code>Advanced'' button, click
+``Accept Risk and Continue'', etc.).</em></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Use curl:</p>
+<div class="listingblock">
+<div class="content">
+<pre>curl -sko /dev/null -w '%{response_code}\n' https://${IP_ADDRESS_FROM_OUTPUT}</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="3">
+<li>
+<p>Verify the WAF is configured to block illegal requests:</p>
+<div class="listingblock">
+<div class="content">
+<pre>curl -sk -X DELETE https://${IP_ADDRESS_FROM_OUTPUT}</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>NOTE: In this specific example, traffic is Source Address Translated and from the Example Application&#8217;s perspective, the "Client" is the BIG-IP&#8217;s addresses. The real client IP is passed via the <code>x-forwarded-for:</code> header. Observe how the "Client IP" changes from one BIG-IP in one AZ to the other.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_best_practices_for_using_f5_big_ip_virtual_edition_on_aws">Best practices for using F5 BIG-IP Virtual Edition on AWS</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><em>Add any best practices for using the software.</em></p>
+<p>For illustration purposes, this solution provides an option to pre-provision additional cloud resources (IP addresses)
+needed for an example virtual service. However, in practice, this solution is only designed to facilitate the initial deployment as cloud-init runs once and is typically used for
+initial provisioning, not as the primary configuration API for a
+long-running platform. More typically in an infrastructure use case,
+virtual services are added post initial deployment, outside the lifecycle of this Cloudformation Template and involves:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong><em>Cloud</em></strong> - Provisioning additional IPs on the desired Network Interfaces.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/MultipleIP.html#ManageMultipleIP">Assigning a Private IP</a></p>
+</li>
+<li>
+<p><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html#using-instance-addressing-eips-allocating">Allocating a Public IP</a></p>
+</li>
+<li>
+<p><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html#using-instance-addressing-eips-associating">Associating a Public IP</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong><em>BIG-IP</em></strong> - Creating Virtual Services that match those
+additional Secondary IPs.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Updating the <a href="https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/userguide/composing-a-declaration.html">AS3</a> declaration with additional Virtual Services.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><em>NOTE: For cloud resources, templates can be created or customized to pre-provision
+and update addtional resources (for example, various combinations of
+NICs, IPs, Public IPs, etc). Please see the <a href="#_support">Support Section</a>
+for more information. For the BIG-IP configurations, you can leverage any
+REST or Automation Tool Chain clients like
+<a href="https://ansible.github.io/workshops/exercises/ansible_f5/3.0-as3-intro/">Ansible</a>, <a href="https://registry.terraform.io/providers/F5Networks/bigip/latest/docs/resources/bigip_as3">Terraform</a>,
+etc.</em></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_deleting_the_deployment">Deleting the Deployment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As Cloudformation does not delete S3 buckets that contain data, in order to delete this deployment, you will first need to manually empty and/or delete the S3 bucket created for the Cloud Failover Extension (provided via <strong>cfeS3Bucket</strong> parameter). Go to <strong>AWS Management Console &#8594; S3</strong> and search for <strong>cfeS3Bucket</strong> bucket name, click the radio button associated with it and then click the "Empty" button.</p>
+</div>
+<div class="paragraph">
+<p>You can now delete the deployment. Go to <strong>AWS Management Console &#8594; Cloudformation &#8594; Stacks</strong> and select the radio button associated with the Parent Stack and then click the "Empty" button.</p>
+</div>
+<div class="paragraph">
+<p>For more information, see <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/troubleshooting.html" target="_blank" rel="noopener">Troubleshooting AWS CloudFormation</a>.</p>
 </div>
 </div>
 </div>
@@ -1950,7 +2799,178 @@ NOTE: Unless you are customizing the Quick Start templates for your own deployme
 <h2 id="_security">Security</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><em>Add any security-related information.</em></p>
+<p>This solution requires Internet Access for:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Downloading additional F5 software components used for onboarding and
+configuring the BIG-IP (via GitHub.com). Internet access is required via
+the management interface and then via a dataplane interface (for
+example, external Self-IP) once a default route is configured. See
+<a href="https://support.f5.com/csp/article/K13284">Overview of Mgmt Routing</a> for
+more details. By default, as a convenience, this solution provisions
+Public IPs to enable this but in a production environment, outbound
+access should be provided by a <code>routed</code> SNAT service (for example, NAT
+Gateway, custom firewall, etc). <em>NOTE: access via web proxy is not
+currently supported. Other options include 1) hosting the file locally
+and modifying the runtime-init package url and configuration files to
+point to local URLs instead or 2) baking them into a custom image, using
+the <a href="https://clouddocs.f5.com/cloud/public/v1/ve-image-gen_index.html">F5
+Image Generation Tool</a>.</em></p>
+</li>
+<li>
+<p>Contacting native cloud services (for example, s3.amazonaws.com,
+ec2.amazonaws.com, etc.) for various cloud integrations: **
+<em>Onboarding</em>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/f5networks/f5-bigip-runtime-init">F5 BIG-IP Runtime
+Init</a> - to fetch secrets from native vault services ** <em>Operation</em>:</p>
+</li>
+<li>
+<p><a href="https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/">F5
+Application Services 3</a> - for features like Service Discovery</p>
+</li>
+<li>
+<p><a href="https://clouddocs.f5.com/products/extensions/f5-telemetry-streaming/latest/">F5
+Telemetry Streaming</a> - for logging and reporting</p>
+</li>
+<li>
+<p><a href="https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/">Cloud
+Failover Extension (CFE)</a> - for updating IP and route mappings</p>
+</li>
+<li>
+<p>Additional cloud services like
+<a href="https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints.html">VPC
+endpoints</a> can be used to address calls to native services traversing
+the Internet. ** See <a href="#_security">Security</a> section for more details.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>This CloudFormation template downloads helper code to configure the
+BIG-IP system:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>f5-bigip-runtime-init.gz.run: The self-extracting installer for the F5
+BIG-IP Runtime Init RPM can be verified against a SHA256 checksum
+provided as a release asset on the F5 BIG-IP Runtime Init public GitHub
+repository, for example:
+<a href="https://github.com/F5Networks/f5-bigip-runtime-init/releases/download/1.3.2/f5-bigip-runtime-init-1.3.2-1.gz.run.sha256" class="bare">https://github.com/F5Networks/f5-bigip-runtime-init/releases/download/1.3.2/f5-bigip-runtime-init-1.3.2-1.gz.run.sha256</a>.</p>
+</li>
+<li>
+<p>F5 BIG-IP Runtime Init: The self-extracting installer script extracts,
+verifies, and installs the F5 BIG-IP Runtime Init RPM package. Package
+files are signed by F5 and automatically verified using GPG.</p>
+</li>
+<li>
+<p>F5 Automation Toolchain components: F5 BIG-IP Runtime Init downloads,
+installs, and configures the F5 Automation Toolchain components.
+Although it is optional, F5 recommends adding the extensionHash field to
+each extension install operation in the configuration file. The presence
+of this field triggers verification of the downloaded component package
+checksum against the provided value. The checksum values are published
+as release assets on each extension’s public GitHub repository, for
+example:
+<a href="https://github.com/F5Networks/f5-appsvcs-extension/releases/download/v3.30.0/f5-appsvcs-3.30.0-5.noarch.rpm.sha256" class="bare">https://github.com/F5Networks/f5-appsvcs-extension/releases/download/v3.30.0/f5-appsvcs-3.30.0-5.noarch.rpm.sha256</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following configuration file will verify the Declarative Onboarding
+and Application Services extensions before configuring AS3 from a local
+file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">runtime_parameters: []
+extension_packages:
+    install_operations:
+        - extensionType: do
+          extensionVersion: 1.23.0
+          extensionHash: bfe88c7cf3fdb24adc4070590c27488e203351fc808d57ae6bbb79b615d66d27
+        - extensionType: as3
+          extensionVersion: 3.30.0
+          extensionHash: 47cc7bb6962caf356716e7596448336302d1d977715b6147a74a142dc43b391b
+extension_services:
+    service_operations:
+      - extensionType: as3
+        type: url
+        value: file:///examples/declarations/as3.json</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>More information about F5 BIG-IP Runtime Init and additional examples
+can be found in the
+<a href="https://github.com/F5Networks/f5-bigip-runtime-init/blob/main/README.md">GitHub
+repository</a>.</p>
+</div>
+<div class="paragraph">
+<p>This template can send non-identifiable statistical information to F5 Networks to help us improve our templates. You can disable this functionality by setting the <strong>autoPhonehome</strong> system class property value to false in the F5 Declarative Onboarding declaration. See Customizing the BIG-IP Configuration section for additional information.</p>
+</div>
+<div class="paragraph">
+<p>List of endpoints BIG-IP may contact during onboarding:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>BIG-IP image default:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>vector2.brightcloud.com (by BIG-IP image for
+<a href="https://support.f5.com/csp/article/K03011490">IPI subscription
+validation</a> )</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Solution / Onboarding:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>github.com (for downloading helper packages mentioned above)</p>
+</li>
+<li>
+<p>f5-cft.s3.amazonaws.com (downloading GPG Key and other helper configuration files)</p>
+</li>
+<li>
+<p>license.f5.com (licensing functions)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Telemetry:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>product-s.apis.f5.com.</p>
+</li>
+<li>
+<p>f5-prod-webdev-prod.apigee.net.</p>
+</li>
+<li>
+<p>id-prod-global-endpoint.trafficmanager.net.</p>
+</li>
+<li>
+<p>global.azure-devices-provisioning.net.</p>
+</li>
+<li>
+<p>www-google-analytics.l.google.com</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -1958,7 +2978,54 @@ NOTE: Unless you are customizing the Quick Start templates for your own deployme
 <h2 id="_other_useful_information">Other useful information</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><em>Add any other details that will help the customer use the software on AWS.</em></p>
+<p>Reference Links:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.f5.com/">F5 website</a>.</p>
+</li>
+<li>
+<p><a href="https://aws.amazon.com/marketplace/pp/prodview-v2lgyijcawiti">F5 BIG-IP Virtual Edition - BEST (PAYG, 25Mbps)</a></p>
+</li>
+<li>
+<p><a href="https://aws.amazon.com/marketplace/pp/prodview-73utu5c5sfyyc">F5 BIG-IP VE - ALL (BYOL, 2 Boot Locations)</a></p>
+</li>
+<li>
+<p><a href="https://www.f5.com/products/big-ip-services/local-traffic-manager">Local Traffic Manager (LTM)</a></p>
+</li>
+<li>
+<p><a href="https://www.f5.com/products/security/advanced-waf">Application Security Manager (ASM)</a></p>
+</li>
+<li>
+<p><a href="https://aws.amazon.com/marketplace/pp/prodview-cs4qijwjf3ijs">F5 Advanced WAF with LTM, IPI, and Threat Campaigns (PAYG, 25Mbps)</a></p>
+</li>
+<li>
+<p><a href="https://github.com/f5networks/f5-bigip-runtime-init">F5 BIG-IP Runtime Init</a> - to fetch secrets from cloud vault services</p>
+</li>
+<li>
+<p><a href="https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/">F5 Cloud Failover Extension (CFE)</a> &#8594; for updating cloud resources (IP and route mappings)</p>
+</li>
+<li>
+<p><a href="https://www.f5.com/pdf/products/automation-toolchain-overview.pdf"> F5 Automation Tool Chain</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/">F5 Declarative Onboarding (DO)</a> &#8594; for system onboarding</p>
+</li>
+<li>
+<p><a href="https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/">F5 Application Services 3 (AS3)</a> &#8594; declarative virtual service definitions</p>
+</li>
+<li>
+<p><a href="https://clouddocs.f5.com/products/extensions/f5-telemetry-streaming/latest/">F5 Telemetry Streaming (TS)</a> &#8594; for logging and reporting (not deployed by default in this solution )</p>
+</li>
+<li>
+<p><a href="https://github.com/f5devcentral/f5-demo-httpd">Example Application (nginx)</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -2002,7 +3069,7 @@ NOTE: Unless you are customizing the Quick Start templates for your own deployme
 </ol>
 </div>
 <div class="paragraph">
-<p>In the even that a template in the stack failed, click on the name of a failed stack and then click <code>Events</code>. Check the <code>Status Reason</code> column for the failed event for details about the cause.</p>
+<p>In the event that a template in the stack failed, click on the name of a failed stack and then click <code>Events</code>. Check the <code>Status Reason</code> column for the failed event for details about the cause.</p>
 </div>
 <div class="paragraph">
 <p><strong>When creating a GitHub issue for a template, please include as much information as possible from the failed CloudFormation stack events.</strong></p>
@@ -2016,23 +3083,23 @@ NOTE: Unless you are customizing the Quick Start templates for your own deployme
 <p>Required fields were left empty or contained incorrect values (input type mismatch, prohibited characters, etc) causing template validation failure</p>
 </li>
 <li>
-<p>Insufficient permissions to create the deployment or resources created by a deployment (IAM roles, etc)</p>
+<p>Insufficient permissions to create the deployment or resources created by a deployment (IAM roles, etc). See <a href="#_technical_requirements">Technical requirements</a>.</p>
 </li>
 <li>
-<p>Resource limitations (exceeded limit of IP addresses or compute resources, etc)</p>
+<p>Resource limitations (exceeded limit of IP addresses or compute resources, etc). See <a href="#_technical_requirements">Technical requirements</a>.</p>
 </li>
 <li>
-<p>AWS service issues (service health can be checked from the AWS [Service Health Dashboard](<a href="https://status.aws.amazon.com/" class="bare">https://status.aws.amazon.com/</a>)</p>
+<p>AWS service issues (service health can be checked from the <a href="https://status.aws.amazon.com/">AWS Service Health Dashboard</a></p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>If all stacks were created "successfully" but maybe the BIG-IP or Service is not reachable, then log in to the BIG-IP instance via SSH to confirm BIG-IP deployment was successful (for example, if startup scripts completed as expected on the BIG-IP). To verify BIG-IP deployment, perform the following steps:</p>
+<p>If all stacks were created "successfully" but maybe the BIG-IP or Service is not reachable, then log in to the BIG-IP instance via SSH to confirm the BIG-IP deployment or desired configuration was successful (for example, if startup scripts completed as expected on the BIG-IP). To verify BIG-IP deployment, perform the following steps:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Obtain the IP address of the BIG-IP instance. See instructions [above](#accessing-the-bigip-ip)</p>
+<p>Obtain the IP address of the BIG-IP instance. See instructions for <a href="#_accessing_the_big_ip">Accessing the BIG-IP</a>.</p>
 </li>
 <li>
 <p>Check startup-script to make sure was installed/interpolated correctly:</p>
@@ -2102,6 +3169,17 @@ NOTE: Unless you are customizing the Quick Start templates for your own deployme
 <div class="content">
 <pre class="highlight"><code class="language-shell" data-lang="shell">aws ec2 get-console-output --region ${REGION}  --instance-id &lt;ID&gt;</code></pre>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_support">Support</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Due to the heavy customization requirements of external cloud resources and BIG-IP configurations in these solutions, F5 does not provide technical support for deploying, customizing, or troubleshooting the templates themselves. However, the various underlying products and components used (for example: <a href="https://clouddocs.f5.com/cloud/public/v1/">F5 BIG-IP Virtual Edition</a>, <a href="https://github.com/F5Networks/f5-bigip-runtime-init">F5 BIG-IP Runtime Init</a>, <a href="https://www.f5.com/pdf/products/automation-toolchain-overview.pdf">F5 Automation Toolchain</a> extensions, and <a href="https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/">Cloud Failover Extension (CFE)</a>) in the solutions located here are F5-Supported and capable of being deployed with other orchestration tools. Read more about <a href="https://www.f5.com/company/policies/support-policies">Support Policies</a>. Problems found with the templates deployed as-is should be reported via a GitHub issue.</p>
+</div>
+<div class="paragraph">
+<p>For help with authoring and support for custom templates, we recommend engaging <a href="https://www.f5.com/services/professional-services">F5 Professional Services (PS)</a>.</p>
 </div>
 </div>
 </div>
