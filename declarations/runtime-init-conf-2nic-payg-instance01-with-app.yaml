@@ -1,4 +1,8 @@
 ---
+bigip_ready_enabled: []
+controls:
+  logLevel: info
+  logFilename: /var/log/cloud/bigIpRuntimeInit.log
 extension_packages:
   install_operations:
     - extensionHash: f1f4a23cd7d3ac3d9f38fed520c373f5a16284fab001ebd26593ddc97c011ef3
@@ -21,30 +25,30 @@ extension_services:
         label: Standalone 2NIC BIG-IP declaration for Declarative Onboarding with PAYG license
         Common:
           class: Tenant
-          myNtp:
-            class: NTP
-            servers:
-              - 0.pool.ntp.org
-              - 1.pool.ntp.org
-            timezone: UTC
-          myDns:
+          My_DbVars:
+            class: DbVariables
+            config.allow.rfc3927: enable
+            tm.tcpudptxchecksum: Software-only
+          My_Dns:
             class: DNS
             nameServers:
               - 169.254.169.253
             search:
               - f5.com
-          mySystem:
-            autoPhonehome: true
-            class: System
-            hostname: 'failover0.local'
-          myLicense:
-            class: License
-            licenseType: regKey
-            regKey: REPLACE_WITH_VALID_REGKEY
-          myProvisioning:
+          My_Ntp:
+            class: NTP
+            servers:
+              - 0.pool.ntp.org
+              - 1.pool.ntp.org
+            timezone: UTC
+          My_Provisioning:
             asm: nominal
             class: Provision
             ltm: nominal
+          My_System:
+            autoPhonehome: true
+            class: System
+            hostname: 'failover01.local'
           admin:
             class: User
             userType: regular
@@ -57,7 +61,7 @@ extension_services:
             interfaces:
               - name: '1.1'
                 tagged: false
-          externalSelf:
+          external-self:
             class: SelfIp
             address: '{{{SELF_IP_EXTERNAL}}}'
             vlan: external
@@ -71,16 +75,16 @@ extension_services:
             localOnly: true
           configSync:
             class: ConfigSync
-            configsyncIp: /Common/externalSelf/address
+            configsyncIp: /Common/external-self/address
           failoverAddress:
             class: FailoverUnicast
-            address: /Common/externalSelf/address
+            address: /Common/external-self/address
           failoverGroup:
             class: DeviceGroup
             type: sync-failover
             members:
-              - failover0.local
-              - failover1.local
+              - failover01.local
+              - failover02.local
             owner: /Common/failoverGroup/members/0
             autoSync: true
             saveOnAutoSync: false
@@ -94,10 +98,6 @@ extension_services:
             remoteHost: /Common/failoverGroup/members/0
             remoteUsername: admin
             remotePassword: '{{{BIGIP_PASSWORD}}}'
-          dbVars:
-            class: DbVariables
-            config.allow.rfc3927: enable
-            tm.tcpudptxchecksum: Software-only
     - extensionType: cf
       type: inline
       value:
@@ -106,7 +106,7 @@ extension_services:
         environment: aws
         controls:
           class: Controls
-          logLevel: info
+          logLevel: silly
         externalStorage:
           scopingTags:
             f5_cloud_failover_label: aws_quickstart
@@ -127,7 +127,7 @@ extension_services:
           Shared:
             class: Application
             template: shared
-            shared_pool:
+            Service_01_Pool:
               class: Pool
               remark: Service 1 shared pool
               members:
@@ -140,86 +140,83 @@ extension_services:
                   addressRealm: private
               monitors:
                 - http
-            serviceAddress01:
+            Custom_HTTP_Profile:
+              class: HTTP_Profile
+              xForwardedFor: true
+            Custom_WAF_Policy:
+              class: WAF_Policy
+              url: >-
+                https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/Rapid_Deployment_Policy_13_1.xml
+              enforcementMode: blocking
+              ignoreChanges: false
+            Service_Address_01_A:
               class: Service_Address
               virtualAddress: 10.0.10.101
               trafficGroup: none
-            serviceAddress02:
+            Service_Address_01_B:
               class: Service_Address
               virtualAddress: 10.0.20.101
               trafficGroup: none
-          HTTP_Service_01:
+          HTTP_Service_01_A:
             class: Application
             template: http
             serviceMain:
               class: Service_HTTP
               virtualAddresses:
-                - use: /Tenant_1/Shared/serviceAddress02
+                - use: /Tenant_1/Shared/Service_Address_01_A
               snat: auto
-              pool: /Tenant_1/Shared/shared_pool
-            WAFPolicy:
-              class: WAF_Policy
-              url: >-
-                https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/Rapid_Deployment_Policy_13_1.xml
-              enforcementMode: blocking
-              ignoreChanges: false
-          HTTP_Service_02:
+              pool: /Tenant_1/Shared/Service_01_Pool
+              profileHTTP:
+                use: /Tenant_1/Shared/Custom_HTTP_Profile
+              policyWAF: 
+                use: /Tenant_1/Shared/Custom_WAF_Policy
+          HTTP_Service_01_B:
             class: Application
             template: http
             serviceMain:
               class: Service_HTTP
               virtualAddresses:
-                - use: /Tenant_1/Shared/serviceAddress01
+                - use: /Tenant_1/Shared/Service_Address_01_B
               snat: auto
-              pool: /Tenant_1/Shared/shared_pool
-            WAFPolicy:
-              class: WAF_Policy
-              url: >-
-                https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/Rapid_Deployment_Policy_13_1.xml
-              enforcementMode: blocking
-              ignoreChanges: false
-          HTTPS_Service_01:
+              pool: /Tenant_1/Shared/Service_01_Pool
+              profileHTTP:
+                use: /Tenant_1/Shared/Custom_HTTP_Profile
+              policyWAF: 
+                use: /Tenant_1/Shared/Custom_WAF_Policy
+          HTTPS_Service_01_A:
             class: Application
             template: https
             serviceMain:
               class: Service_HTTPS
               virtualAddresses:
-                - use: /Tenant_1/Shared/serviceAddress02
+                - use: /Tenant_1/Shared/Service_Address_01_A
               snat: auto
-              pool: /Tenant_1/Shared/shared_pool
+              pool: /Tenant_1/Shared/Service_01_Pool
               serverTLS:
                 bigip: /Common/clientssl
               redirect80: false
-            WAFPolicy:
-              class: WAF_Policy
-              url: >-
-                https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/Rapid_Deployment_Policy_13_1.xml
-              enforcementMode: blocking
-              ignoreChanges: false
-          HTTPS_Service_02:
+              profileHTTP:
+                use: /Tenant_1/Shared/Custom_HTTP_Profile
+              policyWAF: 
+                use: /Tenant_1/Shared/Custom_WAF_Policy
+          HTTPS_Service_01_B:
             class: Application
             template: https
             serviceMain:
               class: Service_HTTPS
               virtualAddresses:
-                - use: /Tenant_1/Shared/serviceAddress01
+                - use: /Tenant_1/Shared/Service_Address_01_B
               snat: auto
-              pool: /Tenant_1/Shared/shared_pool
+              pool: /Tenant_1/Shared/Service_01_Pool
               serverTLS:
                 bigip: /Common/clientssl
               redirect80: false
-            WAFPolicy:
-              class: WAF_Policy
-              url: >-
-                https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/Rapid_Deployment_Policy_13_1.xml
-              enforcementMode: blocking
-              ignoreChanges: false
+              profileHTTP:
+                use: /Tenant_1/Shared/Custom_HTTP_Profile
+              policyWAF: 
+                use: /Tenant_1/Shared/Custom_WAF_Policy
 post_onboard_enabled: []
-pre_onboard_enabled:
-  - name: disable_1nic_config
-    type: inline
-    commands:
-      - /usr/bin/setdb provision.1nicautoconfig disable
+pre_onboard_enabled: []
 runtime_parameters:
   - name: BIGIP_PASSWORD
     type: secret
@@ -228,12 +225,6 @@ runtime_parameters:
       secretId: bigIpPassword
       type: SecretsManager
       version: AWSCURRENT
-  - name: HOST_NAME
-    type: metadata
-    metadataProvider:
-      environment: aws
-      type: compute
-      field: hostname
   - name: SELF_IP_EXTERNAL
     type: metadata
     metadataProvider:
@@ -270,4 +261,4 @@ runtime_parameters:
       - name: method
         value: PUT
       - name: X-aws-ec2-metadata-token-ttl-seconds
-        value: 21600
+        value: 21600 

@@ -17,50 +17,50 @@ cp -avr $PWD/declarations /tmp/<DEWPOINT JOB ID>/
 
 secret_arn=$(aws secretsmanager list-secrets --region <REGION> --filters Key=name,Values=<DEWPOINT JOB ID>-secret | jq -r .SecretList[0].ARN)
 # Update runtime init with correct secret
-/usr/bin/yq e ".runtime_parameters.[0].secretProvider.secretId = \"<DEWPOINT JOB ID>-secret\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg_instance01.yaml
-/usr/bin/yq e ".runtime_parameters.[0].secretProvider.secretId = \"<DEWPOINT JOB ID>-secret\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg_instance02.yaml
-/usr/bin/yq e ".runtime_parameters.[0].secretProvider.secretId = \"<DEWPOINT JOB ID>-secret\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg_instance01_with_app.yaml
-/usr/bin/yq e ".runtime_parameters.[0].secretProvider.secretId = \"<DEWPOINT JOB ID>-secret\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg_instance02_with_app.yaml
-/usr/bin/yq e ".runtime_parameters.[0].secretProvider.secretId = \"<DEWPOINT JOB ID>-secret\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol_instance01.yaml
-/usr/bin/yq e ".runtime_parameters.[0].secretProvider.secretId = \"<DEWPOINT JOB ID>-secret\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol_instance02.yaml
-/usr/bin/yq e ".runtime_parameters.[0].secretProvider.secretId = \"<DEWPOINT JOB ID>-secret\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol_instance01_with_app.yaml
-/usr/bin/yq e ".runtime_parameters.[0].secretProvider.secretId = \"<DEWPOINT JOB ID>-secret\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol_instance02_with_app.yaml
+/usr/bin/yq e ".runtime_parameters.[0].secretProvider.secretId = \"<DEWPOINT JOB ID>-secret\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance01.yaml
+/usr/bin/yq e ".runtime_parameters.[0].secretProvider.secretId = \"<DEWPOINT JOB ID>-secret\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance02.yaml
+/usr/bin/yq e ".runtime_parameters.[0].secretProvider.secretId = \"<DEWPOINT JOB ID>-secret\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance01-with-app.yaml
+/usr/bin/yq e ".runtime_parameters.[0].secretProvider.secretId = \"<DEWPOINT JOB ID>-secret\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance02-with-app.yaml
+/usr/bin/yq e ".runtime_parameters.[0].secretProvider.secretId = \"<DEWPOINT JOB ID>-secret\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance01.yaml
+/usr/bin/yq e ".runtime_parameters.[0].secretProvider.secretId = \"<DEWPOINT JOB ID>-secret\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance02.yaml
+/usr/bin/yq e ".runtime_parameters.[0].secretProvider.secretId = \"<DEWPOINT JOB ID>-secret\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance01-with-app.yaml
+/usr/bin/yq e ".runtime_parameters.[0].secretProvider.secretId = \"<DEWPOINT JOB ID>-secret\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance02-with-app.yaml
 
 # Disable AutoPhoneHome
-/usr/bin/yq e ".extension_services.service_operations.[0].value.Common.mySystem.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg_instance01.yaml
-/usr/bin/yq e ".extension_services.service_operations.[0].value.Common.mySystem.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg_instance02.yaml
-/usr/bin/yq e ".extension_services.service_operations.[0].value.Common.mySystem.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg_instance01_with_app.yaml
-/usr/bin/yq e ".extension_services.service_operations.[0].value.Common.mySystem.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg_instance02_with_app.yaml
-/usr/bin/yq e ".extension_services.service_operations.[0].value.Common.mySystem.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol_instance01.yaml
-/usr/bin/yq e ".extension_services.service_operations.[0].value.Common.mySystem.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol_instance02.yaml
-/usr/bin/yq e ".extension_services.service_operations.[0].value.Common.mySystem.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol_instance01_with_app.yaml
-/usr/bin/yq e ".extension_services.service_operations.[0].value.Common.mySystem.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol_instance02_with_app.yaml
+/usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_System.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance01.yaml
+/usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_System.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance02.yaml
+/usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_System.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance01-with-app.yaml
+/usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_System.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance02-with-app.yaml
+/usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_System.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance01.yaml
+/usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_System.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance02.yaml
+/usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_System.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance01-with-app.yaml
+/usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_System.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance02-with-app.yaml
 
 if [[ "<LICENSE TYPE>" == "byol" ]]; then
 # Add RegKey for BYOLs
-    /usr/bin/yq e ".extension_services.service_operations.[0].value.Common.myLicense.regKey = \"$regKey01\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol_instance01.yaml
-    /usr/bin/yq e ".extension_services.service_operations.[0].value.Common.myLicense.regKey = \"$regKey02\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol_instance02.yaml
+    /usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_License.regKey = \"$regKey01\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance01.yaml
+    /usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_License.regKey = \"$regKey02\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance02.yaml
 
-    /usr/bin/yq e ".extension_services.service_operations.[0].value.Common.myLicense.regKey = \"$regKey01\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol_instance01_with_app.yaml
-    /usr/bin/yq e ".extension_services.service_operations.[0].value.Common.myLicense.regKey = \"$regKey02\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol_instance02_with_app.yaml
+    /usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_License.regKey = \"$regKey01\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance01-with-app.yaml
+    /usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_License.regKey = \"$regKey02\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance02-with-app.yaml
 fi
 
 # Update taskcat test configs with correct runtime url
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.bigIpRuntimeInitConfig01 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-payg_instance01.yaml\"" -i $PWD/ci/taskcat1.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.bigIpRuntimeInitConfig02 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-payg_instance02.yaml\"" -i $PWD/ci/taskcat1.yml
+/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.bigIpRuntimeInitConfig01 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-payg-instance01.yaml\"" -i $PWD/ci/taskcat1.yml
+/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.bigIpRuntimeInitConfig02 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-payg-instance02.yaml\"" -i $PWD/ci/taskcat1.yml
 /usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.secretArn = \"${secret_arn}\"" -i $PWD/ci/taskcat1.yml
 
-/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.bigIpRuntimeInitConfig01 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-payg_instance01_with_app.yaml\"" -i $PWD/ci/taskcat2.yml
-/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.bigIpRuntimeInitConfig02 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-payg_instance02_with_app.yaml\"" -i $PWD/ci/taskcat2.yml
+/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.bigIpRuntimeInitConfig01 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-payg-instance01-with-app.yaml\"" -i $PWD/ci/taskcat2.yml
+/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.bigIpRuntimeInitConfig02 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-payg-instance02-with-app.yaml\"" -i $PWD/ci/taskcat2.yml
 /usr/bin/yq e ".tests.f5ve-ha-prod.parameters.secretArn = \"${secret_arn}\"" -i $PWD/ci/taskcat2.yml
 
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.bigIpRuntimeInitConfig01 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-byol_instance01.yaml\"" -i $PWD/ci/taskcat3.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.bigIpRuntimeInitConfig02 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-byol_instance02.yaml\"" -i $PWD/ci/taskcat3.yml
+/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.bigIpRuntimeInitConfig01 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-byol-instance01.yaml\"" -i $PWD/ci/taskcat3.yml
+/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.bigIpRuntimeInitConfig02 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-byol-instance02.yaml\"" -i $PWD/ci/taskcat3.yml
 /usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.secretArn = \"${secret_arn}\"" -i $PWD/ci/taskcat3.yml
 
 
-/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.bigIpRuntimeInitConfig01 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-byol_instance01_with_app.yaml\"" -i $PWD/ci/taskcat4.yml
-/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.bigIpRuntimeInitConfig02 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-byol_instance02_with_app.yaml\"" -i $PWD/ci/taskcat4.yml
+/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.bigIpRuntimeInitConfig01 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-byol-instance01-with-app.yaml\"" -i $PWD/ci/taskcat4.yml
+/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.bigIpRuntimeInitConfig02 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-byol-instance02-with-app.yaml\"" -i $PWD/ci/taskcat4.yml
 /usr/bin/yq e ".tests.f5ve-ha-prod.parameters.secretArn = \"${secret_arn}\"" -i $PWD/ci/taskcat4.yml
 
 
