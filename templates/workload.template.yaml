@@ -519,9 +519,6 @@ Mappings:
       PerAppVeAwaf25Mbps: ami-07122e9684d899eec
       AllTwoBootLocations: ami-0ff28d6bcc8f04c28
 Conditions:
-  usePublicIpMgmt: !Equals
-    - 'true'
-    - !Ref provisionPublicIpMgmt
   usePublicIpVip: !Equals
     - 'true'
     - !Ref provisionExampleApp
@@ -555,7 +552,6 @@ Metadata:
           - privateSubnet2SelfAddress
           - privateSubnet3ID
           - privateSubnet4ID
-          - provisionPublicIpMgmt
       - Label:
           default: Amazon EC2 Configuration
         Parameters:
@@ -634,8 +630,6 @@ Metadata:
         default: Owner
       provisionExampleApp:
         default: Provision Example App
-      provisionPublicIpMgmt:
-        default: Provision Public IP addresses for the BIG-IP management interfaces
       publicSubnet1SelfAddress:
         default: BIG-IP address for public subnet in AZ1
       publicSubnet2SelfAddress:
@@ -809,13 +803,6 @@ Parameters:
     Default: 'false'
     Description: Flag to deploy the demo web application.
     Type: String
-  provisionPublicIpMgmt:
-    AllowedValues:
-      - 'false'
-      - 'false'
-    Default: 'false'
-    Description: Choose True to provision public IP addresses for the BIG-IP management network interfaces. By default, no public IP addresses are provisioned.
-    Type: String
   publicSubnet1ID:
     Description: Public Subnet1 ID.
     Type: AWS::EC2::Subnet::Id
@@ -922,8 +909,8 @@ Resources:
         createFailoverIngress: 'true'
         environment: !Ref environment
         group: !Ref group
-        numberPublicExternalIpAddresses: !If [usePublicIpVip, 4, 0]
-        numberPublicMgmtIpAddresses: !If [usePublicIpMgmt, 2, 0]
+        numberPublicExternalIpAddresses: !If [usePublicIpVip, 3, 2]
+        numberPublicMgmtIpAddresses: 0
         owner: !Ref owner
         restrictedSrcAddressMgmt: !Ref restrictedSrcAddressMgmt
         restrictedSrcAddressApp: !Ref restrictedSrcAddressApp
@@ -945,19 +932,19 @@ Resources:
         bigIpRuntimeInitPackageUrl: !Ref bigIpRuntimeInitPackageUrl
         cfeS3Bucket: !Ref cfeS3Bucket
         imageId: !If [noCustomImageId, !FindInMap [!FindInMap [VERSION, !Ref bigIpVersion, REGIONMAP], !Ref 'AWS::Region', !FindInMap [AWSBigipThroughput, !Ref bigIpThroughput, !Ref bigIpImageName]], !Ref bigIpImageId]
-        externalPrimaryPublicId: !If [usePublicIpVip, !GetAtt [Dag, Outputs.bigIpExternalEipAllocationId02], '']
-        externalPublicIpIds: !If [usePublicIpVip, !GetAtt [Dag, Outputs.bigIpExternalEipAllocationId01], '']
+        externalPrimaryPublicId: !GetAtt [Dag, Outputs.bigIpExternalEipAllocationId01]
+        externalPublicIpIds: !If [usePublicIpVip, !GetAtt [Dag, Outputs.bigIpExternalEipAllocationId03], '']
         externalSecurityGroupId: !GetAtt [Dag, Outputs.bigIpExternalSecurityGroup]
         externalSelfIp: !Ref publicSubnet1SelfAddress
         externalServiceIps: !Ref publicSubnet1VipAddress
         externalSubnetId: !Ref publicSubnet1ID
         instanceType: !Ref bigIpInstanceType
         internalSubnetId: !Ref 'AWS::NoValue'
-        mgmtPublicIpId: !If [usePublicIpMgmt, !GetAtt [Dag, Outputs.bigipManagementEipAllocationId01], '']
+        mgmtPublicIpId: ''
         mgmtSecurityGroupId: !GetAtt [Dag, Outputs.bigIpExternalSecurityGroup]
         mgmtSelfIp: !Ref privateSubnet1SelfAddress
         mgmtSubnetId: !Ref privateSubnet1ID
-        numSecondaryPrivateIpAddress: 1
+        numSecondaryPrivateIpAddress: !If [usePublicIpVip, 1, 0]
         sshKey: !Ref sshKey
         uniqueString: !Ref uniqueString
   BigipInstance02:
@@ -971,7 +958,7 @@ Resources:
         bigIpInstanceProfile: !GetAtt [Access, Outputs.bigIpInstanceProfile]
         bigIpRuntimeInitConfig: !Ref bigIpRuntimeInitConfig02
         imageId: !If [noCustomImageId, !FindInMap [!FindInMap [VERSION, !Ref bigIpVersion, REGIONMAP], !Ref 'AWS::Region', !FindInMap [AWSBigipThroughput, !Ref bigIpThroughput, !Ref bigIpImageName]], !Ref bigIpImageId]
-        externalPrimaryPublicId: ''
+        externalPrimaryPublicId: !GetAtt [Dag, Outputs.bigIpExternalEipAllocationId02]
         externalPublicIpIds: ''
         externalSecurityGroupId: !GetAtt [Dag, Outputs.bigIpExternalSecurityGroup]
         externalSelfIp: !Ref publicSubnet2SelfAddress
@@ -979,7 +966,7 @@ Resources:
         externalSubnetId: !Ref publicSubnet2ID
         instanceType: !Ref bigIpInstanceType
         internalSubnetId:  !Ref 'AWS::NoValue'
-        mgmtPublicIpId: !If [usePublicIpMgmt, !GetAtt [Dag, Outputs.bigipManagementEipAllocationId02], '']
+        mgmtPublicIpId: ''
         mgmtSecurityGroupId: !GetAtt [Dag, Outputs.bigIpExternalSecurityGroup]
         mgmtSelfIp: !Ref privateSubnet2SelfAddress
         mgmtSubnetId: !Ref privateSubnet2ID
@@ -1029,7 +1016,7 @@ Outputs:
   applicationPublicIp:
     Condition: usePublicIpVip
     Description: application VIP Public Ip
-    Value: !GetAtt [Dag, Outputs.bigIpExternalEipAddress01]
+    Value: !GetAtt [Dag, Outputs.bigIpExternalEipAddress03]
   bigipInstance01:
     Description: bigip-standalone nested stack name
     Value: !GetAtt [BigipInstance01, Outputs.stackName]

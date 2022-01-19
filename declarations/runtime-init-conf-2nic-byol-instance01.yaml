@@ -71,10 +71,10 @@ extension_services:
             vlan: external
             allowService: 'default'
             trafficGroup: traffic-group-local-only
-          internal:
+          default:
             class: Route
             gw: '{{{DEFAULT_ROUTE}}}'
-            network: 10.0.0.0/16
+            network: default
             mtu: 1500
             localOnly: true
           configSync:
