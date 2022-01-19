@@ -1404,11 +1404,11 @@ Certain Regions are available on an opt-in basis. For more information, see <a h
 <div class="sect2">
 <h3 id="_customizing_the_big_ip_configuration">Customizing the BIG-IP configuration</h3>
 <div class="paragraph">
-<p>The initial BIG-IP configurations are passed through the <a href="https://github.com/f5networks/f5-bigip-runtime-init">F5 BIG-IP Runtime Init</a> config files. As the potential amount of customization for the BIG-IP configuration is so large, these are the primary mechanisms to customize the initial BIG-IP configurations for your deployment. Customizing the BIG-IP configurations generally involves updating AND rehosting these files and passing their location through the <strong>bigIpRuntimeInitConfig</strong> template parameters.</p>
+<p>Before deploying, you first need to confirm or customize the desired BIG-IP Configuration. The initial BIG-IP configurations are passed through the <a href="https://github.com/f5networks/f5-bigip-runtime-init">F5 BIG-IP Runtime Init</a> config files. As the potential amount of customization for the BIG-IP configuration is so large, these are the primary mechanisms to customize the initial BIG-IP configurations for your deployment. Customizing the BIG-IP configurations generally involves updating AND rehosting these files and passing their location through the <strong>bigIpRuntimeInitConfig</strong> template parameters.</p>
 </div>
 <div class="paragraph">
 <p>By default, per the diagram above, this solution deploys a minimal 2NIC PAYG configuration into the default Quickstart network topology using the following configuration files in the
-<code>declarations</code> folder:</p>
+<code>/declarations</code> folder in this repository:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1421,7 +1421,7 @@ Certain Regions are available on an opt-in basis. For more information, see <a h
 </ul>
 </div>
 <div class="paragraph">
-<p>This deploys a minimal baseline HA failover cluster <strong>without</strong> any services provisioned.</p>
+<p>This deploys a minimal baseline HA failover cluster <strong>without</strong> any virtual services provisioned.</p>
 </div>
 <div class="paragraph">
 <p>Optionally, to illustrate how services work, you can deploy an <em>example</em> waf protected web service ( which will deploy web application instances and a waf protected virtual service on the BIG-IPs). To do this, set <strong>provisionExampleApp</strong> parameter to <strong>true</strong> and reference the following configuration files via <strong>bigIpRuntimeInitConfig</strong> parameters instead.</p>
@@ -1437,7 +1437,7 @@ Certain Regions are available on an opt-in basis. For more information, see <a h
 </ul>
 </div>
 <div class="paragraph">
-<p>Any further customizations require updating AND rehosting your configuration files at a <strong>custom</strong> URL.</p>
+<p>Any further customizations require <strong>updating</strong> AND <strong>rehosting</strong> your configuration files at a <strong>custom</strong> URL.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1456,7 +1456,7 @@ Certain Regions are available on an opt-in basis. For more information, see <a h
 <p>The BIG-IP configurations must match the external environment in which they are deployed. Although the provided Runtime-Init config examples extract and templatize many common values, some values are still harcoded and need to be updated to match your specific environment or deployment first.</p>
 </div>
 <div class="sect3">
-<h4 id="_example_customization_1">Example Customization 1</h4>
+<h4 id="_common_example_customization_1">Common Example Customization 1</h4>
 <div class="paragraph">
 <p>For example, to deploy a <strong>Bring Your Own License (BYOL)</strong> instance:</p>
 </div>
@@ -1472,12 +1472,30 @@ value.</p>
 <div class="paragraph">
 <p>Example snippet:</p>
 </div>
+<div class="paragraph">
+<p>From:</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">          My_License:
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">...
+          My_License:
             class: License
             licenseType: regKey
-            regKey: AAAAA-BBBBB-CCCCC-DDDDD-EEEEEEE</code></pre>
+            regKey: REPLACE_WITH_VALID_REGKEY
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">...
+          My_License:
+            class: License
+            licenseType: regKey
+            regKey: AAAAA-BBBBB-CCCCC-DDDDD-EEEEEEE
+...</code></pre>
 </div>
 </div>
 <div class="olist arabic">
@@ -1495,9 +1513,85 @@ new URLs of the updated configurations.</p>
 </li>
 </ol>
 </div>
+<div class="paragraph">
+<p><br></p>
+</div>
 </div>
 <div class="sect3">
-<h4 id="_example_customization_2">Example Customization 2</h4>
+<h4 id="_common_example_customization_2">Common Example Customization 2</h4>
+<div class="paragraph">
+<p>For example, if you would like to change hostnames, disable usage reporting to F5, ntp / dns servers, etc. :</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Edit/modify the Declarative Onboarding (DO) declaration in a
+corresponding example runtime-init configs file with your new
+values.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Example snippet:</p>
+</div>
+<div class="paragraph">
+<p>From:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">...
+          My_System:
+            autoPhonehome: true
+            class: System
+            hostname: "failover01.local"
+...
+          failoverGroup:
+            class: DeviceGroup
+            type: sync-failover
+            members:
+              - failover01.local
+              - failover02.local
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">...
+          My_System:
+            autoPhonehome: false
+            class: System
+            hostname: "bigip-cluster-01-a.yourcompany.com"
+...
+          failoverGroup:
+            class: DeviceGroup
+            type: sync-failover
+            members:
+              - bigip-cluster-01-a.yourcompany.com
+              - bigip-cluster-01-b.yourcompany.com
+...</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="2">
+<li>
+<p>Publish/host the customized runtime-init config files at a location
+reachable by the BIG-IP at deploy time (for example: git, S3, etc.).</p>
+</li>
+<li>
+<p>Update the <strong>bigIpRuntimeInitConfig</strong> input parameters to reference the
+new URLs of the updated configurations.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><br></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_common_example_customization_3">Common Example Customization 3</h4>
 <div class="paragraph">
 <p>For example, if deploying into an <strong>existing</strong> network, it will certainly have different network topologies, subnetting, etc.:</p>
 </div>
@@ -1516,11 +1610,6 @@ values.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-yaml" data-lang="yaml">...
-          internal:
-            class: Route
-            gw: '{{{DEFAULT_ROUTE}}}'
-            network: &lt;YOUR-NEW-NETWORK&gt;
-...
           trust:
             class: DeviceTrust
             localUsername: admin
@@ -3049,6 +3138,19 @@ validation</a> )</p>
 </div>
 <div class="paragraph">
 <p><strong>A.</strong> We recommend that you launch the Quick Start templates from the links in this guide or from another S3 bucket. If you deploy the templates from a local copy on your computer or from a location other than an S3 bucket, you might encounter template size limitations. For more information about AWS CloudFormation quotas, see the <a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html">AWS documentation</a>.</p>
+</div>
+<div class="paragraph">
+<p><strong>Q.</strong> Is this solution IPv6 compatiable?</p>
+</div>
+<div class="paragraph">
+<p><strong>A.</strong> This specific solution does not support IPv6 deployments. Please see the <a href="#_support">Support Section</a>
+for assistance with customization or more information.</p>
+</div>
+<div class="paragraph">
+<p><strong>Q.</strong> Is this solution <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html">IMDSv2</a> compatiable?</p>
+</div>
+<div class="paragraph">
+<p><strong>A.</strong> This specific solution is not fully <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html">IMDSv2</a> compatible (F5 ID 1061797) at this time. Please see the <a href="#_support">Support Section</a> for assistance with customization or more information.</p>
 </div>
 </div>
 </div>

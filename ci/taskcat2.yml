@@ -22,8 +22,6 @@ tests:
       privateSubnet1ASelfAddress: 10.0.11.11
       privateSubnet2ASelfAddress: 10.0.21.11
       provisionExampleApp: 'true'
-      provisionPublicIpMgmt: 'false'
-      provisionPublicIpVip: 'true'
       publicSubnet1SelfAddress: 10.0.10.11
       publicSubnet1VipAddress: 10.0.10.101
       publicSubnet2SelfAddress: 10.0.20.11

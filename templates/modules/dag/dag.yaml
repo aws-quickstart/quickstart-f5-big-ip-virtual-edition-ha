@@ -779,6 +779,15 @@ Resources:
       SourceSecurityGroupId: !Ref BigipExternalSecurityGroup
       ToPort: 4353
     Type: 'AWS::EC2::SecurityGroupIngress'
+  bigipSecurityGroupIngressConfigSyncASM:
+    Condition: Failover
+    Properties:
+      FromPort: 6123
+      GroupId: !Ref BigipExternalSecurityGroup
+      IpProtocol: tcp
+      SourceSecurityGroupId: !Ref BigipExternalSecurityGroup
+      ToPort: 6128
+    Type: 'AWS::EC2::SecurityGroupIngress'
   bigipSecurityGroupIngressHa:
     Condition: Failover
     Properties:
