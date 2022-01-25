@@ -397,6 +397,8 @@ Resources:
             - ''
             - - !Ref uniqueString
               - '-external-lb'
+        - Key: application
+          Value: !Ref application
         - Key: costcenter
           Value: !Ref cost
         - Key: environment
@@ -473,6 +475,8 @@ Resources:
           - ''
           - - !Ref uniqueString
             - '-external-http-tg'
+      - Key: application
+        Value: !Ref application
       - Key: costcenter
         Value: !Ref cost
       - Key: environment
@@ -500,6 +504,8 @@ Resources:
             - ''
             - - !Ref uniqueString
               - '-internal-lb'
+        - Key: application
+          Value: !Ref application
         - Key: costcenter
           Value: !Ref cost
         - Key: environment
@@ -571,6 +577,8 @@ Resources:
     Properties:
       Domain: vpc
       Tags:
+        - Key: application
+          Value: !Ref application
         - Key: costcenter
           Value: !Ref cost
         - Key: environment
@@ -590,6 +598,8 @@ Resources:
     Properties:
       Domain: vpc
       Tags:
+        - Key: application
+          Value: !Ref application
         - Key: costcenter
           Value: !Ref cost
         - Key: environment
@@ -609,6 +619,8 @@ Resources:
     Properties:
       Domain: vpc
       Tags:
+        - Key: application
+          Value: !Ref application
         - Key: costcenter
           Value: !Ref cost
         - Key: environment
@@ -628,6 +640,8 @@ Resources:
     Properties:
       Domain: vpc
       Tags:
+        - Key: application
+          Value: !Ref application
         - Key: costcenter
           Value: !Ref cost
         - Key: environment
@@ -647,6 +661,8 @@ Resources:
     Properties:
       Domain: vpc
       Tags:
+        - Key: application
+          Value: !Ref application
         - Key: costcenter
           Value: !Ref cost
         - Key: environment
@@ -670,6 +686,8 @@ Resources:
     Properties:
       Domain: vpc
       Tags:
+        - Key: application
+          Value: !Ref application
         - Key: costcenter
           Value: !Ref cost
         - Key: environment
@@ -689,6 +707,8 @@ Resources:
     Properties:
       Domain: vpc
       Tags:
+        - Key: application
+          Value: !Ref application
         - Key: costcenter
           Value: !Ref cost
         - Key: environment
@@ -708,6 +728,8 @@ Resources:
     Properties:
       Domain: vpc
       Tags:
+        - Key: application
+          Value: !Ref application
         - Key: costcenter
           Value: !Ref cost
         - Key: environment
@@ -755,6 +777,8 @@ Resources:
           ToPort: 443
           CidrIp: !Ref vpcCidr
       Tags:
+        - Key: application
+          Value: !Ref application
         - Key: costcenter
           Value: !Ref cost
         - Key: environment
@@ -833,6 +857,8 @@ Resources:
           ToPort: 443
           CidrIp: !Ref vpcCidr
       Tags:
+        - Key: application
+          Value: !Ref application
         - Key: costcenter
           Value: !Ref cost
         - Key: environment

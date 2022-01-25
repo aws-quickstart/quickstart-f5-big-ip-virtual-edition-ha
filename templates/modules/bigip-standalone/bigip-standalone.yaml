@@ -280,8 +280,6 @@ Metadata:
         default: Internal Private IP Address
       internalSubnetId:
         default: Internal Subnet Id
-      licenseType:
-        default: Licence type used for BIG-IP VE
       mgmtPublicIpId:
         default: Management Public Ip Id
       mgmtSecurityGroupId:
@@ -373,7 +371,7 @@ Parameters:
       configuration.'
     Type: String
   bigIpRuntimeInitPackageUrl:
-    Default: 'https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.3.2/dist/f5-bigip-runtime-init-1.3.2-1.gz.run'
+    Default: 'https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.4.0/dist/f5-bigip-runtime-init-1.4.0-1.gz.run'
     Description: URL for BIG-IP Runtime Init package.
     Type: String
   cost:
@@ -839,6 +837,8 @@ Resources:
             - !Ref 'BigipInternalInterface'
             - !Ref 'BigipStaticInternalInterface'
       Tags:
+        - Key: application
+          Value: !Ref 'application'
         - Key: costcenter
           Value: !Ref 'cost'
         - Key: environment
@@ -993,6 +993,8 @@ Resources:
             - !Ref 'BigipExternalInterface'
             - !Ref 'BigipStaticExternalInterface'
       Tags:
+        - Key: application
+          Value: !Ref 'application'
         - Key: costcenter
           Value: !Ref 'cost'
         - Key: environment
@@ -1141,6 +1143,8 @@ Resources:
             - !Ref 'BigipManagementInterface'
             - !Ref 'BigipStaticManagementInterface'
       Tags:
+        - Key: application
+          Value: !Ref 'application'
         - Key: costcenter
           Value: !Ref 'cost'
         - Key: environment
