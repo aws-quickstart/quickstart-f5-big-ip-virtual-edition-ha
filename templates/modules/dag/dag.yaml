@@ -669,10 +669,6 @@ Resources:
           Value: !Ref environment
         - Key: group
           Value: !Ref group
-        - Key: f5_cloud_failover_label
-          Value: !Ref cfeTag
-        - Key: f5_cloud_failover_vips
-          Value: !Ref cfeVipTag
         - Key: Name
           Value: !Join
             - ''
@@ -715,6 +711,10 @@ Resources:
           Value: !Ref environment
         - Key: group
           Value: !Ref group
+        - Key: f5_cloud_failover_label
+          Value: !Ref cfeTag
+        - Key: f5_cloud_failover_vips
+          Value: !Ref cfeVipTag
         - Key: Name
           Value: !Join
             - ''
