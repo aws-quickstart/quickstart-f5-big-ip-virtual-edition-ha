@@ -17,6 +17,7 @@ ALLOWED_DIRS=(ci declarations docs submodules templates)
 ALLOWED_FILES=(.cfnlintrc .gitignore .gitmodules LICENSE.txt README.md taskcat.yml)
 
 echo "*** Setting git origin"
+git fetch --unshallow origin
 git remote rm origin && git remote add origin git@github.com:F5Networks/quickstart-f5-big-ip-virtual-edition.git
 echo "*** Removing everything from local git"
 git rm -rf .
