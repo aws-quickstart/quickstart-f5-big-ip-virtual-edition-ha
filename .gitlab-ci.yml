@@ -15,6 +15,20 @@ stages:
 before_script:
   - *helpers
 
+run_cfn_lint:
+  stage: lint
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+  script:
+    - pip install cfn-lint
+    - cfn-lint
+  tags:
+    - cm-official-docker-executor
+  except:
+    refs:
+      - schedules
+      - triggers
+      - pipelines
 
 run_taskcat_lint:
   stage: lint
