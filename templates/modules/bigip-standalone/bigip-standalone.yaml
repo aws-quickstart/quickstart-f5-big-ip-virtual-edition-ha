@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: >-
   BIG-IP Standalone Template is intended to deploy standalone BIG-IP VE instance virtual
-  editions.
+  editions.(qs-1p2474b65)
 Conditions:
   is3Nic: !And
     - !Not

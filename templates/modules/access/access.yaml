@@ -2,7 +2,7 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: >-
   Access Template is intended to deploy IAM roles for all BIG-IP Cloud Solutions
   (i.e. High-Availability or Autoscale)
-  Secret Manager service.
+  Secret Manager service.(qs-1p2474b65)
 Conditions:
   createBigIqRoles: !Equals
     - !Ref createBigIqRoles

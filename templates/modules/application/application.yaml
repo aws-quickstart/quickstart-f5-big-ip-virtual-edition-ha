@@ -3,7 +3,7 @@ Description: >-
   This template deploys all components to support the application, with the
   exception of those related to BIG-IP.  An autoscaling group for the
   application is created. Disclaimer: More realistic application template would
-  take AMI ID as input, with AMI ID being be artifact of a build pipe line.
+  take AMI ID as input, with AMI ID being be artifact of a build pipe line.(qs-1p2474b65)
 Conditions:
   useAppSecurityGroupId: !Not
     - !Equals
