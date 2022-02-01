@@ -173,6 +173,7 @@ Parameters:
     AllowedValues:
       - Best
       - AdvancedWaf
+      - AllTwoBootLocations
     ConstraintDescription: Must be a valid F5 BIG-IP VE image type.
     Default: Best
     Description: F5 BIG-IP Performance Type.

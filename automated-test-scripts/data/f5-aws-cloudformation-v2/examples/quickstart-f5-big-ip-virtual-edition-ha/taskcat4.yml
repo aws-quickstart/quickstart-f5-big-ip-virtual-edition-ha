@@ -12,6 +12,7 @@ tests:
   f5ve-ha-prod:
     parameters:
       availabilityZones: $[taskcat_genaz_2]
+      bigIpImageName: AllTwoBootLocations
       bigIpInstanceType: m5.xlarge
       bigIpRuntimeInitConfig01: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-byol-instance01-with-app.yaml
       bigIpRuntimeInitConfig02: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-byol-instance02-with-app.yaml
