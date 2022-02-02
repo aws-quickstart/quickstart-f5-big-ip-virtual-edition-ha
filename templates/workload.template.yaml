@@ -432,6 +432,7 @@ Metadata:
           default: Network Configuration
         Parameters:
           - vpc
+          - peerConfigSyncAddr
           - publicSubnet1ID
           - publicSubnet1SelfAddress
           - privateSubnet1ID
@@ -518,6 +519,8 @@ Metadata:
         default: Group
       owner:
         default: Owner
+      peerConfigSyncAddr:
+        default: Static self IP address for peer device.
       provisionExampleApp:
         default: Provision Example App
       publicSubnet1SelfAddress:
@@ -661,6 +664,10 @@ Parameters:
   owner:
     Default: f5owner
     Description: Owner Tag
+    Type: String
+  peerConfigSyncAddr:
+    Default: 10.0.10.11
+    Description: Type the static self IP address of the remote host here. Leave empty if not configuring peering with a remote host on this device.
     Type: String
   privateSubnet1ID:
     Description: Private Subnet1 ID.
@@ -835,6 +842,7 @@ Resources:
         mgmtSelfIp: !Ref privateSubnet1SelfAddress
         mgmtSubnetId: !Ref privateSubnet1ID
         numSecondaryPrivateIpAddress: !If [usePublicIpVip, 1, 0]
+        peerConfigSyncAddr: ''
         sshKey: !Ref sshKey
         uniqueString: !Ref uniqueString
   BigipInstance02:
@@ -861,6 +869,7 @@ Resources:
         mgmtSelfIp: !Ref privateSubnet2SelfAddress
         mgmtSubnetId: !Ref privateSubnet2ID
         numSecondaryPrivateIpAddress: 0
+        peerConfigSyncAddr: !Ref peerConfigSyncAddr
         sshKey: !Ref sshKey
         uniqueString: !Ref uniqueString
   Application01:

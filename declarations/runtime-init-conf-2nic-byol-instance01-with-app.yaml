@@ -265,4 +265,4 @@ runtime_parameters:
       - name: method
         value: PUT
       - name: X-aws-ec2-metadata-token-ttl-seconds
-        value: 21600 
+        value: 21600
