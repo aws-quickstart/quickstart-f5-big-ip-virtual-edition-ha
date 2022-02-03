@@ -31,7 +31,7 @@ tests:
       cfeS3Bucket: tcat-quickstart-cfe-$[taskcat_random-string]
       keyPairName: <YOUR-KEY>
       qss3BucketName: $[taskcat_autobucket]
-      qss3Region: us-east-1
+      qss3Region: $[taskcat_current_region]
       remoteAccessCIDR: <YOUR-TRUSTED-NETWORK-HERE>
       restrictedSrcAddressApp: <YOUR-TRUSTED-NETWORK-HERE>
       restrictedSrcAddressMgmt: <YOUR-TRUSTED-NETWORK-HERE>
@@ -58,7 +58,7 @@ tests:
       publicSubnet2SelfAddress: 10.0.20.11
       publicSubnet2VipAddress: 10.0.20.101
       qss3BucketName: $[taskcat_autobucket]
-      qss3Region: us-west-1
+      qss3Region: $[taskcat_current_region]
       remoteAccessCIDR: <YOUR-TRUSTED-NETWORK-HERE>
       restrictedSrcAddressApp: <YOUR-TRUSTED-NETWORK-HERE>
       restrictedSrcAddressMgmt: <YOUR-TRUSTED-NETWORK-HERE>
