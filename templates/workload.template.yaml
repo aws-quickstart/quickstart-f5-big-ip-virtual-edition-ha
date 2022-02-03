@@ -7,18 +7,24 @@ Description: >-
 Mappings:
   AWSBigipThroughput:
     1000Mbps:
+      AllTwoBootLocations: AllTwoBootLocations
       Best: Best1000Mbps
     200Mbps:
       AdvancedWaf: AdvancedWaf200Mbps
+      AllTwoBootLocations: AllTwoBootLocations
       Best: Best200Mbps
     25Mbps:
       AdvancedWaf: AdvancedWaf25Mbps
+      AllTwoBootLocations: AllTwoBootLocations
       Best: Best25Mbps
     3000Mbps:
       AdvancedWaf: AdvancedWaf3000Mbps
+      AllTwoBootLocations: AllTwoBootLocations
     5000Mbps:
+      AllTwoBootLocations: AllTwoBootLocations
       Best: Best5000Mbps
     10000Mbps:
+      AllTwoBootLocations: AllTwoBootLocations
       Best: Best10000Mbps
   VERSION:
     16-1-2-1-0010:
@@ -31,9 +37,9 @@ Mappings:
       AdvancedWaf25Mbps: ami-016627175d4256a6a
       AdvancedWaf3000Mbps: ami-06dff7310df9e2a34
       AllTwoBootLocations: ami-0f671f966a041912b
-      Best10000Mbps: ami-07c7dc4d3fcdd3e0e
+      Best10000Mbps: ami-0bcdedf2b75173395
       Best1000Mbps: ami-039569f01d1b66fa9
-      Best200Mbps: ami-069e20c5969a6f119
+      Best200Mbps: ami-0819a7f10ce76fc5a
       Best25Mbps: ami-00af081df73bd58dc
       Best5000Mbps: ami-0dfd667fd41fb6d46
     ap-east-1:
@@ -41,11 +47,11 @@ Mappings:
       AdvancedWaf25Mbps: ami-0427958315bc886f2
       AdvancedWaf3000Mbps: ami-0985147f7920ed542
       AllTwoBootLocations: ami-0bba3021f7d664f38
-      Best10000Mbps: ami-07b1f53b2355947e5
-      Best1000Mbps: ami-0ddf9dee916521ca9
-      Best200Mbps: ami-06079d7b3afab481b
-      Best25Mbps: ami-025b9f6f4eea5202e
-      Best5000Mbps: ami-0c961d49f731b945a
+      Best10000Mbps: ami-03a50078f74846458
+      Best1000Mbps: ami-0ca29584f0e22cbe3
+      Best200Mbps: ami-082c29f2bea9ef305
+      Best25Mbps: ami-087d9ae12a5cd03d4
+      Best5000Mbps: ami-081d4fac3ba20f64a
     ap-northeast-1:
       AdvancedWaf200Mbps: ami-013590344850f0c4a
       AdvancedWaf25Mbps: ami-05662ecab2d7939ee
@@ -141,11 +147,11 @@ Mappings:
       AdvancedWaf25Mbps: ami-0dcfd32aa7fe29df4
       AdvancedWaf3000Mbps: ami-0a6007b00579e12f7
       AllTwoBootLocations: ami-09d1d292ffc83d28b
-      Best10000Mbps: ami-0d9d029841ff787df
+      Best10000Mbps: ami-02a1e95dfe8708d5c
       Best1000Mbps: ami-00e4fa693b20b5903
-      Best200Mbps: ami-093bf49088ea85cc0
+      Best200Mbps: ami-033a9c41cbb1bcbcc
       Best25Mbps: ami-0cb4c29901b82b809
-      Best5000Mbps: ami-034db9afde8dac5bd
+      Best5000Mbps: ami-094e8c7f88bcbfda6
     eu-west-1:
       AdvancedWaf200Mbps: ami-01ba32ebfba5dc087
       AdvancedWaf25Mbps: ami-0d31530a991cfdfcf
@@ -197,8 +203,15 @@ Mappings:
       Best25Mbps: ami-0c5c2838aa3887338
       Best5000Mbps: ami-034c1a53dcd39fc75
     us-east-1:
-      Best1000Mbps: ami-003a0c2c823dc65a8
-      Best25Mbps: ami-03a437a9795d3717d
+      AdvancedWaf200Mbps: ami-04f64528e4ec2e338
+      AdvancedWaf25Mbps: ami-00d75b4219bdde22b
+      AdvancedWaf3000Mbps: ami-016bd6e8f70ca4f47
+      AllTwoBootLocations: ami-00e5f8a1ccd470b8a
+      Best10000Mbps: ami-0d1c1efb0e81f3d8f
+      Best1000Mbps: ami-08d7dce5a2b108ede
+      Best200Mbps: ami-01a79c12d08c392de
+      Best25Mbps: ami-0ce94feb4eff482da
+      Best5000Mbps: ami-08c1dd06a4ba6a2ed
     us-east-2:
       AdvancedWaf200Mbps: ami-00139a1743c29e4ee
       AdvancedWaf25Mbps: ami-00b99be3cfeca2ee3
@@ -255,8 +268,8 @@ Mappings:
       AdvancedWaf25Mbps: ami-07dc7250900815728
       AdvancedWaf3000Mbps: ami-06f69d6d398d57a34
       AllTwoBootLocations: ami-0edd568fd059031b2
-      Best10000Mbps: ami-0d7b99da2b3bfde10
-      Best1000Mbps: ami-03b3437886fd58102
+      Best10000Mbps: ami-09d10f4a9a349ecaf
+      Best1000Mbps: ami-04983385dfa46642c
       Best200Mbps: ami-002112e36bf1e5f18
       Best25Mbps: ami-03ce2ef34af178fbf
       Best5000Mbps: ami-0fa498978d9a61d3d
@@ -265,7 +278,7 @@ Mappings:
       AdvancedWaf25Mbps: ami-07b10b352d0c91612
       AdvancedWaf3000Mbps: ami-0608b415cbf6ee4a8
       AllTwoBootLocations: ami-0ed657c0112bf14ed
-      Best10000Mbps: ami-020155c045460bb14
+      Best10000Mbps: ami-07d53c055533f7cfe
       Best1000Mbps: ami-00dbf43f6dc4c0fde
       Best200Mbps: ami-0c27096fea021c294
       Best25Mbps: ami-07d6a5e8b03fdc104
@@ -366,7 +379,7 @@ Mappings:
       AdvancedWaf3000Mbps: ami-001f93b315e9d8454
       AllTwoBootLocations: ami-08b66b44b33f38a90
       Best10000Mbps: ami-0f078140c26fa7041
-      Best1000Mbps: ami-0e8405d3516dc56bd
+      Best1000Mbps: ami-0fa58a1959a0d038a
       Best200Mbps: ami-0378dc3d3f4b95eda
       Best25Mbps: ami-0b53c74f94f951c67
       Best5000Mbps: ami-02b238715333323f2
@@ -421,7 +434,15 @@ Mappings:
       Best25Mbps: ami-0516b15a670c22c7b
       Best5000Mbps: ami-000c20a7849b2e984
     us-east-1:
-      Best5000Mbps: ami-08040a8d3c5adbb3e
+      AdvancedWaf200Mbps: ami-05b9d54f40833c46d
+      AdvancedWaf25Mbps: ami-07e6bf1cb9cefc44a
+      AdvancedWaf3000Mbps: ami-06cf9dbd71b90bccc
+      AllTwoBootLocations: ami-0319a4b07d1ca7db7
+      Best10000Mbps: ami-0873f7ae105d7a849
+      Best1000Mbps: ami-0167afeffa4549244
+      Best200Mbps: ami-0727e25aa4ad98901
+      Best25Mbps: ami-053c74da7dcd1e1f5
+      Best5000Mbps: ami-02f694c9970e0f5eb
     us-east-2:
       AdvancedWaf200Mbps: ami-0964f0dd943359803
       AdvancedWaf25Mbps: ami-0b8dadedb4b5768dc
@@ -633,6 +654,7 @@ Parameters:
     AllowedValues:
       - Best
       - AdvancedWaf
+      - AllTwoBootLocations
     ConstraintDescription: Must be a valid F5 BIG-IP VE image type
     Default: Best
     Description: F5 BIG-IP Performance Type

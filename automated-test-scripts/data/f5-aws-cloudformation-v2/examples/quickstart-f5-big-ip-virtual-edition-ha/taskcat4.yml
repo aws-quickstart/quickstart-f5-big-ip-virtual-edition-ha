@@ -12,6 +12,7 @@ tests:
   f5ve-ha-prod:
     parameters:
       availabilityZones: $[taskcat_genaz_2]
+      bigIpImageName: AllTwoBootLocations
       bigIpInstanceType: m5.xlarge
       bigIpRuntimeInitConfig01: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-byol-instance01-with-app.yaml
       bigIpRuntimeInitConfig02: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-byol-instance02-with-app.yaml
@@ -27,11 +28,11 @@ tests:
       publicSubnet2SelfAddress: 10.0.20.11
       publicSubnet2VipAddress: 10.0.20.101
       qss3BucketName: $[taskcat_autobucket]
-      qss3Region: us-west-2
+      qss3Region: $[taskcat_current_region]
       remoteAccessCIDR: 0.0.0.0/0
       restrictedSrcAddressApp: 0.0.0.0/0
       restrictedSrcAddressMgmt: 0.0.0.0/0
-      secretArn: arn:aws:secretsmanager:us-west-2:089591600128:secret:b596d098-secret-kXyT2d
+      secretArn: arn:aws:secretsmanager:$[taskcat_current_region]:089591600128:secret:b596d098-secret-kXyT2d
       uniqueString: $[taskcat_genpass_8]
     regions:
       - us-west-2

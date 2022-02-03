@@ -12,6 +12,7 @@ tests:
   f5ve-ha-defaults:
     parameters:
       availabilityZones: $[taskcat_genaz_2]
+      bigIpImageName: AllTwoBootLocations
       bigIpInstanceType: m5.xlarge
       bigIpRuntimeInitConfig01: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-byol-instance01.yaml
       bigIpRuntimeInitConfig02: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-byol-instance02.yaml
@@ -20,11 +21,11 @@ tests:
       cfeS3Bucket: tcat-quickstart-cfe-$[taskcat_random-string]
       keyPairName: dewpt
       qss3BucketName: $[taskcat_autobucket]
-      qss3Region: us-east-2
+      qss3Region: $[taskcat_current_region]
       remoteAccessCIDR: 0.0.0.0/0
       restrictedSrcAddressApp: 0.0.0.0/0
       restrictedSrcAddressMgmt: 0.0.0.0/0
-      secretArn: arn:aws:secretsmanager:us-east-2:089591600128:secret:b596d098-secret-kXyT2d
+      secretArn: arn:aws:secretsmanager:$[taskcat_current_region]:089591600128:secret:b596d098-secret-kXyT2d
       uniqueString: $[taskcat_genpass_8]
     regions:
       - us-east-2
