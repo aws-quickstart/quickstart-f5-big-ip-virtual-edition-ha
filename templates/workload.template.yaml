@@ -693,6 +693,7 @@ Parameters:
       - 25Mbps
       - 200Mbps
       - 1000Mbps
+      - 3000Mbps
       - 5000Mbps
       - 10000Mbps
     ConstraintDescription: Select the BIG-IP throughput you want to use
