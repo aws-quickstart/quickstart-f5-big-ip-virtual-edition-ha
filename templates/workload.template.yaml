@@ -940,6 +940,7 @@ Resources:
       Parameters:
         bigIpInstanceProfile: !GetAtt [Access, Outputs.bigIpInstanceProfile]
         bigIpRuntimeInitConfig: !Ref bigIpRuntimeInitConfig02
+        bigIpRuntimeInitPackageUrl: !Ref bigIpRuntimeInitPackageUrl
         imageId: !If [noCustomImageId, !FindInMap [!FindInMap [VERSION, !Ref bigIpVersion, REGIONMAP], !Ref 'AWS::Region', !FindInMap [AWSBigipThroughput, !Ref bigIpThroughput, !Ref bigIpImageName]], !Ref bigIpImageId]
         externalPrimaryPublicId: !GetAtt [Dag, Outputs.bigIpExternalEipAllocationId02]
         externalPublicIpIds: ''
