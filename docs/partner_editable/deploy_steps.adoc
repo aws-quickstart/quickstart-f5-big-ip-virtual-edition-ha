@@ -145,38 +145,6 @@ reachable by the BIG-IP at deploy time (for example: git, S3, etc.).
 new URLs of the updated configurations.
 
 {empty} +
-
-==== Common Example Customization 3 
-
-For example, if deploying into an *existing* network, it will certainly have different network topologies, subnetting, etc.:
-
-[arabic]
-. Edit/modify the Declarative Onboarding (DO) declaration in a
-corresponding example runtime-init configs file with your new
-values.
-
-Example snippet:
-
-[source,yaml]
-----
-...
-          trust:
-            class: DeviceTrust
-            localUsername: admin
-            localPassword: '{{{BIGIP_PASSWORD}}}'
-            remoteHost: <YOUR-NEW-HA-PEER-IP-HERE>
-...
-----
-
-NOTE: The *remoteHost* attribute is only used in one of the peer's configs (with `02` in the name). This should correspond the the value you pass for BIG-IP 01's Management IP. 
-
-[arabic, start=2]
-. Publish/host the customized runtime-init config files at a location
-reachable by the BIG-IP at deploy time (for example: git, S3, etc.).
-. Update the *bigIpRuntimeInitConfig* input parameters to reference the
-new URLs of the updated configurations.
-
-{empty} +
 {empty} +
 
 
