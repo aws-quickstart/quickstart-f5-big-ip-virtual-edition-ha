@@ -517,6 +517,7 @@ Metadata:
           default: Network Configuration
         Parameters:
           - vpc
+          - peerConfigSyncAddr
           - publicSubnet1ID
           - publicSubnet1SelfAddress
           - privateSubnet1ID
@@ -603,6 +604,8 @@ Metadata:
         default: Group
       owner:
         default: Owner
+      peerConfigSyncAddr:
+        default: Static self IP address for peer device.
       provisionExampleApp:
         default: Provision Example App
       publicSubnet1SelfAddress:
@@ -710,7 +713,7 @@ Parameters:
   bigIpRuntimeInitPackageUrl:
     Description: 'Supply a URL for the F5 BIG-IP Runtime Init Package install script.'
     Type: String
-    Default: 'https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.4.0/dist/f5-bigip-runtime-init-1.4.0-1.gz.run'
+    Default: 'https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/develop/develop/dist/f5-bigip-runtime-init-1.4.1-1.gz.run'
   bigIpVersion:
     AllowedValues:
       - 16-1-2-1-0010
@@ -747,6 +750,10 @@ Parameters:
   owner:
     Default: f5owner
     Description: Owner Tag
+    Type: String
+  peerConfigSyncAddr:
+    Default: 10.0.10.11
+    Description: Type the static self IP address of the remote host here. Leave empty if not configuring peering with a remote host on this device.
     Type: String
   privateSubnet1ID:
     Description: Private Subnet1 ID.
@@ -921,6 +928,7 @@ Resources:
         mgmtSelfIp: !Ref privateSubnet1SelfAddress
         mgmtSubnetId: !Ref privateSubnet1ID
         numSecondaryPrivateIpAddress: !If [usePublicIpVip, 1, 0]
+        peerConfigSyncAddr: ''
         sshKey: !Ref sshKey
         uniqueString: !Ref uniqueString
   BigipInstance02:
@@ -933,6 +941,7 @@ Resources:
       Parameters:
         bigIpInstanceProfile: !GetAtt [Access, Outputs.bigIpInstanceProfile]
         bigIpRuntimeInitConfig: !Ref bigIpRuntimeInitConfig02
+        bigIpRuntimeInitPackageUrl: !Ref bigIpRuntimeInitPackageUrl
         imageId: !If [noCustomImageId, !FindInMap [!FindInMap [VERSION, !Ref bigIpVersion, REGIONMAP], !Ref 'AWS::Region', !FindInMap [AWSBigipThroughput, !Ref bigIpThroughput, !Ref bigIpImageName]], !Ref bigIpImageId]
         externalPrimaryPublicId: !GetAtt [Dag, Outputs.bigIpExternalEipAllocationId02]
         externalPublicIpIds: ''
@@ -947,6 +956,7 @@ Resources:
         mgmtSelfIp: !Ref privateSubnet2SelfAddress
         mgmtSubnetId: !Ref privateSubnet2ID
         numSecondaryPrivateIpAddress: 0
+        peerConfigSyncAddr: !Ref peerConfigSyncAddr
         sshKey: !Ref sshKey
         uniqueString: !Ref uniqueString
   Application01:

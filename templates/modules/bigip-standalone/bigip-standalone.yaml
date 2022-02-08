@@ -224,6 +224,7 @@ Metadata:
           - internalSubnetId
           - mgmtSelfIp
           - mgmtSubnetId
+          - peerConfigSyncAddr
       - Label:
           default: Disaggregation
         Parameters:
@@ -292,6 +293,8 @@ Metadata:
         default: Number of Secondary Private Ips
       owner:
         default: Owner
+      peerConfigSyncAddr:
+        default: Static self IP address for peer device.
       sshKey:
         default: EC2 KeyPair
       uniqueString:
@@ -371,7 +374,7 @@ Parameters:
       configuration.'
     Type: String
   bigIpRuntimeInitPackageUrl:
-    Default: 'https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.4.0/dist/f5-bigip-runtime-init-1.4.0-1.gz.run'
+    Default: 'https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/develop/develop/dist/f5-bigip-runtime-init-1.4.1-1.gz.run'
     Description: URL for BIG-IP Runtime Init package.
     Type: String
   cost:
@@ -486,6 +489,10 @@ Parameters:
   owner:
     Default: f5owner
     Description: Owner Tag.
+    Type: String
+  peerConfigSyncAddr:
+    Default: ''
+    Description: Type the static self IP address of the remote host here. Leave empty if not configuring peering with a remote host on this device.
     Type: String
   sshKey:
     Description: REQUIRED - Supply the public key that will be used for SSH authentication
@@ -905,6 +912,21 @@ Resources:
             - !Ref 'bigIpRuntimeInitConfig'
             - |
               '
+            - PEER_IP='
+            - !Ref 'peerConfigSyncAddr'
+            - |
+              '
+
+            - |
+              # Save peer device IP to file
+            - |
+              if [[ ! -z "${PEER_IP}" ]]; then
+            - |2
+                  echo "${PEER_IP}" >  /config/cloud/peerConfigSyncAddr
+            - |
+              fi
+            - |2+
+
             - |
               # Download or render f5-bigip-runtime-init config
             - |
@@ -1061,6 +1083,21 @@ Resources:
             - !Ref 'bigIpRuntimeInitConfig'
             - |
               '
+            - PEER_IP='
+            - !Ref 'peerConfigSyncAddr'
+            - |
+              '
+
+            - |
+              # Save peer device IP to file
+            - |
+              if [[ ! -z "${PEER_IP}" ]]; then
+            - |2
+                  echo "${PEER_IP}" >  /config/cloud/peerConfigSyncAddr
+            - |
+              fi
+            - |2+
+
             - |
               # Download or render f5-bigip-runtime-init config
             - |
@@ -1211,6 +1248,21 @@ Resources:
             - !Ref 'bigIpRuntimeInitConfig'
             - |
               '
+            - PEER_IP='
+            - !Ref 'peerConfigSyncAddr'
+            - |
+              '
+
+            - |
+              # Save peer device IP to file
+            - |
+              if [[ ! -z "${PEER_IP}" ]]; then
+            - |2
+                  echo "${PEER_IP}" >  /config/cloud/peerConfigSyncAddr
+            - |
+              fi
+            - |2+
+
             - |
               # Download or render f5-bigip-runtime-init config
             - |

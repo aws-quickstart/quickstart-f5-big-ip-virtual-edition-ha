@@ -26,6 +26,7 @@ Metadata:
         Parameters:
           - vpcCIDR
           - availabilityZones
+          - peerConfigSyncAddr
           - publicSubnet1CIDR
           - publicSubnet1SelfAddress
           - privateSubnet1ACIDR
@@ -114,6 +115,8 @@ Metadata:
         default: EC2 KeyPair to enable SSH access to EC2 instances
       owner:
         default: Owner
+      peerConfigSyncAddr:
+        default: Static self IP address for peer device.
       privateSubnet1ACIDR:
         default: CIDR block for private subnet 1 in AZ1
       privateSubnet1ASelfAddress:
@@ -229,7 +232,7 @@ Parameters:
   bigIpRuntimeInitPackageUrl:
     Description: 'Supply a URL for the F5 BIG-IP Runtime Init Package install script.'
     Type: String
-    Default: 'https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.4.0/dist/f5-bigip-runtime-init-1.4.0-1.gz.run'
+    Default: 'https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/develop/develop/dist/f5-bigip-runtime-init-1.4.1-1.gz.run'
   provisionExampleApp:
     AllowedValues:
       - 'true'
@@ -276,6 +279,10 @@ Parameters:
   owner:
     Default: f5owner
     Description: Owner Tag
+    Type: String
+  peerConfigSyncAddr:
+    Default: 10.0.10.11
+    Description: Type the static self IP address of the remote host here. Leave empty if not configuring peering with a remote host on this device.
     Type: String
   privateSubnet1ACIDR:
     AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$'
@@ -447,6 +454,7 @@ Resources:
         environment: !Ref environment
         group: !Ref group
         owner: !Ref owner
+        peerConfigSyncAddr: !Ref peerConfigSyncAddr
         privateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
         privateSubnet1SelfAddress: !Ref privateSubnet1ASelfAddress
         privateSubnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'

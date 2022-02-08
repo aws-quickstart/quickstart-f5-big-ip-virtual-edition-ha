@@ -99,7 +99,7 @@ extension_services:
             class: DeviceTrust
             localUsername: admin
             localPassword: '{{{BIGIP_PASSWORD}}}'
-            remoteHost: 10.0.10.11
+            remoteHost: '{{{PEER_ADDR}}}'
             remoteUsername: admin
             remotePassword: '{{{BIGIP_PASSWORD}}}'
     - extensionType: cf
@@ -265,4 +265,7 @@ runtime_parameters:
       - name: method
         value: PUT
       - name: X-aws-ec2-metadata-token-ttl-seconds
-        value: 21600 
+        value: 21600
+  - name: PEER_ADDR
+    type: url
+    value: file:///config/cloud/peerConfigSyncAddr
