@@ -36,6 +36,15 @@ secret_arn=$(aws secretsmanager list-secrets --region <REGION> --filters Key=nam
 /usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_System.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance01-with-app.yaml
 /usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_System.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance02-with-app.yaml
 
+/usr/bin/yq e ".extension_services.service_operations.[2].value.Common.My_System.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance01.yaml
+/usr/bin/yq e ".extension_services.service_operations.[2].value.Common.My_System.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance02.yaml
+/usr/bin/yq e ".extension_services.service_operations.[3].value.Common.My_System.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance01-with-app.yaml
+/usr/bin/yq e ".extension_services.service_operations.[3].value.Common.My_System.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance02-with-app.yaml
+/usr/bin/yq e ".extension_services.service_operations.[2].value.Common.My_System.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance01.yaml
+/usr/bin/yq e ".extension_services.service_operations.[2].value.Common.My_System.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance02.yaml
+/usr/bin/yq e ".extension_services.service_operations.[3].value.Common.My_System.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance01-with-app.yaml
+/usr/bin/yq e ".extension_services.service_operations.[3].value.Common.My_System.autoPhonehome = false" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance02-with-app.yaml
+
 if [[ "<LICENSE TYPE>" == "byol" ]]; then
 # Add RegKey for BYOLs
     /usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_License.regKey = \"$regKey01\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance01.yaml

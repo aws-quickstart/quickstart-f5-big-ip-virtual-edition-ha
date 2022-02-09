@@ -1587,62 +1587,6 @@ new URLs of the updated configurations.</p>
 </ol>
 </div>
 <div class="paragraph">
-<p><br></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_common_example_customization_3">Common Example Customization 3</h4>
-<div class="paragraph">
-<p>For example, if deploying into an <strong>existing</strong> network, it will certainly have different network topologies, subnetting, etc.:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Edit/modify the Declarative Onboarding (DO) declaration in a
-corresponding example runtime-init configs file with your new
-values.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Example snippet:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">...
-          trust:
-            class: DeviceTrust
-            localUsername: admin
-            localPassword: '{{{BIGIP_PASSWORD}}}'
-            remoteHost: &lt;YOUR-NEW-HA-PEER-IP-HERE&gt;
-...</code></pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The <strong>remoteHost</strong> attribute is only used in one of the peer&#8217;s configs (with <code>02</code> in the name). This should correspond the the value you pass for BIG-IP 01&#8217;s Management IP.
-</td>
-</tr>
-</table>
-</div>
-<div class="olist arabic">
-<ol class="arabic" start="2">
-<li>
-<p>Publish/host the customized runtime-init config files at a location
-reachable by the BIG-IP at deploy time (for example: git, S3, etc.).</p>
-</li>
-<li>
-<p>Update the <strong>bigIpRuntimeInitConfig</strong> input parameters to reference the
-new URLs of the updated configurations.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
 <p><br>
 <br></p>
 </div>
