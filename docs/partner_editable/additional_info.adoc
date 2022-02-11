@@ -293,7 +293,7 @@ BIG-IP system:
 BIG-IP Runtime Init RPM can be verified against a SHA256 checksum
 provided as a release asset on the F5 BIG-IP Runtime Init public GitHub
 repository, for example:
-https://github.com/F5Networks/f5-bigip-runtime-init/releases/download/1.3.2/f5-bigip-runtime-init-1.3.2-1.gz.run.sha256.
+https://github.com/F5Networks/f5-bigip-runtime-init/releases/download/1.4.1/f5-bigip-runtime-init-1.4.1-1.gz.run.sha256.
 * F5 BIG-IP Runtime Init: The self-extracting installer script extracts,
 verifies, and installs the F5 BIG-IP Runtime Init RPM package. Package
 files are signed by F5 and automatically verified using GPG.
