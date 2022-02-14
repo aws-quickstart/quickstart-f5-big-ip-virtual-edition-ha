@@ -88,6 +88,7 @@ execute_test_job:
     - schedules
   except:
     variables:
+      - $PUBLISH_DEVELOP == "true"
       - $RUN_FUNCTIONAL_TESTS == "false"
       - $RELEASE_RUNTIME_INIT_TESTS == "true"
   variables:
