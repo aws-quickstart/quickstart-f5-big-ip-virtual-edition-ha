@@ -201,5 +201,5 @@ runtime_parameters:
     metadataProvider:
       environment: aws
       type: uri
-      value: 'latest/dynamic/instance-identity/document'
+      value: /latest/dynamic/instance-identity/document
       query: region
