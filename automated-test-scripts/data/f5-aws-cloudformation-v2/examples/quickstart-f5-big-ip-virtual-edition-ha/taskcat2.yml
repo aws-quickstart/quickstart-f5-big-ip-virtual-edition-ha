@@ -29,7 +29,7 @@ tests:
       publicSubnet2SelfAddress: 10.0.20.11
       publicSubnet2VipAddress: 10.0.20.101
       qss3BucketName: $[taskcat_autobucket]
-      qss3BucketRegion: $[taskcat_current_region]
+      qss3BucketRegion: us-east-1
       remoteAccessCIDR: 0.0.0.0/0
       restrictedSrcAddressApp: 0.0.0.0/0
       restrictedSrcAddressMgmt: 0.0.0.0/0
