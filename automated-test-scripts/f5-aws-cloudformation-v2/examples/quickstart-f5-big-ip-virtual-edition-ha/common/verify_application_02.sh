@@ -8,7 +8,7 @@ if [[ "<PROVISION_WEB_APP>" == 'false' ]]; then
     echo "SUCCESS"
 else
     stack_name=$(cat taskcat_outputs/tC* | grep  -m1 StackName: | cut -d":" -f2)
-    echo "stack_name $stack_name"
+    echo "stack_name: $stack_name"
 
     workload_stack_name=$(aws cloudformation describe-stacks --stack-name $stack_name --region <REGION> | jq -r '.Stacks[].Outputs[] | select (.OutputKey=="workLoadStack") | .OutputValue')
     echo "workload_stack_name: $workload_stack_name"
