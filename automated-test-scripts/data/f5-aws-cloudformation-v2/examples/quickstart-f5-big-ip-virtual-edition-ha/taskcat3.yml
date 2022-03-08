@@ -6,6 +6,7 @@ project:
   owner: a.kashcheev@f5.com
   regions:
     - us-east-2
+  s3_regional_buckets: true
   tags:
     delete: 'True'
 tests:
@@ -21,7 +22,7 @@ tests:
       cfeS3Bucket: tcat-quickstart-cfe-$[taskcat_random-string]
       keyPairName: dewpt
       qss3BucketName: $[taskcat_autobucket]
-      qss3BucketRegion: us-east-1
+      qss3BucketRegion: $[taskcat_current_region]
       remoteAccessCIDR: 0.0.0.0/0
       restrictedSrcAddressApp: 0.0.0.0/0
       restrictedSrcAddressMgmt: 0.0.0.0/0

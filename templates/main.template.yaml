@@ -437,6 +437,7 @@ Resources:
         PublicSubnet2ID: !GetAtt 'VPCStack.Outputs.PublicSubnet2ID'
         QSS3BucketName: !Ref 'qss3BucketName'
         QSS3KeyPrefix: !Sub '${qss3KeyPrefix}submodules/quickstart-linux-bastion/'
+        QSS3BucketRegion: !Ref 'qss3BucketRegion'
         RemoteAccessCIDR: !Ref 'remoteAccessCIDR'
         VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
   WorkLoadStack:

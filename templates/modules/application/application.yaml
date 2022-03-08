@@ -17,12 +17,6 @@ Conditions:
     - !Equals
       - !Ref customImageId
       - ''
-  Standalone: !Equals
-    - 'false'
-    - !Ref createAutoscaleGroup
-  Autoscale: !Equals
-      - 'true'
-      - !Ref createAutoscaleGroup
 Mappings:
   imageRegionMap:
     us-east-2:
@@ -74,13 +68,9 @@ Metadata:
           - appDockerImageName
           - appSecurityGroupId
           - applicationSubnet
-          - applicationSubnets
-          - createAutoscaleGroup
           - customImageId
           - instanceType
           - provisionPublicIp
-          - scalingMaxSize
-          - scalingMinSize
           - sshKey
           - staticIp
     ParameterLabels:
@@ -100,16 +90,8 @@ Metadata:
         default: The resource ID of a security group to apply to the application
       applicationSubnet:
         default: Application Subnet ID used in case of standalone application
-      applicationSubnets:
-        default: Application Subnet IDs
-      createAutoscaleGroup:
-        default: The ARN of the AWS secret containing the password used during BIG-IP licensing via BIG-IQ
       instanceType:
         default: Must be a valid EC2 instance type for BIG-IP
-      scalingMaxSize:
-        default: Maximum number of BIG-IP instances (2-100) that can be created in the Auto Scale Group
-      scalingMinSize:
-        default: Minimum number of BIG-IP instances (1-99) you want available in the Auto Scale Group
       provisionPublicIp:
         default: To create a Public IP for the Application Instance.
       sshKey:
@@ -123,11 +105,7 @@ Outputs:
   stackName:
     Description: application nested stack name
     Value: !Ref "AWS::StackName"
-  appAutoscaleGroupName:
-    Condition: Autoscale
-    Value: !Ref appAutoscaleGroup
   appInstanceId:
-    Condition: Standalone
     Description: Application server instance-id
     Value: !Ref AppInstance
 Parameters:
@@ -148,20 +126,9 @@ Parameters:
     Default: ''
     Description: Application Subnet ID used in case of standalone application
     Type: String
-  applicationSubnets:
-    Default: ''
-    Description: Application Subnet IDs
-    Type: CommaDelimitedList
   cost:
     Default: f5cost
     Description: Cost Center Tag.
-    Type: String
-  createAutoscaleGroup:
-    AllowedValues:
-      - 'true'
-      - 'false'
-    Default: 'false'
-    Description: Choose true to create the application instances in an autoscaling configuration.
     Type: String
   customImageId:
     Default: ''
@@ -193,20 +160,6 @@ Parameters:
     Default: 'false'
     Description: Whether or not to provision Public IP Addresses for the Application Network Interfaces.
     Type: String
-  scalingMaxSize:
-    ConstraintDescription: Must be a number between 2-100
-    Default: 2
-    Description: Maximum number of BIG-IP instances (2-100) that can be created in the Auto Scale Group.
-    MaxValue: 100
-    MinValue: 2
-    Type: Number
-  scalingMinSize:
-    ConstraintDescription: Must be a number between 1-99
-    Default: 1
-    Description: Minimum number of BIG-IP instances (1-99) you want available in the Auto Scale Group.
-    MaxValue: 99
-    MinValue: 1
-    Type: Number
   sshKey:
     Description: REQUIRED - Supply the public key that will be used for SSH authentication to the BIG-IP and application virtual machines.
     Type: AWS::EC2::KeyPair::KeyName
@@ -222,7 +175,6 @@ Parameters:
     Type: String
 Resources:
   AppInstance:
-    Condition: Standalone
     Type: 'AWS::EC2::Instance'
     Properties:
       ImageId:
@@ -270,8 +222,7 @@ Resources:
               service docker start
             - 'docker run --name f5demo -p 80:80 -p 443:443 -d '
             - !Ref appDockerImageName
-            - |+
-
+            - ''
       Tags:
         - Key: application
           Value: !Ref application
@@ -288,90 +239,3 @@ Resources:
           Value: !Ref group
         - Key: owner
           Value: !Ref owner
-  appLaunchConfig:
-    Condition: Autoscale
-    Type: 'AWS::AutoScaling::LaunchConfiguration'
-    Metadata:
-      'AWS::CloudFormation::Init':
-        config:
-          commands:
-            010-install-libs:
-              command: !Join
-                - ''
-                - - yum update -y;
-                  - yum install -y epel-release;
-                  - >-
-                    yum install -y
-                    https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.amzn1.noarch.rpm;
-                  - >-
-                    ln -s /usr/local/lib/python2.7/site-packages/cfnbootstrap
-                    /usr/lib/python2.7/site-packages/cfnbootstrap;
-    Properties:
-      ImageId: !FindInMap
-        - imageRegionMap
-        - !Ref 'AWS::Region'
-        - AMI
-      InstanceType: !Ref instanceType
-      AssociatePublicIpAddress: !Ref provisionPublicIp
-      KeyName: !Ref sshKey
-      SecurityGroups:
-        - !If
-          - useAppSecurityGroupId
-          - !Ref appSecurityGroupId
-          - !Ref AWS::NoValue
-      UserData: !Base64
-        'Fn::Join':
-          - ''
-          - - |
-              #!/bin/bash
-            - |
-              yum -y install docker
-            - |
-              service docker start
-            - 'docker run --name f5demo -p 80:80 -p 443:443 -d '
-            - !Ref appDockerImageName
-            - |+
-
-  appAutoscaleGroup:
-    Condition: Autoscale
-    Type: 'AWS::AutoScaling::AutoScalingGroup'
-    Properties:
-      AutoScalingGroupName: !Join
-            - ''
-            - - !Ref uniqueString
-              - '-application-autoscale-group'
-      Tags:
-        - Key: application
-          PropagateAtLaunch: true
-          Value: !Ref application
-        - Key: cost
-          PropagateAtLaunch: true
-          Value: !Ref cost
-        - Key: environment
-          PropagateAtLaunch: true
-          Value: !Ref environment
-        - Key: group
-          PropagateAtLaunch: true
-          Value: !Ref group
-        - Key: Name
-          PropagateAtLaunch: true
-          Value: !Join
-            - ''
-            - - !Ref uniqueString
-              - '-application-autoscale-instance'
-        - Key: owner
-          PropagateAtLaunch: true
-          Value: !Ref owner
-      VPCZoneIdentifier: !Ref applicationSubnets
-      Cooldown: '600'
-      HealthCheckGracePeriod: 120
-      LaunchConfigurationName: !Ref appLaunchConfig
-      MaxSize: !Ref scalingMaxSize
-      MinSize: !Ref scalingMinSize
-      MetricsCollection:
-        - Granularity: 1Minute
-    UpdatePolicy:
-      AutoScalingRollingUpdate:
-        MaxBatchSize: 1
-        MinInstancesInService: 1
-        PauseTime: PT3M

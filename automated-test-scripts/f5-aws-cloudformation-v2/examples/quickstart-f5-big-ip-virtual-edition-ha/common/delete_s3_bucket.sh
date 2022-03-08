@@ -3,7 +3,7 @@
 #  replayEnabled = false
 #  replayTimeout = 0
 
-echo "Start checking s3 buckets for deleteion. Searching for taskcat jobs."
+echo "Start checking s3 buckets for deletion. Searching for taskcat jobs."
 aws s3 ls | grep tcat >> s3_buckets.temp
 # determine bucket tag value
 tcat_id=$(cat taskcat_outputs/tC* | grep  -m1 StackName: | cut -d":" -f2 | cut -d"-" -f12)
@@ -32,7 +32,7 @@ if [[ -z $region ]]; then
 else aws s3 rb s3://${cfe_bucket} --force
 fi
 
-echo "Delete declatations bucket created for deployment"
+echo "Delete declarations bucket created for deployment"
 declaration_bucket_name=`echo dd-<DEWPOINT JOB ID>|cut -c -60|tr '[:upper:]' '[:lower:]'| sed 's:-*$::'`
 echo "Deleting $declaration_bucket_name"
 region=$(aws s3api get-bucket-location --bucket $declaration_bucket_name  | jq -r .LocationConstraint)
