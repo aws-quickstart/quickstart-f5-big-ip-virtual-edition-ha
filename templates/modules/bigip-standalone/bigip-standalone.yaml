@@ -205,6 +205,8 @@ Metadata:
         Parameters:
           - bigIpRuntimeInitConfig
           - bigIpRuntimeInitPackageUrl
+          - cfeS3Bucket
+          - cfeTag
       - Label:
           default: EC2 Instances
         Parameters:
@@ -273,6 +275,8 @@ Metadata:
         default: Group
       cfeS3Bucket:
         default: S3 bucket used as BIGIP storage for Failover solution
+      cfeTag:
+        default: CFE Deployment tag value
       instanceType:
         default: Enter valid instance type.
       internalSecurityGroupId:
@@ -486,6 +490,10 @@ Parameters:
     Description: Provides BIG-IP S3 Bucket name
     Type: String
     Default: OPTIONAL
+  cfeTag:
+    Description: Cloud Failover deployment tag value.
+    Type: String
+    Default: aws_quickstart
   owner:
     Default: f5owner
     Description: Owner Tag.
@@ -514,7 +522,7 @@ Resources:
       AccessControl: BucketOwnerFullControl
       Tags:
         - Key: f5_cloud_failover_label
-          Value: aws_quickstart
+          Value: !Ref cfeTag
   BigipInternalInterface:
     Condition: useDynamicInternalIpAddr
     Properties:
@@ -550,7 +558,7 @@ Resources:
         - Key: f5_cloud_failover_nic_map
           Value: external
         - Key: f5_cloud_failover_label
-          Value: aws_quickstart
+          Value: !Ref cfeTag
     Type: 'AWS::EC2::NetworkInterface'
   BigipStaticInternalInterface:
     Condition: useStaticInternalIpAddr
@@ -610,7 +618,7 @@ Resources:
         - Key: f5_cloud_failover_nic_map
           Value: external
         - Key: f5_cloud_failover_label
-          Value: aws_quickstart
+          Value: !Ref cfeTag
     Type: 'AWS::EC2::NetworkInterface'
   BigipVipEipAssociation:
     Condition: bigIpVipEipAssociation
