@@ -21,7 +21,7 @@ tests:
       cfeS3Bucket: tcat-quickstart-cfe-$[taskcat_random-string]
       keyPairName: dewpt
       qss3BucketName: $[taskcat_autobucket]
-      qss3Region: $[taskcat_current_region]
+      qss3BucketRegion: $[taskcat_current_region]
       remoteAccessCIDR: 0.0.0.0/0
       restrictedSrcAddressApp: 0.0.0.0/0
       restrictedSrcAddressMgmt: 0.0.0.0/0

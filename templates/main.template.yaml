@@ -8,10 +8,10 @@ Description: >-
   for demonstration purposes.  **WARNING** This template creates multiple AWS resources.
   You will be billed for the AWS resources used if you create a stack from this template.(qs-1p2474b65)
 Conditions:
+  useDefaultBucket: !Equals [!Ref qss3BucketName, 'aws-quickstart']
   usePublicIpVip: !Equals
     - 'true'
     - !Ref provisionExampleApp
-  govCloudCondition: !Or [!Equals [!Ref 'AWS::Region', us-gov-west-1], !Equals [!Ref 'AWS::Region', us-gov-east-1]]
 Metadata:
   QuickStartDocumentation:
     EntrypointName: "Launch into a new VPC"
@@ -77,6 +77,7 @@ Metadata:
           default: Quick Start configuration
         Parameters:
           - qss3BucketName
+          - qss3BucketRegion
           - qss3KeyPrefix
     ParameterLabels:
       appDockerImageName:
@@ -145,6 +146,8 @@ Metadata:
         default: Static VIP IP address for public subnet 2 in AZ1.
       qss3BucketName:
         default: S3 bucket where templates are located
+      qss3BucketRegion:
+        default: Region where S3 bucket is located
       qss3KeyPrefix:
         default: S3 key prefix
       remoteAccessCIDR:
@@ -223,12 +226,12 @@ Parameters:
     Description: 'Supply a URL to the bigip-runtime-init configuration file in YAML
       or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.'
     Type: String
-    Default: 'https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance01.yaml'
+    Default: 'https://aws-quickstart.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance01.yaml'
   bigIpRuntimeInitConfig02:
     Description: 'Supply a URL to the bigip-runtime-init configuration file in YAML
      or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.'
     Type: String
-    Default: 'https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance02.yaml'
+    Default: 'https://aws-quickstart.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance02.yaml'
   bigIpRuntimeInitPackageUrl:
     Description: 'Supply a URL for the F5 BIG-IP Runtime Init Package install script.'
     Type: String
@@ -362,6 +365,10 @@ Parameters:
     Default: aws-quickstart
     Description: 'S3 bucket name for the modules. S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).'
     Type: String
+  qss3BucketRegion:
+    Default: us-east-1
+    Description: 'Region where the Quick Start S3 bucket (qss3BucketName) is hosted. When using your own bucket, you must specify this value.'
+    Type: String
   qss3KeyPrefix:
     AllowedPattern: '^[0-9a-zA-Z-/_.-]*$'
     ConstraintDescription: 'Use defaults unless customizing templates and assests that require alternate location. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).'
@@ -410,8 +417,9 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub
-        - https://${qss3BucketName}.${qss3Region}.amazonaws.com/${qss3KeyPrefix}submodules/quickstart-linux-bastion/templates/linux-bastion.template
-        - { qss3Region: !If [govCloudCondition, s3-us-gov-west-1, s3] }
+        - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${qss3KeyPrefix}submodules/quickstart-linux-bastion/templates/linux-bastion.template
+        - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref qss3BucketRegion]
+          S3Bucket: !If [useDefaultBucket, !Sub '${qss3BucketName}-${AWS::Region}', !Ref qss3BucketName]
       Parameters:
         BastionHostName: !Join
           - ''
@@ -435,8 +443,9 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub
-        - https://${qss3BucketName}.${qss3Region}.amazonaws.com/${qss3KeyPrefix}templates/workload.template.yaml
-        - { qss3Region: !If [govCloudCondition, s3-us-gov-west-1, s3] }
+        - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${qss3KeyPrefix}templates/workload.template.yaml
+        - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref qss3BucketRegion]
+          S3Bucket: !If [useDefaultBucket, !Sub '${qss3BucketName}-${AWS::Region}', !Ref qss3BucketName]
       Parameters:
         appDockerImageName: !Ref appDockerImageName
         application: !Ref application
@@ -472,6 +481,7 @@ Resources:
         restrictedSrcAddressApp: !Ref restrictedSrcAddressApp
         s3BucketName: !Ref qss3BucketName
         s3KeyPrefix: !Ref qss3KeyPrefix
+        s3BucketRegion: !Ref qss3BucketRegion
         secretArn: !Ref secretArn
         sshKey: !Ref keyPairName
         vpc: !GetAtt 'VPCStack.Outputs.VPCID'
@@ -480,8 +490,9 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub
-        - https://${qss3BucketName}.${qss3Region}.amazonaws.com/${qss3KeyPrefix}submodules/quickstart-aws-vpc/templates/aws-vpc.template
-        - { qss3Region: !If [govCloudCondition, s3-us-gov-west-1, s3] }
+        - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${qss3KeyPrefix}submodules/quickstart-aws-vpc/templates/aws-vpc.template
+        - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref qss3BucketRegion]
+          S3Bucket: !If [useDefaultBucket, !Sub '${qss3BucketName}-${AWS::Region}', !Ref qss3BucketName]
       Parameters:
         AvailabilityZones: !Join
           - ','

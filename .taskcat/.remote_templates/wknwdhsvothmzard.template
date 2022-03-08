@@ -707,12 +707,12 @@ Parameters:
     Description: 'Supply a URL to the bigip-runtime-init configuration file in YAML
      or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.'
     Type: String
-    Default: 'https://aws-quickstart.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance01.yaml'
+    Default: 'https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance01.yaml'
   bigIpRuntimeInitConfig02:
     Description: 'Supply a URL to the bigip-runtime-init configuration file in YAML
      or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.'
     Type: String
-    Default: 'https://aws-quickstart.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance02.yaml'
+    Default: 'https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance02.yaml'
   bigIpRuntimeInitPackageUrl:
     Description: 'Supply a URL for the F5 BIG-IP Runtime Init Package install script.'
     Type: String
@@ -842,7 +842,7 @@ Parameters:
     Description: 'S3 bucket name for the modules. S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).'
     Type: String
   s3BucketRegion:
-    Default: us-east-1
+    Default: 'us-east-1'
     Description: 'Region where the Quick Start S3 bucket (s3BucketName) is hosted. When using your own bucket, you must specify this value.'
     Type: String
   s3KeyPrefix:
@@ -916,7 +916,7 @@ Resources:
     Properties:
       TemplateURL:
         !Sub
-        - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${s3KeyPrefix}templates/modules/bigip-standalone/bigip-standalone.yaml
+        - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}${s3KeyPrefix}templates/modules/bigip-standalone/bigip-standalone.yaml
         - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref s3BucketRegion]
           S3Bucket: !If [useDefaultBucket, !Sub '${s3BucketName}-${AWS::Region}', !Ref s3BucketName]
       Parameters:

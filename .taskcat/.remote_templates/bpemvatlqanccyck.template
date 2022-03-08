@@ -916,7 +916,7 @@ Resources:
     Properties:
       TemplateURL:
         !Sub
-        - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${s3KeyPrefix}templates/modules/bigip-standalone/bigip-standalone.yaml
+        - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}${s3KeyPrefix}templates/modules/bigip-standalone/bigip-standalone.yaml
         - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref s3BucketRegion]
           S3Bucket: !If [useDefaultBucket, !Sub '${s3BucketName}-${AWS::Region}', !Ref s3BucketName]
       Parameters:
