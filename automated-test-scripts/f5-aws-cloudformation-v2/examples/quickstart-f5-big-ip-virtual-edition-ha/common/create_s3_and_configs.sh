@@ -11,7 +11,6 @@ if [[ "<LICENSE TYPE>" == "byol" ]]; then
     regKey02='<AUTOFILL EVAL LICENSE KEY 2>'
 fi
 
-
 echo "copy declarations and update secret"
 cp -avr $PWD/declarations /tmp/<DEWPOINT JOB ID>/
 
@@ -49,7 +48,7 @@ secret_arn=$(aws secretsmanager list-secrets --region <REGION> --filters Key=nam
 # Set CFE tag
 /usr/bin/yq e ".extension_services.service_operations.[1].value.externalStorage.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance01.yaml
 /usr/bin/yq e ".extension_services.service_operations.[1].value.externalStorage.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance02.yaml
-/usr/bin/yq e ".extension_services.service_operations.[1].value.externalStorage.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\""-i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance01-with-app.yaml
+/usr/bin/yq e ".extension_services.service_operations.[1].value.externalStorage.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance01-with-app.yaml
 /usr/bin/yq e ".extension_services.service_operations.[1].value.externalStorage.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance02-with-app.yaml
 /usr/bin/yq e ".extension_services.service_operations.[1].value.externalStorage.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance01.yaml
 /usr/bin/yq e ".extension_services.service_operations.[1].value.externalStorage.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance02.yaml
@@ -58,7 +57,7 @@ secret_arn=$(aws secretsmanager list-secrets --region <REGION> --filters Key=nam
 
 /usr/bin/yq e ".extension_services.service_operations.[1].value.failoverAddresses.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance01.yaml
 /usr/bin/yq e ".extension_services.service_operations.[1].value.failoverAddresses.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance02.yaml
-/usr/bin/yq e ".extension_services.service_operations.[1].value.failoverAddresses.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\""-i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance01-with-app.yaml
+/usr/bin/yq e ".extension_services.service_operations.[1].value.failoverAddresses.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance01-with-app.yaml
 /usr/bin/yq e ".extension_services.service_operations.[1].value.failoverAddresses.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance02-with-app.yaml
 /usr/bin/yq e ".extension_services.service_operations.[1].value.failoverAddresses.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance01.yaml
 /usr/bin/yq e ".extension_services.service_operations.[1].value.failoverAddresses.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance02.yaml
