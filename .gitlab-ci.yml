@@ -20,8 +20,13 @@ run_cfn_lint:
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
   script:
-    - pip install cfn-lint
-    - cfn-lint
+    - cwd=$(pwd)
+    - git clone https://github.com/aws-quickstart/qs-cfn-lint-rules.git
+    - cd qs-cfn-lint-rules
+    - pip install -e .
+    - cd $cwd
+    - cfn-lint -a qs-cfn-lint-rules/qs_cfn_lint_rules/
+    - rm -rf qs-cfn-lint-rules
   tags:
     - cm-official-docker-executor
   except:
