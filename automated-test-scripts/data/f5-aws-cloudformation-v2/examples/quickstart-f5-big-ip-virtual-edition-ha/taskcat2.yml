@@ -6,6 +6,7 @@ project:
   owner: a.kashcheev@f5.com
   regions:
     - us-west-1
+  s3_regional_buckets: true
   tags:
     delete: 'True'
 tests:
@@ -29,7 +30,7 @@ tests:
       publicSubnet2SelfAddress: 10.0.20.11
       publicSubnet2VipAddress: 10.0.20.101
       qss3BucketName: $[taskcat_autobucket]
-      qss3Region: $[taskcat_current_region]
+      qss3BucketRegion: $[taskcat_current_region]
       remoteAccessCIDR: 0.0.0.0/0
       restrictedSrcAddressApp: 0.0.0.0/0
       restrictedSrcAddressMgmt: 0.0.0.0/0

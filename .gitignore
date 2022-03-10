@@ -15,5 +15,6 @@ logs/*
 *__pycache__*
 taskcat_outputs/*
 .taskcat_overrides.yml
+.taskcat/*
 # ignore make envionmental files
 env.sh

@@ -16,27 +16,19 @@ before_script:
   - *helpers
 
 run_cfn_lint:
+  image: ${ARTIFACTORY_SERVER}/dockerhub-remote/python:3.7
   stage: lint
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
   script:
-    - pip install cfn-lint
-    - cfn-lint
-  tags:
-    - cm-official-docker-executor
-  except:
-    refs:
-      - schedules
-      - triggers
-      - pipelines
-
-run_taskcat_lint:
-  stage: lint
-  variables:
-    GIT_SUBMODULE_STRATEGY: recursive
-  script:
-    - pip install taskcat
-    - taskcat lint -i taskcat.yml
+    - cwd=$(pwd)
+    - git clone https://github.com/aws-quickstart/qs-cfn-lint-rules.git
+    - cd qs-cfn-lint-rules
+    # using this method due to bug with pip install -e
+    - python3 setup.py install
+    - cd $cwd
+    - cfn-lint -a qs-cfn-lint-rules/qs_cfn_lint_rules/
+    - rm -rf qs-cfn-lint-rules
   tags:
     - cm-official-docker-executor
   except:

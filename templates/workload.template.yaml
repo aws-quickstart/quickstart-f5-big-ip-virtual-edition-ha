@@ -494,6 +494,7 @@ Mappings:
       Best25Mbps: ami-0484e65be7b1a7fa3
       Best5000Mbps: ami-048dc847bff912f4e
 Conditions:
+  useDefaultBucket: !Equals [!Ref s3BucketName, 'aws-quickstart']
   usePublicIpVip: !Equals
     - 'true'
     - !Ref provisionExampleApp
@@ -503,7 +504,6 @@ Conditions:
   provisionExampleApp: !Equals
     - !Ref provisionExampleApp
     - 'true'
-  govCloudCondition: !Or [!Equals [!Ref 'AWS::Region', us-gov-west-1], !Equals [!Ref 'AWS::Region', us-gov-east-1]]
 Metadata:
   QuickStartDocumentation:
     EntrypointName: "Launch into an existing VPC"
@@ -568,6 +568,7 @@ Metadata:
           default: Templates Location
         Parameters:
           - s3BucketName
+          - s3BucketRegion
           - s3KeyPrefix
     ParameterLabels:
       appDockerImageName:
@@ -626,6 +627,8 @@ Metadata:
         default: Restricted source address to application
       s3BucketName:
         default: S3 bucket where Templates are Located
+      s3BucketRegion:
+        default: Region where S3 bucket is located
       s3KeyPrefix:
         default: S3 key prefix
       secretArn:
@@ -704,12 +707,12 @@ Parameters:
     Description: 'Supply a URL to the bigip-runtime-init configuration file in YAML
      or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.'
     Type: String
-    Default: 'https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance01.yaml'
+    Default: 'https://aws-quickstart.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance01.yaml'
   bigIpRuntimeInitConfig02:
     Description: 'Supply a URL to the bigip-runtime-init configuration file in YAML
      or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.'
     Type: String
-    Default: 'https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance02.yaml'
+    Default: 'https://aws-quickstart.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance02.yaml'
   bigIpRuntimeInitPackageUrl:
     Description: 'Supply a URL for the F5 BIG-IP Runtime Init Package install script.'
     Type: String
@@ -838,6 +841,10 @@ Parameters:
     Default: aws-quickstart
     Description: 'S3 bucket name for the modules. S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).'
     Type: String
+  s3BucketRegion:
+    Default: us-east-1
+    Description: 'Region where the Quick Start S3 bucket (s3BucketName) is hosted. When using your own bucket, you must specify this value.'
+    Type: String
   s3KeyPrefix:
     AllowedPattern: '^[0-9a-zA-Z-/_.-]*$'
     ConstraintDescription: 'Use defaults unless customizing templates and assests that require alternate location. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).'
@@ -866,8 +873,9 @@ Resources:
     Properties:
       TemplateURL:
         !Sub
-        - https://${s3BucketName}.${s3Region}.amazonaws.com/${s3KeyPrefix}templates/modules/access/access.yaml
-        - { s3Region: !If [govCloudCondition, s3-us-gov-west-1, s3] }
+        - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${s3KeyPrefix}templates/modules/access/access.yaml
+        - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref s3BucketRegion]
+          S3Bucket: !If [useDefaultBucket, !Sub '${s3BucketName}-${AWS::Region}', !Ref s3BucketName]
       Parameters:
         application: !Ref application
         cost: !Ref cost
@@ -883,8 +891,9 @@ Resources:
     Properties:
       TemplateURL:
         !Sub
-        - https://${s3BucketName}.${s3Region}.amazonaws.com/${s3KeyPrefix}templates/modules/dag/dag.yaml
-        - { s3Region: !If [govCloudCondition, s3-us-gov-west-1, s3] }
+        - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${s3KeyPrefix}templates/modules/dag/dag.yaml
+        - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref s3BucketRegion]
+          S3Bucket: !If [useDefaultBucket, !Sub '${s3BucketName}-${AWS::Region}', !Ref s3BucketName]
       Parameters:
         application: !Ref application
         cost: !Ref cost
@@ -907,13 +916,15 @@ Resources:
     Properties:
       TemplateURL:
         !Sub
-        - https://${s3BucketName}.${s3Region}.amazonaws.com/${s3KeyPrefix}templates/modules/bigip-standalone/bigip-standalone.yaml
-        - { s3Region: !If [govCloudCondition, s3-us-gov-west-1, s3] }
+        - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${s3KeyPrefix}templates/modules/bigip-standalone/bigip-standalone.yaml
+        - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref s3BucketRegion]
+          S3Bucket: !If [useDefaultBucket, !Sub '${s3BucketName}-${AWS::Region}', !Ref s3BucketName]
       Parameters:
         bigIpInstanceProfile: !GetAtt [Access, Outputs.bigIpInstanceProfile]
         bigIpRuntimeInitConfig: !Ref bigIpRuntimeInitConfig01
         bigIpRuntimeInitPackageUrl: !Ref bigIpRuntimeInitPackageUrl
         cfeS3Bucket: !Ref cfeS3Bucket
+        cfeTag: !Ref cfeTag
         imageId: !If [noCustomImageId, !FindInMap [!FindInMap [VERSION, !Ref bigIpVersion, REGIONMAP], !Ref 'AWS::Region', !FindInMap [AWSBigipThroughput, !Ref bigIpThroughput, !Ref bigIpImageName]], !Ref bigIpImageId]
         externalPrimaryPublicId: !GetAtt [Dag, Outputs.bigIpExternalEipAllocationId01]
         externalPublicIpIds: !If [usePublicIpVip, !GetAtt [Dag, Outputs.bigIpExternalEipAllocationId03], '']
@@ -936,13 +947,15 @@ Resources:
     Properties:
       TemplateURL:
         !Sub
-        - https://${s3BucketName}.${s3Region}.amazonaws.com/${s3KeyPrefix}templates/modules/bigip-standalone/bigip-standalone.yaml
-        - { s3Region: !If [govCloudCondition, s3-us-gov-west-1, s3] }
+        - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${s3KeyPrefix}templates/modules/bigip-standalone/bigip-standalone.yaml
+        - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref s3BucketRegion]
+          S3Bucket: !If [useDefaultBucket, !Sub '${s3BucketName}-${AWS::Region}', !Ref s3BucketName]
       Parameters:
         bigIpInstanceProfile: !GetAtt [Access, Outputs.bigIpInstanceProfile]
         bigIpRuntimeInitConfig: !Ref bigIpRuntimeInitConfig02
         bigIpRuntimeInitPackageUrl: !Ref bigIpRuntimeInitPackageUrl
         imageId: !If [noCustomImageId, !FindInMap [!FindInMap [VERSION, !Ref bigIpVersion, REGIONMAP], !Ref 'AWS::Region', !FindInMap [AWSBigipThroughput, !Ref bigIpThroughput, !Ref bigIpImageName]], !Ref bigIpImageId]
+        cfeTag: !Ref cfeTag
         externalPrimaryPublicId: !GetAtt [Dag, Outputs.bigIpExternalEipAllocationId02]
         externalPublicIpIds: ''
         externalSecurityGroupId: !GetAtt [Dag, Outputs.bigIpExternalSecurityGroup]
@@ -965,8 +978,9 @@ Resources:
     Properties:
       TemplateURL:
         !Sub
-        - https://${s3BucketName}.${s3Region}.amazonaws.com/${s3KeyPrefix}templates/modules/application/application.yaml
-        - { s3Region: !If [govCloudCondition, s3-us-gov-west-1, s3] }
+        - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${s3KeyPrefix}templates/modules/application/application.yaml
+        - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref s3BucketRegion]
+          S3Bucket: !If [useDefaultBucket, !Sub '${s3BucketName}-${AWS::Region}', !Ref s3BucketName]
       Parameters:
         appDockerImageName: !Ref 'appDockerImageName'
         application: !Ref 'application'
@@ -983,8 +997,9 @@ Resources:
     Properties:
       TemplateURL:
         !Sub
-        - https://${s3BucketName}.${s3Region}.amazonaws.com/${s3KeyPrefix}templates/modules/application/application.yaml
-        - { s3Region: !If [govCloudCondition, s3-us-gov-west-1, s3] }
+        - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${s3KeyPrefix}templates/modules/application/application.yaml
+        - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref s3BucketRegion]
+          S3Bucket: !If [useDefaultBucket, !Sub '${s3BucketName}-${AWS::Region}', !Ref s3BucketName]
       Parameters:
         appDockerImageName: !Ref 'appDockerImageName'
         application: !Ref 'application'
