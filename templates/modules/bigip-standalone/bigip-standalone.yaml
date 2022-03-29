@@ -364,6 +364,18 @@ Outputs:
         - BigipStaticInternalInterface
         - PrimaryPrivateIpAddress
 Parameters:
+  QSS3BucketName:
+    AllowedPattern: '^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$'
+    ConstraintDescription: 'S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).'
+    Default: aws-quickstart
+    Description: 'S3 bucket name for the modules. S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).'
+    Type: String
+  QSS3KeyPrefix:
+    AllowedPattern: '^[0-9a-zA-Z-/_.-]*$'
+    ConstraintDescription: 'Use defaults unless customizing templates and assests that require alternate location. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).'
+    Default: quickstart-f5-big-ip-virtual-edition-ha/
+    Description: 'S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).'
+    Type: String    
   application:
     Default: f5app
     Description: Application Tag.
@@ -514,6 +526,57 @@ Parameters:
     Description: Unique String used when creating object names or Tags.
     Type: String
 Resources:
+  DeleteBucketContents:
+    Type: Custom::DeleteBucketContents
+    Condition: createS3Bucket
+    DependsOn: DeleteBucketContentsRolePolicy
+    Properties:
+      ServiceToken: !GetAtt DeleteBucketContentsLambda.Arn
+      Bucket: !Ref S3Bucket
+  DeleteBucketContentsRole:
+    Type: AWS::IAM::Role
+    Properties:
+      ManagedPolicyArns:
+        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+  DeleteBucketContentsLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: DeleteBucketContents
+      Handler: lambda_function.lambda_handler
+      MemorySize: 128
+      Role: !Ref DeleteBucketContentsRole
+      Runtime: python3.7
+      Timeout: 900
+      Code:
+        S3Bucket: !Ref QSS3BucketName
+        S3Key: !Sub '${QSS3KeyPrefix}functions/packages/DeleteBucketContents/lambda.zip'
+  DeleteBucketContentsRolePolicy:
+    Condition: createS3Bucket
+    Type: AWS::IAM::Policy
+    Properties:
+      Roles: !Ref DeleteBucketContentsRole
+      PolicyName: DeleteBucketContentsPolicy
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action: [
+            "s3:GetObjectAcl",
+            "s3:GetObject",
+            "s3:DeleteObjectVersion",
+            "s3:ListBucketVersions",
+            "s3:GetObjectVersionAcl",
+            "s3:ListBucket",
+            "s3:GetBucketVersioning",
+            "s3:DeleteObject",
+            "s3:GetBucketAcl",
+            "s3:GetBucketLocation",
+            "s3:GetObjectVersion"
+          ]
+          Resource:
+          - !Sub 'arn:${AWS::Partition}:s3:::${cfeS3Bucket}/*'
+          - !Sub 'arn:${AWS::Partition}:s3:::${cfeS3Bucket}'
+
   S3Bucket:
     Condition: createS3Bucket
     Type: 'AWS::S3::Bucket'

@@ -544,8 +544,8 @@ Metadata:
           - bigIpVersion
           - bigIpImageName
           - bigIpThroughput
-          - bigIpRuntimeInitConfig01
-          - bigIpRuntimeInitConfig02
+          - CustomBigIPRuntimeInit01
+          - CustomBigIPRuntimeInit02
           - bigIpRuntimeInitPackageUrl
           - cfeS3Bucket
           - cfeVipTag
@@ -927,7 +927,7 @@ Resources:
           - CustomConfig1
           - !Ref CustomBigIPRuntimeInit01
           - !Sub 
-            - "https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${s3KeyPreifx}declarations/runtime-init-conf-2nic-payg-instance01.yaml"
+            - "https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${s3KeyPrefix}declarations/runtime-init-conf-2nic-payg-instance01.yaml"
             - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref s3BucketRegion]
               S3Bucket: !If [useDefaultBucket, !Sub '${s3BucketName}-${AWS::Region}', !Ref s3BucketName]
 
@@ -951,6 +951,8 @@ Resources:
         peerConfigSyncAddr: ''
         sshKey: !Ref sshKey
         uniqueString: !Ref uniqueString
+        QSS3BucketName: !Ref s3BucketName
+        QSS3KeyPrefix: !Ref s3KeyPrefix
   BigipInstance02:
     Type: 'AWS::CloudFormation::Stack'
     Properties:
@@ -987,6 +989,8 @@ Resources:
         peerConfigSyncAddr: !Ref peerConfigSyncAddr
         sshKey: !Ref sshKey
         uniqueString: !Ref uniqueString
+        QSS3BucketName: !Ref s3BucketName
+        QSS3KeyPrefix: !Ref s3KeyPrefix        
   Application01:
     Type: 'AWS::CloudFormation::Stack'
     Condition: provisionExampleApp

@@ -244,9 +244,8 @@ Parameters:
     Description: Flag to deploy the demo web application.
     Type: String
   cfeS3Bucket:
-    AllowedPattern: '^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$'
     ConstraintDescription: 'S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).'
-    Default: aws-quickstart-cfe
+    Default: ""
     Description: S3 bucket used as BIG-IP storage for Failover solution.
     Type: String
   cfeTag:
