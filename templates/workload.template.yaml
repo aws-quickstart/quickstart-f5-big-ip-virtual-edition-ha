@@ -494,6 +494,8 @@ Mappings:
       Best25Mbps: ami-0484e65be7b1a7fa3
       Best5000Mbps: ami-048dc847bff912f4e
 Conditions:
+  CustomConfig1: !Not [!Equals [!Ref CustomBigIPRuntimeInit01, ""]]
+  CustomConfig2: !Not [!Equals [!Ref CustomBigIPRuntimeInit02, ""]]
   useDefaultBucket: !Equals [!Ref s3BucketName, 'aws-quickstart']
   usePublicIpVip: !Equals
     - 'true'
@@ -581,9 +583,9 @@ Metadata:
         default: BIGIP Image Id
       bigIpInstanceType:
         default: AWS instance type
-      bigIpRuntimeInitConfig01:
+      CustomBigIPRuntimeInit01:
         default: BIG-IP Runtime Init config
-      bigIpRuntimeInitConfig02:
+      CustomBigIPRuntimeInit02:
         default: BIG-IP Runtime Init config
       bigIpRuntimeInitPackageUrl:
         default: BIG-IP Runtime Init Package URL
@@ -703,16 +705,16 @@ Parameters:
     Default: 1000Mbps
     Description: Maximum amount of throughput for BIG-IP VE
     Type: String
-  bigIpRuntimeInitConfig01:
-    Description: 'Supply a URL to the bigip-runtime-init configuration file in YAML
+  CustomBigIPRuntimeInit01:
+    Description: '(Optional) Supply an alternate URL to the bigip-runtime-init configuration file in YAML
      or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.'
     Type: String
-    Default: 'https://aws-quickstart.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance01.yaml'
-  bigIpRuntimeInitConfig02:
-    Description: 'Supply a URL to the bigip-runtime-init configuration file in YAML
+    Default: ""
+  CustomBigIPRuntimeInit02:
+    Description: '(Optional) Supply an alternate URL to the bigip-runtime-init configuration file in YAML
      or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.'
     Type: String
-    Default: 'https://aws-quickstart.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance02.yaml'
+    Default: ""
   bigIpRuntimeInitPackageUrl:
     Description: 'Supply a URL for the F5 BIG-IP Runtime Init Package install script.'
     Type: String
@@ -921,7 +923,14 @@ Resources:
           S3Bucket: !If [useDefaultBucket, !Sub '${s3BucketName}-${AWS::Region}', !Ref s3BucketName]
       Parameters:
         bigIpInstanceProfile: !GetAtt [Access, Outputs.bigIpInstanceProfile]
-        bigIpRuntimeInitConfig: !Ref bigIpRuntimeInitConfig01
+        bigIpRuntimeInitConfig: !If 
+          - CustomConfig1
+          - !Ref CustomBigIPRuntimeInit01
+          - !Sub 
+            - "https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${s3KeyPreifx}declarations/runtime-init-conf-2nic-payg-instance01.yaml"
+            - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref s3BucketRegion]
+              S3Bucket: !If [useDefaultBucket, !Sub '${s3BucketName}-${AWS::Region}', !Ref s3BucketName]
+
         bigIpRuntimeInitPackageUrl: !Ref bigIpRuntimeInitPackageUrl
         cfeS3Bucket: !Ref cfeS3Bucket
         cfeTag: !Ref cfeTag
@@ -951,8 +960,14 @@ Resources:
         - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref s3BucketRegion]
           S3Bucket: !If [useDefaultBucket, !Sub '${s3BucketName}-${AWS::Region}', !Ref s3BucketName]
       Parameters:
-        bigIpInstanceProfile: !GetAtt [Access, Outputs.bigIpInstanceProfile]
-        bigIpRuntimeInitConfig: !Ref bigIpRuntimeInitConfig02
+        bigIpInstanceProfile: !GetAtt [Access, Outputs.tanceProfile]
+        bigIpRuntimeInitConfig: !If 
+          - CustomConfig2
+          - !Ref CustomBigIPRuntimeInit02
+          - !Sub 
+            - "https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${s3KeyPrefix}declarations/runtime-init-conf-2nic-payg-instance02.yaml"
+            - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref s3BucketRegion]
+              S3Bucket: !If [useDefaultBucket, !Sub '${s3BucketName}-${AWS::Region}', !Ref s3BucketName]
         bigIpRuntimeInitPackageUrl: !Ref bigIpRuntimeInitPackageUrl
         imageId: !If [noCustomImageId, !FindInMap [!FindInMap [VERSION, !Ref bigIpVersion, REGIONMAP], !Ref 'AWS::Region', !FindInMap [AWSBigipThroughput, !Ref bigIpThroughput, !Ref bigIpImageName]], !Ref bigIpImageId]
         cfeTag: !Ref cfeTag
