@@ -1,0 +1,28 @@
+// Replace the <n> in each row to specify the number of resources used in this deployment. Remove the rows for resources that aren’t used.
+|===
+|Resource |This deployment uses
+|VPCs | 1
+|Security Groups | 2
+|AWS Identity and Access Management (IAM) Role | 1
+|Elastic IP addresses | 2 to 6 _(see breakdown below)_
+|ec2 instances | 2 to 5 _(see breakdown below)_
+|S3 buckets | 1
+|===
+
+.Instance Breakdown
+* New Network
+- 1 Bastion Host
+* Workload
+- 2 BIG-IPs
+- 2 Example Applications (OPTIONAL)
+
+.EIP Breakdown
+* New Network
+- 2 for NAT Gateways
+- 1 for Bastion Host
+* Workload
+- 2 for BIG-IPs (Unique Self-Ips)
+- 1 for the Example BIG-IP Virtual Service (OPTIONAL)
+
+WARNING: By default, this solution requires more than the default EIP resources allowed on an account so you will most likely need to increase your service limits per above. 
+
