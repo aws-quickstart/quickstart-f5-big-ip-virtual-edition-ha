@@ -4,6 +4,8 @@ general:
 project:
   name: quickstart-f5-big-ip-virtual-edition-ha
   owner: a.kashcheev@f5.com
+  lambda_source_path: functions/source
+  lambda_zip_path: functions/packages
   regions:
     - ap-northeast-1
     - ap-northeast-2
@@ -29,14 +31,13 @@ tests:
       bigIpRuntimeInitConfig02: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance02.yaml
       bigIpRuntimeInitPackageUrl: https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.4.1/dist/f5-bigip-runtime-init-1.4.1-1.gz.run
       cfeTag: aws_quickstart_$[taskcat_random-string]
-      cfeS3Bucket: tcat-quickstart-cfe-$[taskcat_random-string]
-      keyPairName: <YOUR-KEY>
+      keyPairName: override
       qss3BucketName: $[taskcat_autobucket]
       qss3BucketRegion: $[taskcat_current_region]
-      remoteAccessCIDR: <YOUR-TRUSTED-NETWORK-HERE>
-      restrictedSrcAddressApp: <YOUR-TRUSTED-NETWORK-HERE>
-      restrictedSrcAddressMgmt: <YOUR-TRUSTED-NETWORK-HERE>
-      secretArn: <YOUR-SECRET-ARN-HERE>
+      remoteAccessCIDR: override
+      restrictedSrcAddressApp: override
+      restrictedSrcAddressMgmt: override
+      secretArn: override
       uniqueString: $[taskcat_genpass_8]
     regions:
       - us-east-1
@@ -49,8 +50,7 @@ tests:
       bigIpRuntimeInitConfig02: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance02-with-app.yaml
       bigIpRuntimeInitPackageUrl: https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.4.1/dist/f5-bigip-runtime-init-1.4.1-1.gz.run
       cfeTag: aws_quickstart_$[taskcat_random-string]
-      cfeS3Bucket: tcat-quickstart-cfe-$[taskcat_random-string]
-      keyPairName: <YOUR-KEY>
+      keyPairName: override 
       privateSubnet1ASelfAddress: 10.0.11.11
       privateSubnet2ASelfAddress: 10.0.21.11
       provisionExampleApp: 'true'
@@ -60,10 +60,10 @@ tests:
       publicSubnet2VipAddress: 10.0.20.101
       qss3BucketName: $[taskcat_autobucket]
       qss3BucketRegion: $[taskcat_current_region]
-      remoteAccessCIDR: <YOUR-TRUSTED-NETWORK-HERE>
-      restrictedSrcAddressApp: <YOUR-TRUSTED-NETWORK-HERE>
-      restrictedSrcAddressMgmt: <YOUR-TRUSTED-NETWORK-HERE>
-      secretArn: <YOUR-SECRET-ARN-HERE>
+      remoteAccessCIDR: override
+      restrictedSrcAddressApp: override
+      restrictedSrcAddressMgmt: override
+      secretArn: override
       uniqueString: $[taskcat_genpass_8]
     regions:
       - us-west-1

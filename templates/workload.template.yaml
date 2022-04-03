@@ -727,9 +727,8 @@ Parameters:
     Description: Select version of BIG-IP you wish to deploy.
     Type: String
   cfeS3Bucket:
-    AllowedPattern: '^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$'
     ConstraintDescription: 'S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).'
-    Default: aws-quickstart-cfe
+    Default: ""
     Description: 'S3 bucket name used by Cloud Failover Extension.'
     Type: String
   cfeTag:
@@ -914,6 +913,7 @@ Resources:
         vpc: !Ref vpc
         uniqueString: !Ref uniqueString
   BigipInstance01:
+    DependsOn: Access
     Type: 'AWS::CloudFormation::Stack'
     Properties:
       TemplateURL:
@@ -923,10 +923,10 @@ Resources:
           S3Bucket: !If [useDefaultBucket, !Sub '${s3BucketName}-${AWS::Region}', !Ref s3BucketName]
       Parameters:
         bigIpInstanceProfile: !GetAtt [Access, Outputs.bigIpInstanceProfile]
-        bigIpRuntimeInitConfig: !If 
+        bigIpRuntimeInitConfig: !If
           - CustomConfig1
           - !Ref CustomBigIPRuntimeInit01
-          - !Sub 
+          - !Sub
             - "https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${s3KeyPrefix}declarations/runtime-init-conf-2nic-payg-instance01.yaml"
             - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref s3BucketRegion]
               S3Bucket: !If [useDefaultBucket, !Sub '${s3BucketName}-${AWS::Region}', !Ref s3BucketName]
@@ -954,6 +954,7 @@ Resources:
         QSS3BucketName: !Ref s3BucketName
         QSS3KeyPrefix: !Ref s3KeyPrefix
   BigipInstance02:
+    DependsOn: Access
     Type: 'AWS::CloudFormation::Stack'
     Properties:
       TemplateURL:
@@ -962,11 +963,11 @@ Resources:
         - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref s3BucketRegion]
           S3Bucket: !If [useDefaultBucket, !Sub '${s3BucketName}-${AWS::Region}', !Ref s3BucketName]
       Parameters:
-        bigIpInstanceProfile: !GetAtt [Access, Outputs.tanceProfile]
-        bigIpRuntimeInitConfig: !If 
+        bigIpInstanceProfile: !GetAtt [Access, Outputs.bigIpInstanceProfile]
+        bigIpRuntimeInitConfig: !If
           - CustomConfig2
           - !Ref CustomBigIPRuntimeInit02
-          - !Sub 
+          - !Sub
             - "https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${s3KeyPrefix}declarations/runtime-init-conf-2nic-payg-instance02.yaml"
             - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref s3BucketRegion]
               S3Bucket: !If [useDefaultBucket, !Sub '${s3BucketName}-${AWS::Region}', !Ref s3BucketName]
@@ -990,7 +991,7 @@ Resources:
         sshKey: !Ref sshKey
         uniqueString: !Ref uniqueString
         QSS3BucketName: !Ref s3BucketName
-        QSS3KeyPrefix: !Ref s3KeyPrefix        
+        QSS3KeyPrefix: !Ref s3KeyPrefix
   Application01:
     Type: 'AWS::CloudFormation::Stack'
     Condition: provisionExampleApp

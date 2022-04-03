@@ -453,8 +453,8 @@ Resources:
         bigIpImageName: !Ref bigIpImageName
         bigIpInstanceType: !Ref bigIpInstanceType
         bigIpThroughput: !Ref bigIpThroughput
-        bigIpRuntimeInitConfig01: !Ref bigIpRuntimeInitConfig01
-        bigIpRuntimeInitConfig02: !Ref bigIpRuntimeInitConfig02
+        CustomBigIPRuntimeInit01: !Ref bigIpRuntimeInitConfig01
+        CustomBigIPRuntimeInit02: !Ref bigIpRuntimeInitConfig02
         bigIpRuntimeInitPackageUrl: !Ref bigIpRuntimeInitPackageUrl
         cfeS3Bucket: !Ref cfeS3Bucket
         cfeVipTag: !Ref cfeVipTag

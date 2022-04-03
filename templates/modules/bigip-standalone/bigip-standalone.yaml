@@ -196,7 +196,7 @@ Conditions:
   createS3Bucket: !Not
     - !Equals
       - !Ref cfeS3Bucket
-      - OPTIONAL
+      - ""
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
@@ -375,7 +375,7 @@ Parameters:
     ConstraintDescription: 'Use defaults unless customizing templates and assests that require alternate location. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).'
     Default: quickstart-f5-big-ip-virtual-edition-ha/
     Description: 'S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).'
-    Type: String    
+    Type: String
   application:
     Default: f5app
     Description: Application Tag.
@@ -501,7 +501,7 @@ Parameters:
   cfeS3Bucket:
     Description: Provides BIG-IP S3 Bucket name
     Type: String
-    Default: OPTIONAL
+    Default: ""
   cfeTag:
     Description: Cloud Failover deployment tag value.
     Type: String
@@ -538,13 +538,19 @@ Resources:
     Properties:
       ManagedPolicyArns:
         - !Sub 'arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: lambda.amazonaws.com
+          Action: sts:AssumeRole
   DeleteBucketContentsLambda:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: DeleteBucketContents
       Handler: lambda_function.lambda_handler
       MemorySize: 128
-      Role: !Ref DeleteBucketContentsRole
+      Role: !GetAtt DeleteBucketContentsRole.Arn
       Runtime: python3.7
       Timeout: 900
       Code:
@@ -554,7 +560,8 @@ Resources:
     Condition: createS3Bucket
     Type: AWS::IAM::Policy
     Properties:
-      Roles: !Ref DeleteBucketContentsRole
+      Roles:
+        - !Ref DeleteBucketContentsRole
       PolicyName: DeleteBucketContentsPolicy
       PolicyDocument:
         Version: '2012-10-17'
@@ -581,7 +588,6 @@ Resources:
     Condition: createS3Bucket
     Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName: !Ref cfeS3Bucket
       AccessControl: BucketOwnerFullControl
       Tags:
         - Key: f5_cloud_failover_label
@@ -874,10 +880,10 @@ Resources:
         - !Ref 'BigipStaticManagementInterface'
     Type: 'AWS::EC2::EIPAssociation'
   Bigip3NicInstance:
-    CreationPolicy:
-      ResourceSignal:
-        Count: 1
-        Timeout: PT30M
+    # CreationPolicy:
+    #   ResourceSignal:
+    #     Count: 1
+    #     Timeout: PT30M
     Condition: is3Nic
     Properties:
       BlockDeviceMappings:
@@ -1051,10 +1057,10 @@ Resources:
             - ''
     Type: 'AWS::EC2::Instance'
   Bigip2NicInstance:
-    CreationPolicy:
-      ResourceSignal:
-        Count: 1
-        Timeout: PT30M
+    # CreationPolicy:
+    #   ResourceSignal:
+    #     Count: 1
+    #     Timeout: PT30M
     Condition: is2Nic
     Properties:
       BlockDeviceMappings:
@@ -1222,10 +1228,10 @@ Resources:
             - ''
     Type: 'AWS::EC2::Instance'
   Bigip1NicInstance:
-    CreationPolicy:
-      ResourceSignal:
-        Count: 1
-        Timeout: PT30M
+    # CreationPolicy:
+    #   ResourceSignal:
+    #     Count: 1
+    #     Timeout: PT30M
     Condition: is1Nic
     Properties:
       BlockDeviceMappings:
