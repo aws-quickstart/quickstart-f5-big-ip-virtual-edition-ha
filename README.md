@@ -1,4 +1,4 @@
-# quickstart-f5-big-ip-virtual-edition-ha
+# quickstart-f5-big-ip-virtual-edition-ha.
 
 
 ## High Availability pair of F5 BIG-IP Virtual Editions (VEs) on the AWS Cloud
