@@ -1,3 +1,45 @@
 //Include any predeployment steps here, such as signing up for a Marketplace AMI or making any changes to a partner account. If there are no predeployment steps, leave this file empty.
 
 == Predeployment steps
+
+// Optional based on Marketplace listing. Not to be edited
+
+=== Subscribe to the {partner-product-short-name} AMI
+
+This Quick Start requires a subscription to the AMI for {partner-product-short-name} in AWS Marketplace.
+
+. Sign in to your AWS account.
+. {marketplace_listing_url}[Open the page for the {partner-product-short-name} AMI in AWS Marketplace], and then choose *Continue to Subscribe*.
+. Review the terms and conditions for software usage, and then choose *Accept Terms*. +
+  A confirmation page loads, and an email confirmation is sent to the account owner. For detailed subscription instructions, see the https://aws.amazon.com/marketplace/help/200799470[AWS Marketplace documentation^].
+
+. When the subscription process is complete, exit out of AWS Marketplace without further action. *Do not* provision the software from AWS Marketplace—the Quick Start deploys the AMI for you.
+
+=== Prepare your AWS account
+//_Describe any setup required in the AWS account prior to template launch_
+
+This solution *requires* you to have:
+
+* An **SSH Key** pair in AWS for management access to BIG-IP VE. For more information about creating and/or importing the key pair in AWS, see AWS SSH key https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html[documentation].
+* An **AWS secret** stored in AWS https://aws.amazon.com/secrets-manager/[Secrets Manager] containing the password used to access and cluster the HA Pair. For example, to create a secret using the AWS CLI:
+
+    aws secretsmanager create-secret --region us-east-1 --name bigIpPassword --secret-string 'YOUR_BIGIP_PASSWORD'
+
+** _NOTE:_
+*** By default, the secret name must be `bigIpPassword` and created in the region where deploying the template. Otherwise, see link:#_customizing_the_big_ip_configuration[Customizing the BIG-IP Configuration] for more details.
+*** Obtain the secret ARN. The ARN format required for the input parameter will look like _arn:aws:secretsmanager:us-east-1:111111111111:secret:bigIpPassword-xdg0kdf_ You will pass this value to the *secretArn* input parameter.
+*** In the example above, the *--secret-string* value is in single quotes to avoid bash special character interpolation. See the AWS CLI secretsmanager https://docs.aws.amazon.com/cli/latest/reference/secretsmanager/index.html#cli-aws-secretsmanager[documentation] for a more secure example using a file.
+
+* Accepted the EULA for the F5 image in the AWS marketplace. If you have not deployed BIG-IP VE in your environment before, search for F5 in the Marketplace and then click **Accept Software Terms**. This only appears the first time you attempt to launch an F5 image. See link:#_software_licenses[Licensing] section above.
+* The appropriate permission in AWS to launch CloudFormation Templates (CFT). You must be using an IAM user with the Administrator Access policy attached and have permission to create the objects contained in this solution (VPCs, Routes, EIPs, EC2 Instances, etc.). For details on permissions and all AWS configuration, see AWS https://aws.amazon.com/documentation/[documentation].
+
+
+
+//==== Prepare your {partner-company-name} account
+//_Describe any setup required in the partner portal/account prior to template launch_
+
+
+.Important Configuration Notes
+
+
+- This solution template provides an **initial** deployment only for an "infrastructure" use case (meaning that it does not support managing the entire deployment exclusively via the template's "Update-Stack" function). This solution leverages cloud-init to send the instance **user_data**, which is only used to provide an initial BIG-IP configuration and not as the primary configuration API for a long-running platform. Although "Update-Stack" can be used to update some cloud resources, as the BIG-IP configuration needs to align with the cloud resources, like IPs to NICs, updating one without the other can result in inconsistent states, while updating other resources, like the **bigIpImageId** or **bigIpInstanceType**, can trigger an entire instance re-deloyment. For instance, to upgrade software versions, traditional in-place upgrades and config management are required. See link:#_best_practices_for_using_f5_big_ip_virtual_edition_on_aws[Best Practices] and link:#_support[Support] sections for more information.

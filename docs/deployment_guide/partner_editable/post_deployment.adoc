@@ -1,3 +1,137 @@
 // Include any postdeployment steps here, such as steps necessary to test that the deployment was successful. If there are no postdeployment steps, leave this file empty.
 
 == Postdeployment steps
+
+=== Customizing the BIG-IP configuration
+
+Before deploying, you first need to confirm or customize the desired BIG-IP Configuration. The initial BIG-IP configurations are passed through the https://github.com/f5networks/f5-bigip-runtime-init[F5 BIG-IP Runtime Init] config files. As the potential amount of customization for the BIG-IP configuration is so large, these are the primary mechanisms to customize the initial BIG-IP configurations for your deployment. Customizing the BIG-IP configurations generally involves updating AND rehosting these files and passing their location through the *bigIpRuntimeInitConfig* template parameters.
+
+By default, per the diagram above, this solution deploys a minimal 2NIC PAYG configuration into the default Quickstart network topology using the following configuration files in the
+`/declarations` folder in this repository:
+
+** `runtime-init-conf-2nic-payg-instance01.yaml`
+** `runtime-init-conf-2nic-payg-instance02.yaml`
+
+This deploys a minimal baseline HA failover cluster *without* any virtual services provisioned.
+
+Optionally, to illustrate how services work, you can deploy an _example_ waf protected web service ( which will deploy web application instances and a waf protected virtual service on the BIG-IPs). To do this, set *provisionExampleApp* parameter to *true* and reference the following configuration files via *bigIpRuntimeInitConfig* parameters instead.
+
+** `runtime-init-conf-2nic-payg-instance01-with-app.yaml`
+** `runtime-init-conf-2nic-payg-instance02-with-app.yaml`
+
+
+Any further customizations require *updating* AND *rehosting* your configuration files at a *custom* URL.
+
+NOTE: *IMPORTANT* If hosting on git, any URLs pointing to git *must* use the raw file format
+(for example, `raw.githubusercontent.com`).
+
+
+The BIG-IP configurations must match the external environment in which they are deployed. Although the provided Runtime-Init config examples extract and templatize many common values, some values are still harcoded and need to be updated to match your specific environment or deployment first.
+
+
+==== Common Example Customization 1
+
+
+For example, to deploy a *Bring Your Own License (BYOL)* instance:
+
+[arabic]
+. Edit/modify the Declarative Onboarding (DO) declaration in a
+corresponding example `byol` runtime-init config file with the new `regKey`
+value.
+
+Example snippet:
+
+From:
+[source,yaml]
+----
+...
+          My_License:
+            class: License
+            licenseType: regKey
+            regKey: REPLACE_WITH_VALID_REGKEY
+...
+----
+
+To:
+[source,yaml]
+----
+...
+          My_License:
+            class: License
+            licenseType: regKey
+            regKey: AAAAA-BBBBB-CCCCC-DDDDD-EEEEEEE
+...
+----
+
+[arabic, start=2]
+. Publish/host the customized runtime-init config file at a location
+reachable by the BIG-IP at deploy time (for example: git, S3, etc.).
+. Update the *bigIpRuntimeInitConfig* input parameters to reference the
+new URLs of the updated configurations.
+. Update the *bigIpImageId* input parameter to a valid byol image ID.
+
+{empty} +
+
+==== Common Example Customization 2
+
+For example, if you would like to change hostnames, disable usage reporting to F5, ntp / dns servers, etc. :
+
+[arabic]
+. Edit/modify the Declarative Onboarding (DO) declaration in a
+corresponding example runtime-init configs file with your new
+values.
+
+Example snippet:
+
+From:
+[source,yaml]
+----
+...
+          My_System:
+            autoPhonehome: true
+            class: System
+            hostname: "failover01.local"
+...
+          failoverGroup:
+            class: DeviceGroup
+            type: sync-failover
+            members:
+              - failover01.local
+              - failover02.local
+...
+----
+
+To:
+[source,yaml]
+----
+...
+          My_System:
+            autoPhonehome: false
+            class: System
+            hostname: "bigip-cluster-01-a.yourcompany.com"
+...
+          failoverGroup:
+            class: DeviceGroup
+            type: sync-failover
+            members:
+              - bigip-cluster-01-a.yourcompany.com
+              - bigip-cluster-01-b.yourcompany.com
+...
+----
+
+
+[arabic, start=2]
+. Publish/host the customized runtime-init config files at a location
+reachable by the BIG-IP at deploy time (for example: git, S3, etc.).
+. Update the *bigIpRuntimeInitConfig* input parameters to reference the
+new URLs of the updated configurations.
+
+{empty} +
+{empty} +
+
+
+TIP: For additional information and examples, see https://github.com/f5networks/f5-bigip-runtime-init[F5 BIG-IP
+Runtime Init].
+
+{empty} +
+{empty} +

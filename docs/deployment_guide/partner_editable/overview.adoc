@@ -1,5 +1,15 @@
 This Quick Start deploys {partner-product-name} on the AWS Cloud. If you are unfamiliar with AWS Quick Starts, refer to the https://fwd.aws/rA69w?[AWS Quick Start General Information Guide^].
 
+
 // For advanced information about the product that this Quick Start deploys, refer to the https://{quickstart-github-org}.github.io/{quickstart-project-name}/operational/index.html[Operational Guide^].
 
 // For information about using this Quick Start for migrations, refer to the https://{quickstart-github-org}.github.io/{quickstart-project-name}/migration/index.html[Migration Guide^].
+
+
+//Use this for the landing page.
+//BIG-IP VE is an application delivery and security services platform that is built to ensure speed, availability, and security for business-critical applications and networks. As an aggregation tier for your application portfolio, it can be used to standardize security, logging and telemetry policies. It enable intelligent L4-L7 traffic management, robust network and web application firewalls, simplified application access, and much more.  For more information about BIG-IP VE, see the https://www.f5.com/[F5 website].
+
+
+
+
+
