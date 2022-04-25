@@ -1,12 +1,11 @@
-
 == Accessing the BIG-IP
 
 
 Once the Stacks are `CREATE_COMPLETE`, you can access the BIG-IPs through the Bastion Host and if you've provisioned the example application, optionally test the waf service:
 
 
-* From Parent Template Outputs: 
-** *Console*: Navigate to *CloudFormation > _STACK_NAME_ > Outputs*. 
+* From Parent Template Outputs:
+** *Console*: Navigate to *CloudFormation > _STACK_NAME_ > Outputs*.
 ** *AWS CLI*:
 +
 ----
@@ -20,7 +19,7 @@ _bigipInstance01MgmtPrivateIp_*.
 ----
 aws --region ${REGION} cloudformation describe-stacks --stack-name ${STACK_NAME} --query  "Stacks[0].Outputs[ OutputKey=='bigipInstance01MgmtPrivateIp'].OutputValue" --output text
 ----
-** Obtain the Public IP address of the bastion host: 
+** Obtain the Public IP address of the bastion host:
 *** *Console*: *** *Console*: Navigate to *CloudFormation > _STACK_NAME_ > Outputs > _bastionHost_*.
 *** *AWS CLI*:
 +
@@ -87,7 +86,7 @@ cert. Follow your browser’s instructions for accepting self-signed certs
 cat /config/cloud/runtime-init.conf
 ----
 ** Examine the running BIG-IP configurations:
-*** The BIG-IP 
+*** The BIG-IP
 https://www.f5.com/pdf/products/automation-toolchain-overview.pdf[F5
 Automation Toolchain] declarations:
 +
@@ -101,7 +100,7 @@ Failover Extension (CFE)] declaration:
 +
 [source,bash]
 ----
-curl -su admin: http://localhost:8100/mgmt/shared/cloud-failover/declare | jq . 
+curl -su admin: http://localhost:8100/mgmt/shared/cloud-failover/declare | jq .
 ----
 
 === WebUI
@@ -159,10 +158,10 @@ and a reference support ID. Example:
 +
 ----
 $ curl -sko /dev/null -w '%{response_code}\n' https://55.55.55.55
-200     
+200
 $ curl -sk -X DELETE https://55.55.55.55
-<html><head><title>Request Rejected</title></head><body>The requested URL was rejected. 
-Please consult with your administrator.<br><br>Your support ID is: 
+<html><head><title>Request Rejected</title></head><body>The requested URL was rejected.
+Please consult with your administrator.<br><br>Your support ID is:
 2394594827598561347<br><br><a href='javascript:history.back();'>[Go Back]</a></body></html>
 ----
 
@@ -207,7 +206,7 @@ curl -sko /dev/null -w '%{response_code}\n' https://${IP_ADDRESS_FROM_OUTPUT}
 curl -sk -X DELETE https://${IP_ADDRESS_FROM_OUTPUT}
 ----
 
-* NOTE: In this specific example, traffic is Source Address Translated and from the Example Application's perspective, the "Client" is the BIG-IP's addresses. The real client IP is passed via the `x-forwarded-for:` header. Observe how the "Client IP" changes from one BIG-IP in one AZ to the other. 
+* NOTE: In this specific example, traffic is Source Address Translated and from the Example Application's perspective, the "Client" is the BIG-IP's addresses. The real client IP is passed via the `x-forwarded-for:` header. Observe how the "Client IP" changes from one BIG-IP in one AZ to the other.
 
 
 
@@ -220,14 +219,14 @@ For illustration purposes, this solution provides an option to pre-provision add
 needed for an example virtual service. However, in practice, this solution is only designed to facilitate the initial deployment as cloud-init runs once and is typically used for
 initial provisioning, not as the primary configuration API for a
 long-running platform. More typically in an infrastructure use case,
-virtual services are added post initial deployment, outside the lifecycle of this Cloudformation Template and involves: 
+virtual services are added post initial deployment, outside the lifecycle of this Cloudformation Template and involves:
 
 1. *_Cloud_* - Provisioning additional IPs on the desired Network Interfaces.
 - https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/MultipleIP.html#ManageMultipleIP[Assigning a Private IP]
 - https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html#using-instance-addressing-eips-allocating[Allocating a Public IP]
-- https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html#using-instance-addressing-eips-associating[Associating a Public IP] 
+- https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html#using-instance-addressing-eips-associating[Associating a Public IP]
 2. *_BIG-IP_* - Creating Virtual Services that match those
-additional Secondary IPs. 
+additional Secondary IPs.
 - Updating the https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/userguide/composing-a-declaration.html[AS3] declaration with additional Virtual Services.
 
 
@@ -241,9 +240,9 @@ etc._
 
 == Deleting the Deployment
 
-As Cloudformation does not delete S3 buckets that contain data, in order to delete this deployment, you will first need to manually empty and/or delete the S3 bucket created for the Cloud Failover Extension (provided via *cfeS3Bucket* parameter). Go to *AWS Management Console -> S3* and search for *cfeS3Bucket* bucket name, click the radio button associated with it and then click the "Empty" button. 
+As Cloudformation does not delete S3 buckets that contain data, in order to delete this deployment, you will first need to manually empty and/or delete the S3 bucket created for the Cloud Failover Extension (provided via *cfeS3Bucket* parameter). Go to *AWS Management Console -> S3* and search for *cfeS3Bucket* bucket name, click the radio button associated with it and then click the "Empty" button.
 
-You can now delete the deployment. Go to *AWS Management Console -> Cloudformation -> Stacks* and select the radio button associated with the Parent Stack and then click the "Empty" button. 
+You can now delete the deployment. Go to *AWS Management Console -> Cloudformation -> Stacks* and select the radio button associated with the Parent Stack and then click the "Empty" button.
 
 For more information, see https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/troubleshooting.html[Troubleshooting AWS CloudFormation^].
 
@@ -337,9 +336,9 @@ repository].
 
 This template can send non-identifiable statistical information to F5 Networks to help us improve our templates. You can disable this functionality by setting the **autoPhonehome** system class property value to false in the F5 Declarative Onboarding declaration. See Customizing the BIG-IP Configuration section for additional information.
 
-List of endpoints BIG-IP may contact during onboarding: 
+List of endpoints BIG-IP may contact during onboarding:
 
-* BIG-IP image default: 
+* BIG-IP image default:
 ** vector2.brightcloud.com (by BIG-IP image for
 https://support.f5.com/csp/article/K03011490[IPI subscription
 validation] )
@@ -378,3 +377,5 @@ Reference Links:
 *  https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/[F5 Application Services 3 (AS3)] -> declarative virtual service definitions
 *  https://clouddocs.f5.com/products/extensions/f5-telemetry-streaming/latest/[F5 Telemetry Streaming (TS)] -> for logging and reporting (not deployed by default in this solution )
 * https://github.com/f5devcentral/f5-demo-httpd[Example Application (nginx)]
+- https://www.f5.com/services/certification[F5 Certification]
+

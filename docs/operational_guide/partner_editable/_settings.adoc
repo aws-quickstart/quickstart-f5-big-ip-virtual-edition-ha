@@ -1,0 +1,12 @@
+:quickstart-project-name: quickstart-f5-big-ip-virtual-edition-ha
+:quickstart-github-org: aws-quickstart
+:partner-product-name: F5 BIG-IP Virtual Edition
+:partner-product-short-name: BIG-IP VE
+:partner-company-name: F5
+:doc-month: May
+:doc-year: 2022
+//:partner-contributors: John Smith, {partner-company-name}
+//:other-contributors: Akua Mansa, Trek10
+//:aws-contributors: Janine Singh, AWS IoT Partner team
+//:aws-ia-contributors: Toni Jones, AWS Integration & Automation team
+// :private_repo:

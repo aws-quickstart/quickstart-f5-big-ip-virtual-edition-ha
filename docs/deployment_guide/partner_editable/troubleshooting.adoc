@@ -1,41 +1,17 @@
-// Add any tips or answers to anticipated questions. This could include the following troubleshooting information. If you don’t have any other Q&A to add, change “FAQ” to “Troubleshooting.”
-
-
-== FAQ
-
-*Q.* I encountered a *CREATE_FAILED* error when I launched the Quick Start.
-
-*A.* If AWS CloudFormation fails to create the stack, we recommend that you relaunch the template with *Rollback on failure* set to *No*. (This setting is under *Advanced* in the AWS CloudFormation console, *Options* page.) With this setting, the stack’s state is retained and the instance is left running, so you can troubleshoot the issue. (For Windows, look at the log files in %ProgramFiles%\Amazon\EC2ConfigService and C:\cfn\log.)
-// If you’re deploying on Linux instances, provide the location for log files on Linux, or omit this sentence.
-
-*Important:* When you set *Rollback on failure* to *No*, you continue to incur AWS charges for this stack. Please make sure to delete the stack when you finish troubleshooting.
-
-For additional information, see https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/troubleshooting.html[Troubleshooting AWS CloudFormation] on the AWS website.
-
-*Q.* I encountered a size limitation error when I deployed the AWS CloudFormation templates.
-
-*A.* We recommend that you launch the Quick Start templates from the links in this guide or from another S3 bucket. If you deploy the templates from a local copy on your computer or from a location other than an S3 bucket, you might encounter template size limitations. For more information about AWS CloudFormation quotas, see the http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html[AWS documentation].
-
-
-*Q.* Is this solution IPv6 compatiable?
-
-*A.* This specific solution does not support IPv6 deployments. Please see the link:#_support[Support Section]
-for assistance with customization or more information.
-
-
-*Q.* Is this solution https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html[IMDSv2] compatiable?
-
-*A.* This specific solution is not fully https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html[IMDSv2] compatible (F5 ID 1061797) at this time. Please see the link:#_support[Support Section] for assistance with customization or more information.
-
+// Add any unique troubleshooting steps here.
 
 == Troubleshooting
 
+For troubleshooting common Quick Start issues, refer to the https://fwd.aws/rA69w?[AWS Quick Start General Information Guide^] and https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/troubleshooting.html[Troubleshooting CloudFormation^].
+
+// == Resources
+// Uncomment section and add links to any external resources that are specified by the partner
 There are generally two classes of issues:
 
 . Stack creation itself failed
 . Resource(s) within the stack failed to deploy
 
-In the event that a template in the stack failed, click on the name of a failed stack and then click `Events`. Check the `Status Reason` column for the failed event for details about the cause. 
+In the event that a template in the stack failed, click on the name of a failed stack and then click `Events`. Check the `Status Reason` column for the failed event for details about the cause.
 
 **When creating a GitHub issue for a template, please include as much information as possible from the failed CloudFormation stack events.**
 

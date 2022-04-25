@@ -1,3 +1,5 @@
+:xrefstyle: short
+
 Deploying this Quick Start for a new virtual private cloud (VPC) with
 *default parameters* builds the following _{partner-product-name}_ environment in the
 AWS Cloud.
@@ -19,13 +21,13 @@ In the public subnets:
 internet access for resources in the private subnets.*
 * A Linux bastion host in an Auto Scaling group to allow inbound Secure
 Shell (SSH) access to EC2 instances in public and private subnets.*
-* The public facing NICs of a clustered pair of BIG-IP instances 
+* The public facing NICs of a clustered pair of BIG-IP instances
 
 In the private subnets:
 // Add bullet points for any additional components that are included in the deployment. Make sure that the additional components are also represented in the architecture diagram.
 
 * The management NICs of a clustered pair of BIG-IP instances (an out-of-band management network)
-* An example application 
+* An example application
 
 Additional Cloud Resources:
 
