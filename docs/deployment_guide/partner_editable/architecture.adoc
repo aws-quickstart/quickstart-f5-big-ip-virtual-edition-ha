@@ -5,7 +5,7 @@ Deploying this Quick Start for a new virtual private cloud (VPC) with
 AWS Cloud.
 
 // Replace this example diagram with your own. Send us your source PowerPoint file. Be sure to follow our guidelines here : http://(we should include these points on our contributors giude)
-image::architecture_diagram.gif[image,width=648,height=439]
+image::../images/architecture_diagram.png[image,width=648,height=439]
 
 Figure 1: Quick Start architecture for _{partner-product-name}_ on AWS
 
