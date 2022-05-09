@@ -226,12 +226,12 @@ Parameters:
     Description: 'Supply a URL to the bigip-runtime-init configuration file in YAML
       or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.'
     Type: String
-    Default: 'https://aws-quickstart.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance01.yaml'
+    Default: 'https://aws-quickstart.s3.amazonaws.com/quickstart-f5-big-ip-virtual-edition-ha/declarations/runtime-init-conf-2nic-payg-instance01.yaml'
   bigIpRuntimeInitConfig02:
     Description: 'Supply a URL to the bigip-runtime-init configuration file in YAML
      or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.'
     Type: String
-    Default: 'https://aws-quickstart.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance02.yaml'
+    Default: 'https://aws-quickstart.s3.amazonaws.com/quickstart-f5-big-ip-virtual-edition-ha/declarations/runtime-init-conf-2nic-payg-instance02.yaml'
   bigIpRuntimeInitPackageUrl:
     Description: 'Supply a URL for the F5 BIG-IP Runtime Init Package install script.'
     Type: String
