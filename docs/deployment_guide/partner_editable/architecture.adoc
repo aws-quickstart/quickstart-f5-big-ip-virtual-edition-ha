@@ -27,7 +27,7 @@ Shell (SSH) access to EC2 instances in public and private subnets.*
 // Add bullet points for any additional components that are included in the deployment. Make sure that the additional components are also represented in the architecture diagram.
 
 ** The management NICs of a clustered pair of {partner-product-short-name} instances (an out-of-band management network).
-** An example application.
+** An example application to help demonstrate {partner-product-short-name} functionality.
 
 * An AWS Identity and Access Management (IAM) role and instance profile.
 * An Amazon S3 bucket used to provide failover state.
