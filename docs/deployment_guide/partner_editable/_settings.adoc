@@ -8,7 +8,7 @@
 :partner-contributors: Alex Applebaum, Greg Crosby, Andrey Kashcheev, Nitin Khanna, Yossi Rosenboim, Michael Shimkus, {partner-company-name}
 // :other-contributors: Akua Mansa, Trek10
 //:aws-contributors: Janine Singh, AWS IoT Partner team
-:aws-ia-contributors: Andrew Glenn, Troy Ameigh AWS Integration & Automation team
+:aws-ia-contributors: Andrew Glenn and Troy Ameigh, AWS Integration and Automation team
 :deployment_time: 30 minutes
 :default_deployment_region: us-east-1
 // :private_repo:
