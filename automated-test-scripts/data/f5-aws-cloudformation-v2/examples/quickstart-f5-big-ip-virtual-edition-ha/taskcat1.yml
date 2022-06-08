@@ -16,7 +16,7 @@ tests:
       bigIpInstanceType: m5.xlarge
       bigIpRuntimeInitConfig01: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance01.yaml
       bigIpRuntimeInitConfig02: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance02.yaml
-      bigIpRuntimeInitPackageUrl: https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.4.2/dist/f5-bigip-runtime-init-1.4.2-1.gz.run
+      bigIpRuntimeInitPackageUrl: https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.5.0/dist/f5-bigip-runtime-init-1.5.0-1.gz.run
       cfeTag: aws_quickstart_$[taskcat_random-string]
       cfeS3Bucket: tcat-quickstart-cfe-$[taskcat_random-string]
       keyPairName: dewpt
