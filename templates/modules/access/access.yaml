@@ -49,9 +49,9 @@ Outputs:
     Value: !Ref "AWS::StackName"
   bigIpInstanceProfile:
     Description: BIG-IP instance profile with applied IAM policy.
-    Value: !If 
+    Value: !If
       - failover
-      - !Ref BigIpHighAvailabilityInstanceProfile 
+      - !Ref BigIpHighAvailabilityInstanceProfile
       - !Ref AWS::NoValue
 Parameters:
   application:
@@ -117,6 +117,8 @@ Resources:
               Service:
                 - ec2.amazonaws.com
         Version: 2012-10-17
+      ManagedPolicyArns:
+        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/AmazonSSMManagedInstanceCore'
       Path: /
       Policies:
         - PolicyDocument:
@@ -209,7 +211,7 @@ Resources:
               - Action:
                   - 'cloudwatch:PutMetricData'
                 Effect: Allow
-                Resource: 
+                Resource:
                   - '*'
                 Condition:
                   StringEquals:
