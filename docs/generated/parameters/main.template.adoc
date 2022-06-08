@@ -42,7 +42,7 @@
 (`bigIpThroughput`)|`1000Mbps`|Maximum amount of throughput for BIG-IP VE|BIG-IP Runtime Init config for first BIG-IP instance
 (`bigIpRuntimeInitConfig01`)|`https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance01.yaml`|Supply a URL to the bigip-runtime-init configuration file in YAML or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.|BIG-IP Runtime Init config for second BIG-IP instance
 (`bigIpRuntimeInitConfig02`)|`https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg_instance02.yaml`|Supply a URL to the bigip-runtime-init configuration file in YAML or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.|BIG-IP Runtime Init Package URL to install a specific version.
-(`bigIpRuntimeInitPackageUrl`)|`https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.4.2/dist/f5-bigip-runtime-init-1.4.2-1.gz.run`|Supply a URL for the F5 BIG-IP Runtime Init Package install script.|S3 bucket used as BIG-IP storage for failover solution
+(`bigIpRuntimeInitPackageUrl`)|`https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.5.0/dist/f5-bigip-runtime-init-1.5.0-1.gz.run`|Supply a URL for the F5 BIG-IP Runtime Init Package install script.|S3 bucket used as BIG-IP storage for failover solution
 (`cfeS3Bucket`)|`aws-quickstart-cfe`|S3 bucket used as BIG-IP storage for Failover solution.|Deployment tag value used for cloud failover
 (`cfeTag`)|`aws_quickstart`|Cloud Failover deployment tag value.|VIP tag value used for cloud failover
 (`cfeVipTag`)|`10.0.20.101,10.0.10.101`|Cloud Failover VIP tag value; provides private ip addresses to be assigned to VIP public ip.|ARN of Secrets Manager secret
