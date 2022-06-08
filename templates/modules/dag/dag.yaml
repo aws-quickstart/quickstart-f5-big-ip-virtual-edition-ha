@@ -752,14 +752,6 @@ Resources:
           FromPort: 22
           IpProtocol: tcp
           ToPort: 22
-        - CidrIp: !Ref restrictedSrcAddressMgmt
-          FromPort: 22
-          IpProtocol: tcp
-          ToPort: 22
-        - CidrIp: !Ref restrictedSrcAddressMgmt
-          FromPort: !Ref restrictedSrcPort
-          IpProtocol: tcp
-          ToPort: !Ref restrictedSrcPort
         - CidrIp: !Ref restrictedSrcAddressApp
           FromPort: 80
           IpProtocol: tcp
