@@ -16,18 +16,18 @@ tests:
     parameters:
       availabilityZones: $[taskcat_genaz_2]
       bigIpInstanceType: m5.xlarge
-      bigIpRuntimeInitConfig01: override
-      bigIpRuntimeInitConfig02: override
+      bigIpRuntimeInitConfig01: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance01.yaml
+      bigIpRuntimeInitConfig02: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance02.yaml
       bigIpRuntimeInitPackageUrl: https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.5.0/dist/f5-bigip-runtime-init-1.5.0-1.gz.run
       cfeTag: aws_quickstart_$[taskcat_random-string]
       cfeS3Bucket: tcat-quickstart-cfe-$[taskcat_random-string]
-      keyPairName: override
+      keyPairName: dewpt
       qss3BucketName: $[taskcat_autobucket]
       qss3BucketRegion: $[taskcat_current_region]
-      remoteAccessCIDR: override
-      restrictedSrcAddressApp: override
-      restrictedSrcAddressMgmt: override
-      secretArn: override
+      remoteAccessCIDR: 0.0.0.0/0
+      restrictedSrcAddressApp: 0.0.0.0/0
+      restrictedSrcAddressMgmt: 0.0.0.0/0
+      secretArn: arn:aws:secretsmanager:$[taskcat_current_region]:089591600128:secret:b596d098-secret-kXyT2d
       uniqueString: $[taskcat_genpass_8]
     regions:
       - us-east-1
