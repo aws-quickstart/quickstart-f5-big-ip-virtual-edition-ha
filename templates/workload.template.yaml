@@ -930,7 +930,6 @@ Resources:
             - "https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${s3KeyPrefix}declarations/runtime-init-conf-2nic-payg-instance01.yaml"
             - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref s3BucketRegion]
               S3Bucket: !If [useDefaultBucket, !Sub '${s3BucketName}-${AWS::Region}', !Ref s3BucketName]
-
         bigIpRuntimeInitPackageUrl: !Ref bigIpRuntimeInitPackageUrl
         cfeS3Bucket: !Ref cfeS3Bucket
         cfeTag: !Ref cfeTag
@@ -951,8 +950,6 @@ Resources:
         peerConfigSyncAddr: ''
         sshKey: !Ref sshKey
         uniqueString: !Ref uniqueString
-        QSS3BucketName: !Ref s3BucketName
-        QSS3KeyPrefix: !Ref s3KeyPrefix
   BigipInstance02:
     DependsOn: Access
     Type: 'AWS::CloudFormation::Stack'
@@ -990,8 +987,6 @@ Resources:
         peerConfigSyncAddr: !Ref peerConfigSyncAddr
         sshKey: !Ref sshKey
         uniqueString: !Ref uniqueString
-        QSS3BucketName: !Ref s3BucketName
-        QSS3KeyPrefix: !Ref s3KeyPrefix
   Application01:
     Type: 'AWS::CloudFormation::Stack'
     Condition: provisionExampleApp
