@@ -2,41 +2,39 @@
 
 == Postdeployment steps
 
-=== Customizing the BIG-IP configuration
+=== Customize the {partner-product-short-name} configuration
 
-Before deploying, you first need to confirm or customize the desired BIG-IP Configuration. The initial BIG-IP configurations are passed through the https://github.com/f5networks/f5-bigip-runtime-init[F5 BIG-IP Runtime Init] config files. As the potential amount of customization for the BIG-IP configuration is so large, these are the primary mechanisms to customize the initial BIG-IP configurations for your deployment. Customizing the BIG-IP configurations generally involves updating AND rehosting these files and passing their location through the *bigIpRuntimeInitConfig* template parameters.
+If needed, customize the {partner-product-short-name} configuration. The initial {partner-product-short-name} configurations are passed through the https://github.com/f5networks/f5-bigip-runtime-init[F5 BIG-IP Runtime Init^] configuration files. As the potential amount of customization for the {partner-product-short-name} configuration is so large, these files are the primary mechanisms to customize the initial {partner-product-short-name} configurations for your deployment. Customizing the {partner-product-short-name} configurations generally involves updating and rehosting these files and passing their location through the *bigIpRuntimeInitConfig* template parameters.
 
-By default, per the diagram above, this solution deploys a minimal 2NIC PAYG configuration into the default Quickstart network topology using the following configuration files in the
-`/declarations` folder in this repository:
+By default, the Quick Start deploys a minimal 2NIC PAYG configuration into the default Quick Start network topology using the following configuration files in the
+`/declarations` folder:
 
 ** `runtime-init-conf-2nic-payg-instance01.yaml`
 ** `runtime-init-conf-2nic-payg-instance02.yaml`
 
-This deploys a minimal baseline HA failover cluster *without* any virtual services provisioned.
+A minimal baseline high availability (HA) failover cluster *without* any virtual services provisioned is deployed.
 
-Optionally, to illustrate how services work, you can deploy an _example_ waf protected web service ( which will deploy web application instances and a waf protected virtual service on the BIG-IPs). To do this, set *provisionExampleApp* parameter to *true* and reference the following configuration files via *bigIpRuntimeInitConfig* parameters instead.
+Optionally, to illustrate how services work, you can deploy an example web application firewall (WAF)-protected web service (which deploys web application instances and a WAF-protected virtual service on the {partner-product-short-name} instances. To do this, set the *provisionExampleApp* parameter to *true* and reference the following configuration files via *bigIpRuntimeInitConfig* parameters instead.
 
 ** `runtime-init-conf-2nic-payg-instance01-with-app.yaml`
 ** `runtime-init-conf-2nic-payg-instance02-with-app.yaml`
 
+If your deployment requires additional customizations, update and rehost your configuration files at a custom URL.
 
-Any further customizations require *updating* AND *rehosting* your configuration files at a *custom* URL.
-
-NOTE: *IMPORTANT* If hosting on git, any URLs pointing to git *must* use the raw file format
+NOTE: *IMPORTANT* If hosting on GitHub, URLs that point to GitHub must use the raw file format
 (for example, `raw.githubusercontent.com`).
 
 
-The BIG-IP configurations must match the external environment in which they are deployed. Although the provided Runtime-Init config examples extract and templatize many common values, some values are still harcoded and need to be updated to match your specific environment or deployment first.
+The {partner-product-short-name} configurations must match the external environment in which they are deployed. Although the provided Runtime-Init configuration examples extract and templatize many common values, some values are still hardcoded and must be updated to match your specific environment or deployment first.
 
 
-==== Common Example Customization 1
+==== Common customization example 1
 
-
-For example, to deploy a *Bring Your Own License (BYOL)* instance:
+To deploy a Bring Your Own License (BYOL) instance, perform these steps:
 
 [arabic]
 . Edit/modify the Declarative Onboarding (DO) declaration in a
-corresponding example `byol` runtime-init config file with the new `regKey`
+corresponding example `byol` runtime-init configuration file with the new `regKey`
 value.
 
 Example snippet:
@@ -64,21 +62,21 @@ To:
 ----
 
 [arabic, start=2]
-. Publish/host the customized runtime-init config file at a location
-reachable by the BIG-IP at deploy time (for example: git, S3, etc.).
+. Publish or host the customized `runtime-init` configuration file at a location
+that can be accessed by {partner-product-short-name} at deployment time (for example, git, S3, etc.).
 . Update the *bigIpRuntimeInitConfig* input parameters to reference the
 new URLs of the updated configurations.
-. Update the *bigIpImageId* input parameter to a valid byol image ID.
+. Update the *bigIpImageId* input parameter to a valid BYOL image ID.
 
 {empty} +
 
-==== Common Example Customization 2
+==== Common customization example 2
 
-For example, if you would like to change hostnames, disable usage reporting to F5, ntp / dns servers, etc. :
+If you want to change host names, perform these steps to disable usage reporting to the {partner-product-short-name} NTP and DNS servers, etc.:
 
 [arabic]
-. Edit/modify the Declarative Onboarding (DO) declaration in a
-corresponding example runtime-init configs file with your new
+. Edit or modify the DO declaration in a
+corresponding example `runtime-init` configuration file with the new
 values.
 
 Example snippet:
@@ -121,8 +119,8 @@ To:
 
 
 [arabic, start=2]
-. Publish/host the customized runtime-init config files at a location
-reachable by the BIG-IP at deploy time (for example: git, S3, etc.).
+. Publish or host the customized `runtime-init` configuration files at a location
+that can be accessed by {partner-product-short-name} at deployment time (for example, git, S3, etc.)
 . Update the *bigIpRuntimeInitConfig* input parameters to reference the
 new URLs of the updated configurations.
 
@@ -130,8 +128,7 @@ new URLs of the updated configurations.
 {empty} +
 
 
-TIP: For additional information and examples, see https://github.com/f5networks/f5-bigip-runtime-init[F5 BIG-IP
-Runtime Init].
+TIP: For additional information and examples, refer to the https://github.com/f5networks/f5-bigip-runtime-init[F5 BIG-IP Runtime Init^] GitHub repository.
 
 {empty} +
 {empty} +
