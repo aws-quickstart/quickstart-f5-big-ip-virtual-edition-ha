@@ -3,7 +3,7 @@
 :partner-product-name: F5 BIG-IP Virtual Edition
 :partner-product-short-name: BIG-IP VE
 :partner-company-name: F5
-:doc-month: May
+:doc-month: June
 :doc-year: 2022
 :partner-contributors: Alex Applebaum, Greg Crosby, Andrey Kashcheev, Nitin Khanna, Yossi Rosenboim, Michael Shimkus, {partner-company-name}
 // :other-contributors: Akua Mansa, Trek10
