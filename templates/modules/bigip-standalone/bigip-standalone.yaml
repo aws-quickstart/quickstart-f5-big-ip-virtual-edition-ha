@@ -517,105 +517,145 @@ Resources:
   DeleteBucketContents:
     Type: Custom::DeleteBucketContents
     Condition: createS3Bucket
-    DependsOn: DeleteBucketContentsRolePolicy
+    DependsOn: 
+      - DeleteBucketContentsRole
     Properties:
       ServiceToken: !GetAtt DeleteBucketContentsLambda.Arn
-      Bucket: !Ref S3Bucket
+      bucketName: !Ref S3Bucket
+      region: !Ref AWS::Region
   DeleteBucketContentsLambda:
     Type: AWS::Lambda::Function
+    Condition: createS3Bucket
     Properties:
-      Handler: index.lambda_handler
-      MemorySize: 128
-      Role: !GetAtt DeleteBucketContentsRole.Arn
-      Runtime: python3.7
-      Timeout: 900
       Code:
         ZipFile: !Sub |
+          #!/usr/bin/python
+
+          import sys
+          import botocore
           import boto3
+          import cfnresponse
+          import json
           import logging
-          from crhelper import CfnResource
 
-          logger = logging.getLogger(__name__)
-          helper = CfnResource(json_logging=True, log_level='DEBUG')
+          logger = logging.getLogger()
+          logger.setLevel(logging.INFO)
 
-          @helper.delete
-          def delete_objects(event, _c):
-              bucket_name = event["ResourceProperties"]["Bucket"]
-              s3 = boto3.client('s3')
+          def handler(event, context):
+            logger.info('Received event: %s' % json.dumps(event,indent=2))
+            try:
+              bucket_name = event["ResourceProperties"]["bucketName"]
+              region = event["ResourceProperties"]["region"]
 
-              logger.info('Getting objects...')
-              objects = []
-              kwargs = {"Bucket": bucket_name}
-              while True:
+              if event['RequestType'] == 'Create' or event['RequestType'] == 'Update':
+                cfnresponse.send(event, context, cfnresponse.SUCCESS, {}, None )
+              elif event['RequestType'] == 'Delete':             
+                try:
+                  s3 = boto3.client('s3', region_name=region )
+                except botocore.exceptions.ClientError as e:
+                  logger.error('Received client error: %s' % str(e))
+                  sys.exit("Exiting...")
+
+                logger.info('Getting objects...')
+                objects = []
+                kwargs = {"Bucket": bucket_name}
+                while True:
                   versions = s3.list_object_versions(**kwargs)
                   if 'Versions' in versions.keys():
-                      for v in versions['Versions']:
-                          objects.append({'Key': v['Key'], 'VersionId': v['VersionId']})
+                    for v in versions['Versions']:
+                      objects.append({'Key': v['Key'], 'VersionId': v['VersionId']})
                   if 'DeleteMarkers' in versions.keys():
-                      for v in versions['DeleteMarkers']:
-                          objects.append({'Key': v['Key'], 'VersionId': v['VersionId']})
+                    for v in versions['DeleteMarkers']:
+                      objects.append({'Key': v['Key'], 'VersionId': v['VersionId']})
                   if versions['IsTruncated']:
-                      if versions.get('NextKeyMarker', 'null') != 'null':
-                          kwargs["KeyMarker"] = versions['NextKeyMarker']
-                      else:
-                          if kwargs.get("KeyMarker"):
-                              del kwargs["KeyMarker"]
-                      if versions.get('NextVersionIdMarker', 'null') != 'null':
-                          kwargs["VersionIdMarker"] = versions['NextVersionIdMarker']
-                      else:
-                          if kwargs.get("VersionIdMarker"):
-                              del kwargs["VersionIdMarker"]
+                    if versions.get('NextKeyMarker', 'null') != 'null':
+                      kwargs["KeyMarker"] = versions['NextKeyMarker']
+                    else:
+                      if kwargs.get("KeyMarker"):
+                        del kwargs["KeyMarker"]
+                    if versions.get('NextVersionIdMarker', 'null') != 'null':
+                      kwargs["VersionIdMarker"] = versions['NextVersionIdMarker']
+                    else:
+                      if kwargs.get("VersionIdMarker"):
+                        del kwargs["VersionIdMarker"]
                   else:
-                      break
-              if objects:
-                  # delete objects in batches of 1000
+                    break
+                if objects:
                   for i in range(0, len(objects), 1000):
-                      s3.delete_objects(
-                          Bucket=bucket_name,
-                          Delete={'Objects': objects[i:i + 1000]}
-                      )
-
-          def lambda_handler(event, context):
-              helper(event, context)
+                    s3.delete_objects(
+                      Bucket=bucket_name,
+                      Delete={'Objects': objects[i:i + 1000]}
+                    )
+                  logger.info('SUCCESS: Deleting Bucket Contents: %s' % bucket_name)
+                  cfnresponse.send(event, context, cfnresponse.SUCCESS, {}, None)
+                else:
+                  logger.info('SUCCESS: No objects to delete in Bucket: %s' % bucket_name)
+                  cfnresponse.send(event, context, cfnresponse.SUCCESS, {}, None)
+              else:
+                logger.error('FAILED: Unknown request type: %s' % event['RequestType'])
+                cfnresponse.send(event, context, cfnresponse.FAILED, {}, None)
+            except Exception as e:
+              logger.error('Exception in handling the request, %s' % str(e))
+              cfnresponse.send(event, context, cfnresponse.FAILED, {}, None)
+      Environment:
+        Variables:
+          bucketName: !Ref S3Bucket
+          region: !Ref AWS::Region
+      Handler: index.handler
+      MemorySize: 1536
+      Role: !GetAtt DeleteBucketContentsRole.Arn
+      Runtime: python3.7
+      Timeout: 300
   DeleteBucketContentsRole:
     Type: AWS::IAM::Role
+    Condition: createS3Bucket
     Properties:
-      ManagedPolicyArns:
-        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
       AssumeRolePolicyDocument:
-        Version: 2012-10-17
         Statement:
         - Effect: Allow
           Principal:
             Service: lambda.amazonaws.com
           Action: sts:AssumeRole
-  DeleteBucketContentsRolePolicy:
-    Condition: createS3Bucket
-    Type: AWS::IAM::Policy
-    Properties:
-      Roles:
-        - !Ref DeleteBucketContentsRole
-      PolicyName: DeleteBucketContentsPolicy
-      PolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-        - Effect: Allow
-          Action: [
-            "s3:GetObjectAcl",
-            "s3:GetObject",
-            "s3:DeleteObjectVersion",
-            "s3:ListBucketVersions",
-            "s3:GetObjectVersionAcl",
-            "s3:ListBucket",
-            "s3:GetBucketVersioning",
-            "s3:DeleteObject",
-            "s3:GetBucketAcl",
-            "s3:GetBucketLocation",
-            "s3:GetObjectVersion"
-          ]
-          Resource:
-          - !Sub 'arn:${AWS::Partition}:s3:::${cfeS3Bucket}/*'
-          - !Sub 'arn:${AWS::Partition}:s3:::${cfeS3Bucket}'
+        Version: 2012-10-17
+      ManagedPolicyArns:
+        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+      Path: /
+      Policies:
+        - PolicyDocument:
+            Statement:
+              - Action:
+                  - s3:GetObjectAcl
+                  - s3:GetObject
+                  - s3:DeleteObjectVersion
+                  - s3:ListBucketVersions
+                  - s3:GetObjectVersionAcl
+                  - s3:ListBucket
+                  - s3:GetBucketVersioning
+                  - s3:DeleteObject
+                  - s3:GetBucketAcl
+                  - s3:GetBucketLocation
+                  - s3:GetObjectVersion
+                Effect: Allow
+                Resource:
+                  - !Sub 
+                    - 'arn:${AWS::Partition}:s3:::${bucket}'
+                    - bucket: !Ref S3Bucket
+                  - !Sub 
+                    - 'arn:${AWS::Partition}:s3:::${bucket}/*'
+                    - bucket: !Ref S3Bucket
+            Version: 2012-10-17
+          PolicyName: DeleteBucketContentsPolicy
+      Tags:
+        - Key: application
+          Value: !Ref 'application'
+        - Key: costcenter
+          Value: !Ref 'cost'
+        - Key: environment
+          Value: !Ref 'environment'
+        - Key: group
+          Value: !Ref 'group'
+        - Key: owner
+          Value: !Ref 'owner'
   S3Bucket:
     Condition: createS3Bucket
     Type: 'AWS::S3::Bucket'
@@ -912,10 +952,6 @@ Resources:
         - !Ref 'BigipStaticManagementInterface'
     Type: 'AWS::EC2::EIPAssociation'
   Bigip3NicInstance:
-    # CreationPolicy:
-    #   ResourceSignal:
-    #     Count: 1
-    #     Timeout: PT30M
     Condition: is3Nic
     Properties:
       BlockDeviceMappings:
@@ -1089,10 +1125,6 @@ Resources:
             - ''
     Type: 'AWS::EC2::Instance'
   Bigip2NicInstance:
-    # CreationPolicy:
-    #   ResourceSignal:
-    #     Count: 1
-    #     Timeout: PT30M
     Condition: is2Nic
     Properties:
       BlockDeviceMappings:
@@ -1260,10 +1292,6 @@ Resources:
             - ''
     Type: 'AWS::EC2::Instance'
   Bigip1NicInstance:
-    # CreationPolicy:
-    #   ResourceSignal:
-    #     Count: 1
-    #     Timeout: PT30M
     Condition: is1Nic
     Properties:
       BlockDeviceMappings:
