@@ -933,6 +933,7 @@ Resources:
         bigIpRuntimeInitPackageUrl: !Ref bigIpRuntimeInitPackageUrl
         cfeS3Bucket: !Ref cfeS3Bucket
         cfeTag: !Ref cfeTag
+        deleteBucketContentsRole: !GetAtt [Access, Outputs.deleteBucketContentsRole]
         imageId: !If [noCustomImageId, !FindInMap [!FindInMap [VERSION, !Ref bigIpVersion, REGIONMAP], !Ref 'AWS::Region', !FindInMap [AWSBigipThroughput, !Ref bigIpThroughput, !Ref bigIpImageName]], !Ref bigIpImageId]
         externalPrimaryPublicId: !GetAtt [Dag, Outputs.bigIpExternalEipAllocationId01]
         externalPublicIpIds: !If [usePublicIpVip, !GetAtt [Dag, Outputs.bigIpExternalEipAllocationId03], '']
@@ -971,6 +972,7 @@ Resources:
         bigIpRuntimeInitPackageUrl: !Ref bigIpRuntimeInitPackageUrl
         imageId: !If [noCustomImageId, !FindInMap [!FindInMap [VERSION, !Ref bigIpVersion, REGIONMAP], !Ref 'AWS::Region', !FindInMap [AWSBigipThroughput, !Ref bigIpThroughput, !Ref bigIpImageName]], !Ref bigIpImageId]
         cfeTag: !Ref cfeTag
+        deleteBucketContentsRole: ''
         externalPrimaryPublicId: !GetAtt [Dag, Outputs.bigIpExternalEipAllocationId02]
         externalPublicIpIds: ''
         externalSecurityGroupId: !GetAtt [Dag, Outputs.bigIpExternalSecurityGroup]

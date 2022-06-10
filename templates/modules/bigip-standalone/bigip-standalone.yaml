@@ -216,6 +216,7 @@ Metadata:
           - numSecondaryPrivateIpAddress
           - sshKey
           - bigIpInstanceProfile
+          - deleteBucketContentsRole
       - Label:
           default: Networking
         Parameters:
@@ -255,6 +256,8 @@ Metadata:
         default: Runtime Init Package
       cost:
         default: Cost Center
+      deleteBucketContentsRole:
+        default: IAM role
       imageId:
         default: Image Id
       environment:
@@ -384,6 +387,10 @@ Parameters:
   cost:
     Default: f5cost
     Description: Cost Center Tag.
+    Type: String
+  deleteBucketContentsRole:
+    Default: ''
+    Description: Lambda function role with applied IAM policy.
     Type: String
   environment:
     Default: f5env
@@ -517,8 +524,6 @@ Resources:
   DeleteBucketContents:
     Type: Custom::DeleteBucketContents
     Condition: createS3Bucket
-    DependsOn: 
-      - DeleteBucketContentsRole
     Properties:
       ServiceToken: !GetAtt DeleteBucketContentsLambda.Arn
       bucketName: !Ref S3Bucket
@@ -599,59 +604,9 @@ Resources:
               cfnresponse.send(event, context, cfnresponse.FAILED, {}, None)
       Handler: index.handler
       MemorySize: 128
-      Role: !GetAtt DeleteBucketContentsRole.Arn
+      Role: !Ref deleteBucketContentsRole
       Runtime: python3.7
       Timeout: 300
-  DeleteBucketContentsRole:
-    Type: AWS::IAM::Role
-    Condition: createS3Bucket
-    Properties:
-      AssumeRolePolicyDocument:
-        Statement:
-        - Effect: Allow
-          Principal:
-            Service: lambda.amazonaws.com
-          Action: sts:AssumeRole
-        Version: 2012-10-17
-      ManagedPolicyArns:
-        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
-      Path: /
-      Policies:
-        - PolicyDocument:
-            Statement:
-              - Action:
-                  - s3:GetObjectAcl
-                  - s3:GetObject
-                  - s3:DeleteObjectVersion
-                  - s3:ListBucketVersions
-                  - s3:GetObjectVersionAcl
-                  - s3:ListBucket
-                  - s3:GetBucketVersioning
-                  - s3:DeleteObject
-                  - s3:GetBucketAcl
-                  - s3:GetBucketLocation
-                  - s3:GetObjectVersion
-                Effect: Allow
-                Resource:
-                  - !Sub 
-                    - 'arn:${AWS::Partition}:s3:::${bucket}'
-                    - bucket: !Ref S3Bucket
-                  - !Sub 
-                    - 'arn:${AWS::Partition}:s3:::${bucket}/*'
-                    - bucket: !Ref S3Bucket
-            Version: 2012-10-17
-          PolicyName: DeleteBucketContentsPolicy
-      Tags:
-        - Key: application
-          Value: !Ref 'application'
-        - Key: costcenter
-          Value: !Ref 'cost'
-        - Key: environment
-          Value: !Ref 'environment'
-        - Key: group
-          Value: !Ref 'group'
-        - Key: owner
-          Value: !Ref 'owner'
   S3Bucket:
     Condition: createS3Bucket
     Type: 'AWS::S3::Bucket'
