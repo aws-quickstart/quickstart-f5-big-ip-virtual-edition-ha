@@ -20,7 +20,7 @@ Common causes of deployment failure include:
 
 If all stacks were created successfully, but the {partner-product-short-name} or AWS service is unavailable, log in to the {partner-product-short-name} instance via SSH to confirm the {partner-product-short-name} deployment or configuration update was successful. For example, you can check that the startup scripts completed as expected on {partner-product-short-name}. To verify {partner-product-short-name} deployment, perform the following steps:
 
-. Obtain the IP address of the {partner-product-short-name} instance. 
+. Obtain the IP address of the {partner-product-short-name} instance. To learn more, refer to link:#_support[Access the {partner-product-short-name} IP address].
 . Check the startup script to make sure it was installed/interpolated correctly:
   * ```cat /opt/cloud/instance/user-data.txt```
 . Check the logs (in order of invocation):
@@ -43,14 +43,14 @@ If you can't log in to the {partner-product-short-name} instance, navigate to **
 aws ec2 get-console-output --region ${REGION}  --instance-id <ID>
 ----
 
-== Support
+=== Support
 
 Due to the heavy customization requirements of external cloud resources and {partner-product-short-name} configurations, F5 does not provide technical support for deploying, customizing, or troubleshooting CloudFormation templates. However, the various underlying products and components used in teh deployment Quick Start such as https://clouddocs.f5.com/cloud/public/v1/[BIG-IP Virtual Edition^], https://github.com/F5Networks/f5-bigip-runtime-init[F5 BIG-IP Runtime Init^], https://www.f5.com/pdf/products/automation-toolchain-overview.pdf[F5 Automation Toolchain^] extensions, and https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/[F5 Cloud Failover^] are supported by F5 and can be deployed with other orchestration tools. To learn more, refer to https://www.f5.com/company/policies/support-policies[Support Policies^]. For problems with the templates deployed as-is, report a GitHub issue.
 
 For help with authoring and support for custom templates, engage with https://www.f5.com/services/professional-services[F5 Professional Services^].
 
 
-== Useful links
+=== Resources
 //Provide any other information of interest to users, especially focusing on areas where AWS or cloud usage differs from on-premises usage.
 
 //_Add any other details that will help the customer use the software on AWS._
