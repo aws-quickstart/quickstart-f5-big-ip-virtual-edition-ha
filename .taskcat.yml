@@ -4,8 +4,6 @@ general:
 project:
   name: quickstart-f5-big-ip-virtual-edition-ha
   owner: a.kashcheev@f5.com
-  lambda_source_path: functions/source
-  lambda_zip_path: functions/packages
   regions:
     - ap-northeast-1
     - ap-northeast-2

@@ -13,8 +13,8 @@ git config user.name $GITLAB_USER_LOGIN
 git config user.email $GITLAB_USER_EMAIL
 ######################
 
-ALLOWED_DIRS=(ci declarations docs submodules templates)
-ALLOWED_FILES=(.cfnlintrc .gitignore .gitmodules LICENSE.txt README.md .taskcat.yml)
+ALLOWED_DIRS=(declarations submodules templates)
+ALLOWED_FILES=(.cfnlintrc .gitignore .gitmodules .metadata LICENSE.txt README.md .taskcat.yml CODEOWNERS)
 
 echo "*** Setting git origin"
 git fetch --unshallow origin
