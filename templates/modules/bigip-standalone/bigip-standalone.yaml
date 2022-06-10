@@ -597,12 +597,8 @@ Resources:
             except Exception as e:
               logger.error('Exception in handling the request, %s' % str(e))
               cfnresponse.send(event, context, cfnresponse.FAILED, {}, None)
-      Environment:
-        Variables:
-          bucketName: !Ref S3Bucket
-          region: !Ref AWS::Region
       Handler: index.handler
-      MemorySize: 1536
+      MemorySize: 128
       Role: !GetAtt DeleteBucketContentsRole.Arn
       Runtime: python3.7
       Timeout: 300
@@ -660,10 +656,21 @@ Resources:
     Condition: createS3Bucket
     Type: 'AWS::S3::Bucket'
     Properties:
+      BucketName: !Ref 'cfeS3Bucket'
       AccessControl: BucketOwnerFullControl
       Tags:
         - Key: f5_cloud_failover_label
           Value: !Ref cfeTag
+        - Key: application
+          Value: !Ref 'application'
+        - Key: costcenter
+          Value: !Ref 'cost'
+        - Key: environment
+          Value: !Ref 'environment'
+        - Key: group
+          Value: !Ref 'group'
+        - Key: owner
+          Value: !Ref 'owner'
   BigipInternalInterface:
     Condition: useDynamicInternalIpAddr
     Properties:
