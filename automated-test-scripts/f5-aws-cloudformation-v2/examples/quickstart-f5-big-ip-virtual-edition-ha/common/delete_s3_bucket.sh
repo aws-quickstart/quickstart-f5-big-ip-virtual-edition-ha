@@ -22,15 +22,15 @@ while read -a line; do
     fi
 done <  s3_buckets.temp
 
-echo "Delete CFE bucket created for deployment"
-stack_name=$(cat taskcat_outputs/tC* | grep  -m1 StackName: | cut -d":" -f2)
-cfe_bucket=$(aws cloudformation describe-stacks --stack-name $stack_name --region <REGION> | jq -r '.Stacks[].Outputs[] | select (.OutputKey=="cfeS3Bucket") | .OutputValue')
-echo "Deleting $cfe_bucket"
-region=$(aws s3api get-bucket-location --bucket $cfe_bucket  | jq -r .LocationConstraint)
-if [[ -z $region ]]; then
-    aws s3 rb s3://${cfe_bucket} --region $region --force
-else aws s3 rb s3://${cfe_bucket} --force
-fi
+# echo "Delete CFE bucket created for deployment"
+# stack_name=$(cat taskcat_outputs/tC* | grep  -m1 StackName: | cut -d":" -f2)
+# cfe_bucket=$(aws cloudformation describe-stacks --stack-name $stack_name --region <REGION> | jq -r '.Stacks[].Outputs[] | select (.OutputKey=="cfeS3Bucket") | .OutputValue')
+# echo "Deleting $cfe_bucket"
+# region=$(aws s3api get-bucket-location --bucket $cfe_bucket  | jq -r .LocationConstraint)
+# if [[ -z $region ]]; then
+#     aws s3 rb s3://${cfe_bucket} --region $region --force
+# else aws s3 rb s3://${cfe_bucket} --force
+# fi
 
 echo "Delete declarations bucket created for deployment"
 declaration_bucket_name=`echo dd-<DEWPOINT JOB ID>|cut -c -60|tr '[:upper:]' '[:lower:]'| sed 's:-*$::'`
