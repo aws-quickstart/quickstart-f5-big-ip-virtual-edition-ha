@@ -14,12 +14,12 @@ onStart:
   - ../quickstart-f5-big-ip-virtual-edition-ha/common/verify_failover.sh
   - ../quickstart-f5-big-ip-virtual-edition-ha/common/verify_active_standby.sh
   - ../quickstart-f5-big-ip-virtual-edition-ha/common/verify_application_01.sh
-  - ../quickstart-f5-big-ip-virtual-edition-ha/common/delete_s3_bucket.sh
+  # - ../quickstart-f5-big-ip-virtual-edition-ha/common/delete_s3_bucket.sh
   - ../quickstart-f5-big-ip-virtual-edition-ha/common/delete_stack.sh
   - ../quickstart-f5-big-ip-virtual-edition-ha/common/verify_delete.sh
   - ../quickstart-f5-big-ip-virtual-edition-ha/common/delete_secret.sh
 onFail:
-  - ../quickstart-f5-big-ip-virtual-edition-ha/common/delete_s3_bucket.sh
+  # - ../quickstart-f5-big-ip-virtual-edition-ha/common/delete_s3_bucket.sh
   - ../quickstart-f5-big-ip-virtual-edition-ha/common/delete_stack.sh
   - ../quickstart-f5-big-ip-virtual-edition-ha/common/verify_delete.sh
   - ../quickstart-f5-big-ip-virtual-edition-ha/common/delete_secret.sh
