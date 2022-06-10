@@ -18,7 +18,7 @@ ALLOWED_FILES=(.cfnlintrc .gitignore .gitmodules .metadata LICENSE.txt README.md
 
 echo "*** Setting git origin"
 git fetch --unshallow origin
-git remote rm origin && git remote add origin git@github.com:F5Networks/quickstart-f5-big-ip-virtual-edition.git
+git remote rm origin && git remote add origin git@github.com:F5Networks/quickstart-f5-big-ip-virtual-edition-ha.git
 echo "*** Removing everything from local git"
 git rm -rf .
 
@@ -38,9 +38,5 @@ echo "*** Committing source code"
 git status
 git commit -m "Updating develop..." || echo "No changes, nothing to commit!"
 git push -u origin HEAD:develop -f
-
-######################
-# Reserved for creating pull request via Github API
-######################
 
 echo "*** Publishing to github is completed."
