@@ -494,6 +494,8 @@ Mappings:
       Best25Mbps: ami-00f3354c008c0818d
       Best5000Mbps: ami-01c54ae69d6bf7217
 Conditions:
+  CustomConfig1: !Not [!Equals [!Ref CustomBigIPRuntimeInit01, ""]]
+  CustomConfig2: !Not [!Equals [!Ref CustomBigIPRuntimeInit02, ""]]
   useDefaultBucket: !Equals [!Ref s3BucketName, 'aws-quickstart']
   usePublicIpVip: !Equals
     - 'true'
@@ -542,8 +544,8 @@ Metadata:
           - bigIpVersion
           - bigIpImageName
           - bigIpThroughput
-          - bigIpRuntimeInitConfig01
-          - bigIpRuntimeInitConfig02
+          - CustomBigIPRuntimeInit01
+          - CustomBigIPRuntimeInit02
           - bigIpRuntimeInitPackageUrl
           - cfeS3Bucket
           - cfeVipTag
@@ -581,9 +583,9 @@ Metadata:
         default: BIGIP Image Id
       bigIpInstanceType:
         default: AWS instance type
-      bigIpRuntimeInitConfig01:
+      CustomBigIPRuntimeInit01:
         default: BIG-IP Runtime Init config
-      bigIpRuntimeInitConfig02:
+      CustomBigIPRuntimeInit02:
         default: BIG-IP Runtime Init config
       bigIpRuntimeInitPackageUrl:
         default: BIG-IP Runtime Init Package URL
@@ -703,16 +705,16 @@ Parameters:
     Default: 1000Mbps
     Description: Maximum amount of throughput for BIG-IP VE
     Type: String
-  bigIpRuntimeInitConfig01:
-    Description: 'Supply a URL to the bigip-runtime-init configuration file in YAML
+  CustomBigIPRuntimeInit01:
+    Description: '(Optional) Supply an alternate URL to the bigip-runtime-init configuration file in YAML
      or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.'
     Type: String
-    Default: 'https://aws-quickstart.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance01.yaml'
-  bigIpRuntimeInitConfig02:
-    Description: 'Supply a URL to the bigip-runtime-init configuration file in YAML
+    Default: ""
+  CustomBigIPRuntimeInit02:
+    Description: '(Optional) Supply an alternate URL to the bigip-runtime-init configuration file in YAML
      or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.'
     Type: String
-    Default: 'https://aws-quickstart.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance02.yaml'
+    Default: ""
   bigIpRuntimeInitPackageUrl:
     Description: 'Supply a URL for the F5 BIG-IP Runtime Init Package install script.'
     Type: String
@@ -725,9 +727,8 @@ Parameters:
     Description: Select version of BIG-IP you wish to deploy.
     Type: String
   cfeS3Bucket:
-    AllowedPattern: '^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$'
     ConstraintDescription: 'S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).'
-    Default: aws-quickstart-cfe
+    Default: ""
     Description: 'S3 bucket name used by Cloud Failover Extension.'
     Type: String
   cfeTag:
@@ -912,6 +913,7 @@ Resources:
         vpc: !Ref vpc
         uniqueString: !Ref uniqueString
   BigipInstance01:
+    DependsOn: Access
     Type: 'AWS::CloudFormation::Stack'
     Properties:
       TemplateURL:
@@ -921,10 +923,17 @@ Resources:
           S3Bucket: !If [useDefaultBucket, !Sub '${s3BucketName}-${AWS::Region}', !Ref s3BucketName]
       Parameters:
         bigIpInstanceProfile: !GetAtt [Access, Outputs.bigIpInstanceProfile]
-        bigIpRuntimeInitConfig: !Ref bigIpRuntimeInitConfig01
+        bigIpRuntimeInitConfig: !If
+          - CustomConfig1
+          - !Ref CustomBigIPRuntimeInit01
+          - !Sub
+            - "https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${s3KeyPrefix}declarations/runtime-init-conf-2nic-payg-instance01.yaml"
+            - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref s3BucketRegion]
+              S3Bucket: !If [useDefaultBucket, !Sub '${s3BucketName}-${AWS::Region}', !Ref s3BucketName]
         bigIpRuntimeInitPackageUrl: !Ref bigIpRuntimeInitPackageUrl
         cfeS3Bucket: !Ref cfeS3Bucket
         cfeTag: !Ref cfeTag
+        deleteBucketContentsRole: !GetAtt [Access, Outputs.deleteBucketContentsRole]
         imageId: !If [noCustomImageId, !FindInMap [!FindInMap [VERSION, !Ref bigIpVersion, REGIONMAP], !Ref 'AWS::Region', !FindInMap [AWSBigipThroughput, !Ref bigIpThroughput, !Ref bigIpImageName]], !Ref bigIpImageId]
         externalPrimaryPublicId: !GetAtt [Dag, Outputs.bigIpExternalEipAllocationId01]
         externalPublicIpIds: !If [usePublicIpVip, !GetAtt [Dag, Outputs.bigIpExternalEipAllocationId03], '']
@@ -943,6 +952,7 @@ Resources:
         sshKey: !Ref sshKey
         uniqueString: !Ref uniqueString
   BigipInstance02:
+    DependsOn: Access
     Type: 'AWS::CloudFormation::Stack'
     Properties:
       TemplateURL:
@@ -952,10 +962,17 @@ Resources:
           S3Bucket: !If [useDefaultBucket, !Sub '${s3BucketName}-${AWS::Region}', !Ref s3BucketName]
       Parameters:
         bigIpInstanceProfile: !GetAtt [Access, Outputs.bigIpInstanceProfile]
-        bigIpRuntimeInitConfig: !Ref bigIpRuntimeInitConfig02
+        bigIpRuntimeInitConfig: !If
+          - CustomConfig2
+          - !Ref CustomBigIPRuntimeInit02
+          - !Sub
+            - "https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${s3KeyPrefix}declarations/runtime-init-conf-2nic-payg-instance02.yaml"
+            - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref s3BucketRegion]
+              S3Bucket: !If [useDefaultBucket, !Sub '${s3BucketName}-${AWS::Region}', !Ref s3BucketName]
         bigIpRuntimeInitPackageUrl: !Ref bigIpRuntimeInitPackageUrl
         imageId: !If [noCustomImageId, !FindInMap [!FindInMap [VERSION, !Ref bigIpVersion, REGIONMAP], !Ref 'AWS::Region', !FindInMap [AWSBigipThroughput, !Ref bigIpThroughput, !Ref bigIpImageName]], !Ref bigIpImageId]
         cfeTag: !Ref cfeTag
+        deleteBucketContentsRole: ''
         externalPrimaryPublicId: !GetAtt [Dag, Outputs.bigIpExternalEipAllocationId02]
         externalPublicIpIds: ''
         externalSecurityGroupId: !GetAtt [Dag, Outputs.bigIpExternalSecurityGroup]

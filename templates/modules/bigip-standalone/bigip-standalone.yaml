@@ -196,7 +196,7 @@ Conditions:
   createS3Bucket: !Not
     - !Equals
       - !Ref cfeS3Bucket
-      - OPTIONAL
+      - ""
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
@@ -216,6 +216,7 @@ Metadata:
           - numSecondaryPrivateIpAddress
           - sshKey
           - bigIpInstanceProfile
+          - deleteBucketContentsRole
       - Label:
           default: Networking
         Parameters:
@@ -255,6 +256,8 @@ Metadata:
         default: Runtime Init Package
       cost:
         default: Cost Center
+      deleteBucketContentsRole:
+        default: IAM role
       imageId:
         default: Image Id
       environment:
@@ -385,6 +388,10 @@ Parameters:
     Default: f5cost
     Description: Cost Center Tag.
     Type: String
+  deleteBucketContentsRole:
+    Default: ''
+    Description: Lambda function role with applied IAM policy.
+    Type: String
   environment:
     Default: f5env
     Description: Environment Tag.
@@ -489,7 +496,7 @@ Parameters:
   cfeS3Bucket:
     Description: Provides BIG-IP S3 Bucket name
     Type: String
-    Default: OPTIONAL
+    Default: ""
   cfeTag:
     Description: Cloud Failover deployment tag value.
     Type: String
@@ -514,15 +521,111 @@ Parameters:
     Description: Unique String used when creating object names or Tags.
     Type: String
 Resources:
+  DeleteBucketContents:
+    Type: Custom::DeleteBucketContents
+    Condition: createS3Bucket
+    Properties:
+      ServiceToken: !GetAtt DeleteBucketContentsLambda.Arn
+      bucketName: !Ref S3Bucket
+      region: !Ref AWS::Region
+  DeleteBucketContentsLambda:
+    Type: AWS::Lambda::Function
+    Condition: createS3Bucket
+    Properties:
+      Code:
+        ZipFile: !Sub |
+          #!/usr/bin/python
+
+          import sys
+          import botocore
+          import boto3
+          import cfnresponse
+          import json
+          import logging
+
+          logger = logging.getLogger()
+          logger.setLevel(logging.INFO)
+
+          def handler(event, context):
+            logger.info('Received event: %s' % json.dumps(event,indent=2))
+            try:
+              bucket_name = event["ResourceProperties"]["bucketName"]
+              region = event["ResourceProperties"]["region"]
+
+              if event['RequestType'] == 'Create' or event['RequestType'] == 'Update':
+                cfnresponse.send(event, context, cfnresponse.SUCCESS, {}, None )
+              elif event['RequestType'] == 'Delete':             
+                try:
+                  s3 = boto3.client('s3', region_name=region )
+                except botocore.exceptions.ClientError as e:
+                  logger.error('Received client error: %s' % str(e))
+                  sys.exit("Exiting...")
+
+                logger.info('Getting objects...')
+                objects = []
+                kwargs = {"Bucket": bucket_name}
+                while True:
+                  versions = s3.list_object_versions(**kwargs)
+                  if 'Versions' in versions.keys():
+                    for v in versions['Versions']:
+                      objects.append({'Key': v['Key'], 'VersionId': v['VersionId']})
+                  if 'DeleteMarkers' in versions.keys():
+                    for v in versions['DeleteMarkers']:
+                      objects.append({'Key': v['Key'], 'VersionId': v['VersionId']})
+                  if versions['IsTruncated']:
+                    if versions.get('NextKeyMarker', 'null') != 'null':
+                      kwargs["KeyMarker"] = versions['NextKeyMarker']
+                    else:
+                      if kwargs.get("KeyMarker"):
+                        del kwargs["KeyMarker"]
+                    if versions.get('NextVersionIdMarker', 'null') != 'null':
+                      kwargs["VersionIdMarker"] = versions['NextVersionIdMarker']
+                    else:
+                      if kwargs.get("VersionIdMarker"):
+                        del kwargs["VersionIdMarker"]
+                  else:
+                    break
+                if objects:
+                  for i in range(0, len(objects), 1000):
+                    s3.delete_objects(
+                      Bucket=bucket_name,
+                      Delete={'Objects': objects[i:i + 1000]}
+                    )
+                  logger.info('SUCCESS: Deleting Bucket Contents: %s' % bucket_name)
+                  cfnresponse.send(event, context, cfnresponse.SUCCESS, {}, None)
+                else:
+                  logger.info('SUCCESS: No objects to delete in Bucket: %s' % bucket_name)
+                  cfnresponse.send(event, context, cfnresponse.SUCCESS, {}, None)
+              else:
+                logger.error('FAILED: Unknown request type: %s' % event['RequestType'])
+                cfnresponse.send(event, context, cfnresponse.FAILED, {}, None)
+            except Exception as e:
+              logger.error('Exception in handling the request, %s' % str(e))
+              cfnresponse.send(event, context, cfnresponse.FAILED, {}, None)
+      Handler: index.handler
+      MemorySize: 128
+      Role: !Ref deleteBucketContentsRole
+      Runtime: python3.7
+      Timeout: 300
   S3Bucket:
     Condition: createS3Bucket
     Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName: !Ref cfeS3Bucket
+      BucketName: !Ref 'cfeS3Bucket'
       AccessControl: BucketOwnerFullControl
       Tags:
         - Key: f5_cloud_failover_label
           Value: !Ref cfeTag
+        - Key: application
+          Value: !Ref 'application'
+        - Key: costcenter
+          Value: !Ref 'cost'
+        - Key: environment
+          Value: !Ref 'environment'
+        - Key: group
+          Value: !Ref 'group'
+        - Key: owner
+          Value: !Ref 'owner'
   BigipInternalInterface:
     Condition: useDynamicInternalIpAddr
     Properties:
@@ -811,10 +914,6 @@ Resources:
         - !Ref 'BigipStaticManagementInterface'
     Type: 'AWS::EC2::EIPAssociation'
   Bigip3NicInstance:
-    CreationPolicy:
-      ResourceSignal:
-        Count: 1
-        Timeout: PT30M
     Condition: is3Nic
     Properties:
       BlockDeviceMappings:
@@ -988,10 +1087,6 @@ Resources:
             - ''
     Type: 'AWS::EC2::Instance'
   Bigip2NicInstance:
-    CreationPolicy:
-      ResourceSignal:
-        Count: 1
-        Timeout: PT30M
     Condition: is2Nic
     Properties:
       BlockDeviceMappings:
@@ -1159,10 +1254,6 @@ Resources:
             - ''
     Type: 'AWS::EC2::Instance'
   Bigip1NicInstance:
-    CreationPolicy:
-      ResourceSignal:
-        Count: 1
-        Timeout: PT30M
     Condition: is1Nic
     Properties:
       BlockDeviceMappings:

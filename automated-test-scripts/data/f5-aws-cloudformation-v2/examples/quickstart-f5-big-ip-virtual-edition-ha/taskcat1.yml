@@ -22,9 +22,9 @@ tests:
       keyPairName: dewpt
       qss3BucketName: $[taskcat_autobucket]
       qss3BucketRegion: $[taskcat_current_region]
-      remoteAccessCIDR: <YOUR-TRUSTED-NETWORK-HERE>
-      restrictedSrcAddressApp: <YOUR-TRUSTED-NETWORK-HERE>
-      restrictedSrcAddressMgmt: <YOUR-TRUSTED-NETWORK-HERE>
+      remoteAccessCIDR: 0.0.0.0/0
+      restrictedSrcAddressApp: 0.0.0.0/0
+      restrictedSrcAddressMgmt: 0.0.0.0/0
       secretArn: arn:aws:secretsmanager:$[taskcat_current_region]:089591600128:secret:b596d098-secret-kXyT2d
       uniqueString: $[taskcat_genpass_8]
     regions:

@@ -226,12 +226,12 @@ Parameters:
     Description: 'Supply a URL to the bigip-runtime-init configuration file in YAML
       or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.'
     Type: String
-    Default: 'https://aws-quickstart.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance01.yaml'
+    Default: 'https://aws-quickstart.s3.amazonaws.com/quickstart-f5-big-ip-virtual-edition-ha/declarations/runtime-init-conf-2nic-payg-instance01.yaml'
   bigIpRuntimeInitConfig02:
     Description: 'Supply a URL to the bigip-runtime-init configuration file in YAML
      or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.'
     Type: String
-    Default: 'https://aws-quickstart.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance02.yaml'
+    Default: 'https://aws-quickstart.s3.amazonaws.com/quickstart-f5-big-ip-virtual-edition-ha/declarations/runtime-init-conf-2nic-payg-instance02.yaml'
   bigIpRuntimeInitPackageUrl:
     Description: 'Supply a URL for the F5 BIG-IP Runtime Init Package install script.'
     Type: String
@@ -244,9 +244,8 @@ Parameters:
     Description: Flag to deploy the demo web application.
     Type: String
   cfeS3Bucket:
-    AllowedPattern: '^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$'
     ConstraintDescription: 'S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).'
-    Default: aws-quickstart-cfe
+    Default: ""
     Description: S3 bucket used as BIG-IP storage for Failover solution.
     Type: String
   cfeTag:
@@ -454,8 +453,8 @@ Resources:
         bigIpImageName: !Ref bigIpImageName
         bigIpInstanceType: !Ref bigIpInstanceType
         bigIpThroughput: !Ref bigIpThroughput
-        bigIpRuntimeInitConfig01: !Ref bigIpRuntimeInitConfig01
-        bigIpRuntimeInitConfig02: !Ref bigIpRuntimeInitConfig02
+        CustomBigIPRuntimeInit01: !Ref bigIpRuntimeInitConfig01
+        CustomBigIPRuntimeInit02: !Ref bigIpRuntimeInitConfig02
         bigIpRuntimeInitPackageUrl: !Ref bigIpRuntimeInitPackageUrl
         cfeS3Bucket: !Ref cfeS3Bucket
         cfeVipTag: !Ref cfeVipTag
