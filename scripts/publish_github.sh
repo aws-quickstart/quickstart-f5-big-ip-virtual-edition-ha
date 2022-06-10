@@ -39,8 +39,4 @@ git status
 git commit -m "Updating develop..." || echo "No changes, nothing to commit!"
 git push -u origin HEAD:develop -f
 
-######################
-# Reserved for creating pull request via Github API
-######################
-
 echo "*** Publishing to github is completed."
