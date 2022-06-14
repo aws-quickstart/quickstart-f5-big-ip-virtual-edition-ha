@@ -1,28 +1,21 @@
 This Quick Start deploys {partner-product-name} on the AWS Cloud. If you are unfamiliar with AWS Quick Starts, refer to the https://fwd.aws/rA69w?[AWS Quick Start General Information Guide^].
 
-BIG-IP VE is an application delivery and security services platform that is built to ensure
-speed, availability, and security for business-critical applications and networks. As an aggregation tier for your application portfolio, it can be used to standardize security, logging and telemetry policies. It enables intelligent L4-L7 traffic management, robust network and web application firewalls, simplified application access, and much more.  For more information about BIG-IP VE, see the https://www.f5.com/[F5 website].
+This deployment guide discusses architectural considerations and configuration steps for deploying a failover cluster of {partner-product-short-name} instances on the Amazon Web Services (AWS) Cloud. It also provides links for viewing and launching AWS CloudFormation templates that automate the deployment.
 
-This Quick Start reference deployment guide discusses architectural considerations and configuration steps for deploying a failover cluster of F5 BIG-IP instances on the Amazon Web Services (AWS) Cloud. It also provides links for viewing and launching AWS CloudFormation templates that automate the deployment.
+{partner-product-short-name} is an application delivery and security services platform for delivering speed, availability, and security for business-critical applications and networks. As an aggregation tier for your application portfolio, you can use {partner-product-short-name} to  standardize security, logging, and telemetry policies. It enables intelligent L4-L7 traffic management, robust network and web application firewalls, simplified application access, and much more.  For more information about {partner-product-short-name}, navigate to the https://www.f5.com/[F5 website^].
 
-The guide is for IT infrastructure architects, administrators, and NetOps professionals who are planning to implement or extend their web application proxy and firewall workloads on the AWS Cloud.
+This Quick Start deploys a highly available cluster of two {partner-product-short-name} instances provisioned with:
 
-This Quick Start deploys a highly available cluster of two BIG-IP VE instances provisioned with:
-
-* *https://www.f5.com/products/big-ip-services/local-traffic-manager[Local Traffic Manager (LTM)]* - which performs uniform resource identifier (URI)
-routing, Secure Sockets Layer (SSL) encryption, TCP optimization and automatic discovery of automatically
-scaled web applications
-* *https://www.f5.com/products/security/advanced-waf[Application Security Manager (ASM)]* - a best of breed web application firewall to help protect against:
+* *https://www.f5.com/products/big-ip-services/local-traffic-manager[Local Traffic Manager (LTM)^]* - Performs uniform resource identifier (URI)
+routing, Secure Sockets Layer (SSL) encryption, TCP optimization, and automatic discovery of automatically
+scaled web applications.
+* *https://www.f5.com/products/security/advanced-waf[Application Security Manager (ASM)^]* - A best of breed web application firewall to help protect against:
 ** *Automated attacks and bots* - Automated attacks and bots can overwhelm application resources.
 ** *Credential theft*  - Attacks that steal application credentials or take advantage of compromised accounts.
 ** *Attacks on mobile clients* - Bots that target browser-based and mobile clients.
 ** *Application-layer attacks* - Application-layer attacks can evade signature and reputation-based security solutions.
 ** *Web app and API attacks* - New attack surfaces and threats due to the rapid adoption of APIs.
 ** *Targeted attack campaigns* - Active attack campaigns are difficult to detect from singular attacks.
-
-You can customize this Quick Start by changing the configuration parameters. The Quick
-Start deploys either a full working stack (network, bastion host and BIG-IP solution) or just the BIG-IP solution into an existing network that you can inspect and use as a reference.
-
 
 // For advanced information about the product that this Quick Start deploys, refer to the https://{quickstart-github-org}.github.io/{quickstart-project-name}/operational/index.html[Operational Guide^].
 
