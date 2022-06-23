@@ -21,16 +21,15 @@ best practices, to provide you with your own virtual network on AWS.*
 internet access for resources in the private subnets.*
 ** A Linux bastion host in an Auto Scaling group to allow inbound Secure
 Shell (SSH) access to EC2 instances in public and private subnets.*
-** A BIG-IP VE instance hosted on Amazon Elastic Compute Cloud (Amazon EC2). 
+** BIG-IP VE deployed to Amazon Elastic Compute Cloud (Amazon EC2) instances. 
 
 * In the private subnets:
 // Add bullet points for any additional components that are included in the deployment. Make sure that the additional components are also represented in the architecture diagram.
 
-** The management network interface cards (NICs) of a clustered pair of {partner-product-short-name} instances, which make up an out-of-band management network.
 ** An example application to help demonstrate {partner-product-short-name} functionality.
-** An elastic network interface that represents the public-facing NIC of a clustered pair of BIG-IP VE instances.
+** An elastic network interface that represents the public-facing network interface card (NIC) of a clustered pair of BIG-IP VE instances.
 
-* An AWS Identity and Access Management (IAM) role and instance profile.
+* AWS Identity and Access Management (IAM) for a role and EC2 instance profile.
 * An Amazon S3 bucket used to provide failover state.
 
 *The template that deploys the Quick Start into an existing VPC skips

@@ -10,8 +10,7 @@ This Quick Start requires a subscription to the AMI for {partner-product-short-n
 
 . Sign in to your AWS account.
 . https://aws.amazon.com/marketplace/pp/prodview-nlakutvltzij4[Open the page for the {partner-product-short-name} AMI in AWS Marketplace^], and then choose *Continue to Subscribe*.
-. Review the terms and conditions for software usage, and then choose *Accept Terms*. +
-  A confirmation page loads, and an email confirmation is sent to the account owner. For detailed subscription instructions, see the https://aws.amazon.com/marketplace/help/200799470[AWS Marketplace documentation^].
+. Review the terms and conditions for software usage, and then choose *Accept Terms*. A confirmation page loads, and an email confirmation is sent to the account owner. For detailed subscription instructions, see the https://aws.amazon.com/marketplace/help/200799470[AWS Marketplace documentation^].
 
 . When the subscription process is complete, close out of AWS Marketplace without further action. Do not provision the software from AWS Marketplace, as the Quick Start deploys the AMI for you.
 
@@ -21,7 +20,7 @@ This Quick Start requires a subscription to the AMI for {partner-product-short-n
 This Quick Start requires: 
 
 * An SSH key pair in AWS for management access to {partner-product-short-name}. For more information about creating and/or importing the key pair in AWS, refer to https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html[Amazon EC2 key pairs and Linux instances^].
-* An AWS secret stored in https://aws.amazon.com/secrets-manager/[AWS Secrets Manager^] containing the password used to access and cluster the HA Pair. For example, to create a secret using the AWS Command Line Interface (AWS CLI), run the following command:
+* An AWS secret stored in https://aws.amazon.com/secrets-manager/[AWS Secrets Manager^] containing the password used to access and cluster the HA pair. For example, to create a secret using the AWS Command Line Interface (AWS CLI), run the following command:
 
     aws secretsmanager create-secret --region us-east-1 --name bigIpPassword --secret-string 'YOUR_BIGIP_PASSWORD'
 

@@ -202,9 +202,6 @@ Login credentials
 * username: admin
 * password: _<YOUR_AWS_SECRET>_
 
-
-=== Additional exploration
-
 ==== SSH
 
 * From TMOS Shell (tmsh), type *bash* and then press the Enter key to access the bash shell.
