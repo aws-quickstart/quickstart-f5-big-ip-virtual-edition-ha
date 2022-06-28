@@ -554,7 +554,7 @@ Resources:
 
               if event['RequestType'] == 'Create' or event['RequestType'] == 'Update':
                 cfnresponse.send(event, context, cfnresponse.SUCCESS, {}, None )
-              elif event['RequestType'] == 'Delete':             
+              elif event['RequestType'] == 'Delete':
                 try:
                   s3 = boto3.client('s3', region_name=region )
                 except botocore.exceptions.ClientError as e:

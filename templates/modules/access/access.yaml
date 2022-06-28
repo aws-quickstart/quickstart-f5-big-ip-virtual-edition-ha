@@ -145,10 +145,10 @@ Resources:
                   - s3:GetObjectVersion
                 Effect: Allow
                 Resource:
-                  - !Sub 
+                  - !Sub
                     - 'arn:${AWS::Partition}:s3:::${bucket}'
                     - bucket: !Ref s3Bucket
-                  - !Sub 
+                  - !Sub
                     - 'arn:${AWS::Partition}:s3:::${bucket}/*'
                     - bucket: !Ref s3Bucket
             Version: 2012-10-17
