@@ -56,13 +56,13 @@ Outputs:
     Value: !If
       - failover
       - !Ref BigIpHighAvailabilityInstanceProfile
-      - !Ref AWS::NoValue
+      - ""
   deleteBucketContentsRole:
     Description: Lambda function role with applied IAM policy.
     Value: !If
       - createS3Bucket
       - !GetAtt DeleteBucketContentsRole.Arn
-      - !Ref AWS::NoValue
+      - ""
 Parameters:
   application:
     Default: f5app
