@@ -12,4 +12,4 @@ If you want to deploy other types of {partner-product-short-name} instances, acc
 aws ec2 describe-images --filters 'Name=name,Values=*BIGIP*' --query 'Images[*].[ImageId,Name]' --region us-east-1
 ----
 
-If deploying to a production environment, you can use Bring Your Own License (BYOL) instances (for example, https://aws.amazon.com/marketplace/pp/prodview-73utu5c5sfyyc[F5 BIG-IP VE - ALL (BYOL, 2 Boot Locations)^]), which require registration keys. If you don't have registration keys, visit the https://www.f5.com/trials/big-ip-virtual-edition[F5 website^]. Additional pricing, terms, and conditions may apply. 
+If deploying to a production environment, you can use Bring Your Own License (BYOL) instances (for example, https://aws.amazon.com/marketplace/pp/prodview-73utu5c5sfyyc[F5 BIG-IP VE - ALL (BYOL, 2 Boot Locations)^]), which require registration keys. If you don't have registration keys, visit the https://www.f5.com/trials/big-ip-virtual-edition[F5 website^]. Additional pricing, terms, and conditions may apply.

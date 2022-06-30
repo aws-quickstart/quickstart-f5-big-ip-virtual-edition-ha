@@ -338,7 +338,7 @@ NOTE: In this example, traffic uses Source Network Address Translation (SNAT). A
 For illustration purposes, this Quick Start provides an option to pre-provision additional cloud resources (IP addresses)
 needed for an example virtual service. However, in practice, it's designed solely to facilitate the initial deployment as cloud-init runs once. It's  typically used for initial provisioning, not as the primary configuration API for a
 long-running platform. More typically in an infrastructure use case,
-virtual services are added after initial deployment, outside the lifecycle of this Cloudformation template. 
+virtual services are added after initial deployment, outside the lifecycle of this Cloudformation template.
 
 === Add services via the cloud
 Provision additional IP addresses on the desired network interfaces. Refer to the following resources:
@@ -347,14 +347,14 @@ Provision additional IP addresses on the desired network interfaces. Refer to th
 - https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html#using-instance-addressing-eips-associating[Associate an Elastic IP address with an instance or network interface^]
 
 === Add services via {partner-product-short-name}
-Create virtual services that match the secondary IP addresses. Also update the AS3 declaration with additional virtual services. Refer to https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/userguide/composing-a-declaration.html[Composing an AS3 Declaration] for more information.  
+Create virtual services that match the secondary IP addresses. Also update the AS3 declaration with additional virtual services. Refer to https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/userguide/composing-a-declaration.html[Composing an AS3 Declaration] for more information.
 
 
 NOTE: For cloud resources, templates can be created or customized to pre-provision
 and update addtional resources (for example, various combinations of
 NICs, IPs, public IPs, etc). Refer to the link:#_support[Support] section
 for more information. For the {partner-product-short-name} configurations, use either REST or Automation Toolchain clients like
-https://ansible.github.io/workshops/exercises/ansible_f5/3.0-as3-intro/[Ansible^] or https://registry.terraform.io/providers/F5Networks/bigip/latest/docs/resources/bigip_as3[Terraform^]. 
+https://ansible.github.io/workshops/exercises/ansible_f5/3.0-as3-intro/[Ansible^] or https://registry.terraform.io/providers/F5Networks/bigip/latest/docs/resources/bigip_as3[Terraform^].
 
 == Delete the deployment
 
@@ -380,7 +380,7 @@ https://support.f5.com/csp/article/K13284[Overview of management interface routi
 more details. By default, as a convenience, this Quick Start provisions
 public IP addresses to enable this, but in a production environment, outbound
 access should be provided by a `routed` SNAT service (for example, NAT
-gateway, custom firewall, etc). 
+gateway, custom firewall, etc).
 
 NOTE: Access via web proxy is not
 currently supported. Other options include either:
@@ -391,11 +391,11 @@ point to local URLs instead.
 the https://clouddocs.f5.com/cloud/public/v1/ve-image-gen_index.html[F5 BIG-IP Image Generation Tool^].
 
 . Contacting native cloud services (for example, s3.amazonaws.com,
-ec2.amazonaws.com, etc.) for various cloud integrations, including: 
+ec2.amazonaws.com, etc.) for various cloud integrations, including:
 
 === Onboarding
 ** https://github.com/f5networks/f5-bigip-runtime-init[F5 BIG-IP Runtime
-Init] to fetch secrets from native vault services 
+Init] to fetch secrets from native vault services
 
 === Operation
 ** https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/[F5 Application Services 3^] for features like Service Discovery
@@ -468,5 +468,3 @@ https://support.f5.com/csp/article/K03011490[IPI subscription validation^])
 ** id-prod-global-endpoint.trafficmanager.net.
 ** global.azure-devices-provisioning.net.
 ** www-google-analytics.l.google.com
-
-

@@ -2,7 +2,7 @@ For troubleshooting common Quick Start issues, refer to the https://fwd.aws/rA69
 
 // == Resources
 // Uncomment section and add links to any external resources that are specified by the partner
-The following issues are most common: 
+The following issues are most common:
 
 - The entire stack was not created
 - Resource(s) within the stack failed to deploy
@@ -14,8 +14,8 @@ NOTE: When creating a GitHub issue for a failed template, include as much inform
 Common causes of deployment failure include:
 
 - Required fields were left empty or contained incorrect values (for example, an input type mismatch, prohibited characters, etc.), causing template validation failure.
-- Insufficient permissions to create the deployment or resources created by a deployment (for example, IAM roles, etc). 
-- Resource limitations (for example, exceeded limit of IP addresses or compute resources, etc.). 
+- Insufficient permissions to create the deployment or resources created by a deployment (for example, IAM roles, etc).
+- Resource limitations (for example, exceeded limit of IP addresses or compute resources, etc.).
 - An AWS service issue. To check service health, visit the https://status.aws.amazon.com/[AWS service health dashboard^].
 
 If all stacks were created successfully, but the {partner-product-short-name} or AWS service is unavailable, log in to the {partner-product-short-name} instance via SSH to confirm the {partner-product-short-name} deployment or configuration update was successful. For example, you can check that the startup scripts completed as expected on {partner-product-short-name}. To verify {partner-product-short-name} deployment, perform the following steps:

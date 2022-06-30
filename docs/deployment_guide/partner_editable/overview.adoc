@@ -22,8 +22,3 @@ This Quick Start deploys a highly available cluster of two {partner-product-shor
 
 //Use this for the landing page.
 //BIG-IP VE is an application delivery and security services platform that is built to ensure speed, availability, and security for business-critical applications and networks. As an aggregation tier for your application portfolio, it can be used to standardize security, logging and telemetry policies. It enable intelligent L4-L7 traffic management, robust network and web application firewalls, simplified application access, and much more.  For more information about BIG-IP VE, see the https://www.f5.com/[F5 website].
-
-
-
-
-

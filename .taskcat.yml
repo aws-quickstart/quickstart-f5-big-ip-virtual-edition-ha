@@ -50,7 +50,7 @@ tests:
       bigIpRuntimeInitConfig02: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance02-with-app.yaml
       bigIpRuntimeInitPackageUrl: https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.4.1/dist/f5-bigip-runtime-init-1.4.1-1.gz.run
       cfeTag: aws_quickstart_$[taskcat_random-string]
-      keyPairName: override 
+      keyPairName: override
       privateSubnet1ASelfAddress: 10.0.11.11
       privateSubnet2ASelfAddress: 10.0.21.11
       provisionExampleApp: 'true'

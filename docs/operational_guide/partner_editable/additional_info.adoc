@@ -378,4 +378,3 @@ Reference Links:
 *  https://clouddocs.f5.com/products/extensions/f5-telemetry-streaming/latest/[F5 Telemetry Streaming (TS)] -> for logging and reporting (not deployed by default in this solution )
 * https://github.com/f5devcentral/f5-demo-httpd[Example Application (nginx)]
 - https://www.f5.com/services/certification[F5 Certification]
-

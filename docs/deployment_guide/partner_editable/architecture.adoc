@@ -21,7 +21,7 @@ best practices, to provide you with your own virtual network on AWS.*
 internet access for resources in the private subnets.*
 ** A Linux bastion host in an Auto Scaling group to allow inbound Secure
 Shell (SSH) access to EC2 instances in public and private subnets.*
-** BIG-IP VE deployed to Amazon Elastic Compute Cloud (Amazon EC2) instances. 
+** BIG-IP VE deployed to Amazon Elastic Compute Cloud (Amazon EC2) instances.
 
 * In the private subnets:
 // Add bullet points for any additional components that are included in the deployment. Make sure that the additional components are also represented in the architecture diagram.

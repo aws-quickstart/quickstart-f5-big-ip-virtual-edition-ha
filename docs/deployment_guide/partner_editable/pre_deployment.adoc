@@ -17,7 +17,7 @@ This Quick Start requires a subscription to the AMI for {partner-product-short-n
 === Prepare your AWS account
 //_Describe any setup required in the AWS account prior to template launch_
 
-This Quick Start requires: 
+This Quick Start requires:
 
 * An SSH key pair in AWS for management access to {partner-product-short-name}. For more information about creating and/or importing the key pair in AWS, refer to https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html[Amazon EC2 key pairs and Linux instances^].
 * An AWS secret stored in https://aws.amazon.com/secrets-manager/[AWS Secrets Manager^] containing the password used to access and cluster the HA pair. For example, to create a secret using the AWS Command Line Interface (AWS CLI), run the following command:
@@ -26,10 +26,10 @@ This Quick Start requires:
 
 *** By default, the secret name must be *bigIpPassword* and created in the Region where the template is deployed. Otherwise, refer to link:#_customizing_the_big_ip_configuration[Customizing the BIG-IP configuration] for more details.
 *** Obtain the secret Amazon Resource Name (ARN). The ARN format required for the input parameter looks similar to  `arn:aws:secretsmanager:us-east-1:111111111111:secret:bigIpPassword-xdg0kdf` Pass this value to the *secretArn* input parameter.
-*** In the example command above, the *--secret-string* value is in single quotes to avoid bash special character interpolation. For a more secure example using a file, refer to the https://docs.aws.amazon.com/cli/latest/reference/secretsmanager/index.html#cli-aws-secretsmanager[AWS CLI secretsmanager documentation^]. 
+*** In the example command above, the *--secret-string* value is in single quotes to avoid bash special character interpolation. For a more secure example using a file, refer to the https://docs.aws.amazon.com/cli/latest/reference/secretsmanager/index.html#cli-aws-secretsmanager[AWS CLI secretsmanager documentation^].
 
 * Acceptance of the end-user license agreement for the F5 image in the AWS Marketplace. If you haven't deployed {partner-product-short-name} in your environment, search for F5 in the AWS Marketplace and then choose *Accept Software Terms*. This option appears only the first time you attempt to launch an F5 image. For more details, refer to the link:#_software_licenses[Costs and licenses] section.
-* The appropriate permission in AWS to launch AWS CloudFormation templates. You must be an IAM user with the Administrator Access policy attached and have permission to create the objects contained in this Quick Start, including VPCs, Elastic IP addresses, EC2 instances, etc. 
+* The appropriate permission in AWS to launch AWS CloudFormation templates. You must be an IAM user with the Administrator Access policy attached and have permission to create the objects contained in this Quick Start, including VPCs, Elastic IP addresses, EC2 instances, etc.
 
 
 
@@ -39,8 +39,8 @@ This Quick Start requires:
 
 ==== Configuration notes ====
 
-The Quick Start template provides an initial deployment for an infrastructure use case, which means that it doesn't support managing the entire deployment exclusively via the template's update-stack feature. 
+The Quick Start template provides an initial deployment for an infrastructure use case, which means that it doesn't support managing the entire deployment exclusively via the template's update-stack feature.
 
-This Quick Start uses the `cloud-init` package to send the instance user data, which is only used to provide an initial {partner-product-short-name} configuration and not as the primary configuration API for a long-running platform. You can use the update-stack feature to update certain cloud resources, however the {partner-product-short-name} configuration needs to align with cloud resources, such as IPs and NICs. Therefore, updating one resource without the other can result in inconsistent states, while updating other resources, like the *bigIpImageId* or *bigIpInstanceType* parameters, can trigger an entire instance re-deloyment. 
+This Quick Start uses the `cloud-init` package to send the instance user data, which is only used to provide an initial {partner-product-short-name} configuration and not as the primary configuration API for a long-running platform. You can use the update-stack feature to update certain cloud resources, however the {partner-product-short-name} configuration needs to align with cloud resources, such as IPs and NICs. Therefore, updating one resource without the other can result in inconsistent states, while updating other resources, like the *bigIpImageId* or *bigIpInstanceType* parameters, can trigger an entire instance re-deloyment.
 
 For example, to upgrade software versions, traditional in-place upgrades and configuration management are required. For details, refer to the link:#_support[Support] section.
