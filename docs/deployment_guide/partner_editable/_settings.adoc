@@ -1,0 +1,14 @@
+:quickstart-project-name: quickstart-f5-big-ip-virtual-edition-ha
+:quickstart-github-org: aws-quickstart
+:partner-product-name: F5 BIG-IP Virtual Edition
+:partner-product-short-name: BIG-IP VE
+:partner-company-name: F5
+:doc-month: June
+:doc-year: 2022
+:partner-contributors: Alex Applebaum, Greg Crosby, Andrey Kashcheev, Nitin Khanna, Yossi Rosenboim, Michael Shimkus, {partner-company-name}
+// :other-contributors: Akua Mansa, Trek10
+//:aws-contributors: Janine Singh, AWS IoT Partner team
+:aws-ia-contributors: Andrew Glenn and Troy Ameigh, AWS Integration and Automation team
+:deployment_time: 30 minutes
+:default_deployment_region: us-east-1
+// :private_repo:

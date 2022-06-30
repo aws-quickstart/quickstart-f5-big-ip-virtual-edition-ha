@@ -1,5 +1,0 @@
-templates:
-  - templates/**/*.yaml
-  - templates/*.yaml
-ignore_checks:
-  - W
