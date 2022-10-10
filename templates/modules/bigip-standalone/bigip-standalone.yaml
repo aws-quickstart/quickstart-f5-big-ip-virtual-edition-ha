@@ -207,6 +207,8 @@ Metadata:
           - bigIpRuntimeInitPackageUrl
           - cfeS3Bucket
           - cfeTag
+          - secretArn
+          - allowUsageAnalytics
       - Label:
           default: EC2 Instances
         Parameters:
@@ -246,6 +248,8 @@ Metadata:
           - group
           - owner
     ParameterLabels:
+      allowUsageAnalytics:
+        default: Send anonymous statistics to F5
       application:
         default: Application
       bigIpInstanceProfile:
@@ -302,6 +306,8 @@ Metadata:
         default: Owner
       peerConfigSyncAddr:
         default: Static self IP address for peer device.
+      secretArn:
+        default: Secret
       sshKey:
         default: EC2 KeyPair
       uniqueString:
@@ -367,6 +373,14 @@ Outputs:
         - BigipStaticInternalInterface
         - PrimaryPrivateIpAddress
 Parameters:
+  allowUsageAnalytics:
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Default: 'true'
+    Description: This deployment can send anonymous statistics to F5 to help us determine
+      how to improve our solutions. If you select **false** statistics are not sent.
+    Type: String
   application:
     Default: f5app
     Description: Application Tag.
@@ -509,6 +523,12 @@ Parameters:
     Default: ''
     Description: Type the static self IP address of the remote host here. Leave empty if not configuring peering with a remote host on this device.
     Type: String
+  secretArn:
+    Default: ''
+    Description: The ARN of a Secrets Manager secret to create READ permissions for.
+      For example, if customizing your runtime-init config with an admin password,
+      logging credential, etc.
+    Type: String
   sshKey:
     Description: REQUIRED - Supply the public key that will be used for SSH authentication
       to the BIG-IP and application virtual machines.
@@ -613,6 +633,10 @@ Resources:
     Properties:
       BucketName: !Ref 'cfeS3Bucket'
       AccessControl: BucketOwnerFullControl
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: 'AES256'
       Tags:
         - Key: f5_cloud_failover_label
           Value: !Ref cfeTag
@@ -1023,7 +1047,14 @@ Resources:
             - !Ref 'peerConfigSyncAddr'
             - |
               '
-
+            - SECRET_ID='
+            - !Ref 'secretArn'
+            - |
+              '
+            - ALLOW_ANALYTICS='
+            - !Ref 'allowUsageAnalytics'
+            - |
+              '
             - |
               # Save peer device IP to file
             - |
@@ -1032,6 +1063,10 @@ Resources:
                   echo "${PEER_IP}" >  /config/cloud/peerConfigSyncAddr
             - |
               fi
+            - |
+              echo ${SECRET_ID} > /config/cloud/secret_id
+            - |
+              if [[ ${ALLOW_ANALYTICS} == "false" ]]; then TELEMETRY_FLAG="--skip-telemetry"; else TELEMETRY_FLAG=""; fi
             - |2+
 
             - |
@@ -1071,7 +1106,7 @@ Resources:
             - |
               # Execute Runtime-init
             - |
-              f5-bigip-runtime-init --config-file /config/cloud/runtime-init.conf
+              f5-bigip-runtime-init --config-file /config/cloud/runtime-init.conf ${TELEMETRY_FLAG}
             - |2+
 
             - '[[ $? -eq 0 ]] && /opt/aws/bin/cfn-signal -e 0 --stack '
@@ -1190,7 +1225,14 @@ Resources:
             - !Ref 'peerConfigSyncAddr'
             - |
               '
-
+            - SECRET_ID='
+            - !Ref 'secretArn'
+            - |
+              '
+            - ALLOW_ANALYTICS='
+            - !Ref 'allowUsageAnalytics'
+            - |
+              '
             - |
               # Save peer device IP to file
             - |
@@ -1199,6 +1241,10 @@ Resources:
                   echo "${PEER_IP}" >  /config/cloud/peerConfigSyncAddr
             - |
               fi
+            - |
+              echo ${SECRET_ID} > /config/cloud/secret_id
+            - |
+              if [[ ${ALLOW_ANALYTICS} == "false" ]]; then TELEMETRY_FLAG="--skip-telemetry"; else TELEMETRY_FLAG=""; fi
             - |2+
 
             - |
@@ -1238,7 +1284,7 @@ Resources:
             - |
               # Execute Runtime-init
             - |
-              f5-bigip-runtime-init --config-file /config/cloud/runtime-init.conf
+              f5-bigip-runtime-init --config-file /config/cloud/runtime-init.conf ${TELEMETRY_FLAG}
             - |2+
 
             - '[[ $? -eq 0 ]] && /opt/aws/bin/cfn-signal -e 0 --stack '
@@ -1351,7 +1397,14 @@ Resources:
             - !Ref 'peerConfigSyncAddr'
             - |
               '
-
+            - SECRET_ID='
+            - !Ref 'secretArn'
+            - |
+              '
+            - ALLOW_ANALYTICS='
+            - !Ref 'allowUsageAnalytics'
+            - |
+              '
             - |
               # Save peer device IP to file
             - |
@@ -1360,6 +1413,10 @@ Resources:
                   echo "${PEER_IP}" >  /config/cloud/peerConfigSyncAddr
             - |
               fi
+            - |
+              echo ${SECRET_ID} > /config/cloud/secret_id
+            - |
+              if [[ ${ALLOW_ANALYTICS} == "false" ]]; then TELEMETRY_FLAG="--skip-telemetry"; else TELEMETRY_FLAG=""; fi
             - |2+
 
             - |
@@ -1399,7 +1456,7 @@ Resources:
             - |
               # Execute Runtime-init
             - |
-              f5-bigip-runtime-init --config-file /config/cloud/runtime-init.conf
+              f5-bigip-runtime-init --config-file /config/cloud/runtime-init.conf ${TELEMETRY_FLAG}
             - |2+
 
             - '[[ $? -eq 0 ]] && /opt/aws/bin/cfn-signal -e 0 --stack '

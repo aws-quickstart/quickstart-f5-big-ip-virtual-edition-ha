@@ -47,6 +47,7 @@ Metadata:
       - Label:
           default: BIG-IP Configuration
         Parameters:
+          - allowUsageAnalytics
           - bigIpInstanceType
           - bigIpImageId
           - bigIpImageName
@@ -80,6 +81,8 @@ Metadata:
           - qss3BucketRegion
           - qss3KeyPrefix
     ParameterLabels:
+      allowUsageAnalytics:
+        default: Send anonymous statistics to F5
       appDockerImageName:
         default: Application Docker image name
       application:
@@ -164,6 +167,14 @@ Metadata:
         default: unique string value which gets append to cloud resources names
   Version: 1.0.0
 Parameters:
+  allowUsageAnalytics:
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Default: 'true'
+    Description: This deployment can send anonymous statistics to F5 to help us determine
+      how to improve our solutions. If you select **false** statistics are not sent.
+    Type: String
   appDockerImageName:
     Default: f5devcentral/f5-demo-httpd:latest
     Description: Application docker image name.
@@ -447,6 +458,7 @@ Resources:
         - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref qss3BucketRegion]
           S3Bucket: !If [useDefaultBucket, !Sub '${qss3BucketName}-${AWS::Region}', !Ref qss3BucketName]
       Parameters:
+        allowUsageAnalytics: !Ref 'allowUsageAnalytics'
         appDockerImageName: !Ref appDockerImageName
         application: !Ref application
         bigIpImageId: !Ref bigIpImageId

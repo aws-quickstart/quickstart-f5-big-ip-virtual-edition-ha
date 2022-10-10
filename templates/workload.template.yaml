@@ -539,6 +539,7 @@ Metadata:
       - Label:
           default: BIG-IP Configuration
         Parameters:
+          - allowUsageAnalytics
           - bigIpInstanceType
           - bigIpImageId
           - bigIpVersion
@@ -573,6 +574,8 @@ Metadata:
           - s3BucketRegion
           - s3KeyPrefix
     ParameterLabels:
+      allowUsageAnalytics:
+        default: Send anonymous statistics to F5
       appDockerImageName:
         default: Application docker image name
       application:
@@ -643,6 +646,14 @@ Metadata:
         default: unique string value which gets append to cloud resources names
   Version: 1.0.0
 Parameters:
+  allowUsageAnalytics:
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Default: 'true'
+    Description: This deployment can send anonymous statistics to F5 to help us determine
+      how to improve our solutions. If you select **false** statistics are not sent.
+    Type: String
   appDockerImageName:
     Default: f5devcentral/f5-demo-httpd:latest
     Description: Application docker image name
@@ -922,6 +933,7 @@ Resources:
         - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref s3BucketRegion]
           S3Bucket: !If [useDefaultBucket, !Sub '${s3BucketName}-${AWS::Region}', !Ref s3BucketName]
       Parameters:
+        allowUsageAnalytics: !Ref 'allowUsageAnalytics'
         bigIpInstanceProfile: !GetAtt [Access, Outputs.bigIpInstanceProfile]
         bigIpRuntimeInitConfig: !If
           - CustomConfig1
@@ -949,6 +961,7 @@ Resources:
         mgmtSubnetId: !Ref privateSubnet1ID
         numSecondaryPrivateIpAddress: !If [usePublicIpVip, 1, 0]
         peerConfigSyncAddr: ''
+        secretArn: !Ref secretArn
         sshKey: !Ref sshKey
         uniqueString: !Ref uniqueString
   BigipInstance02:
@@ -961,6 +974,7 @@ Resources:
         - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref s3BucketRegion]
           S3Bucket: !If [useDefaultBucket, !Sub '${s3BucketName}-${AWS::Region}', !Ref s3BucketName]
       Parameters:
+        allowUsageAnalytics: !Ref 'allowUsageAnalytics'
         bigIpInstanceProfile: !GetAtt [Access, Outputs.bigIpInstanceProfile]
         bigIpRuntimeInitConfig: !If
           - CustomConfig2
@@ -987,6 +1001,7 @@ Resources:
         mgmtSubnetId: !Ref privateSubnet2ID
         numSecondaryPrivateIpAddress: 0
         peerConfigSyncAddr: !Ref peerConfigSyncAddr
+        secretArn: !Ref secretArn
         sshKey: !Ref sshKey
         uniqueString: !Ref uniqueString
   Application01:

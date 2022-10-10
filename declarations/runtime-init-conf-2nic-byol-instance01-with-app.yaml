@@ -87,6 +87,10 @@ extension_services:
           class: Controls
           logLevel: silly
         externalStorage:
+          encryption:
+            serverSide:
+              enabled: true
+              algorithm: AES256
           scopingTags:
             f5_cloud_failover_label: aws_quickstart
         failoverAddresses:
@@ -279,11 +283,14 @@ extension_services:
 post_onboard_enabled: []
 pre_onboard_enabled: []
 runtime_parameters:
+  - name: SECRET_ID
+    type: url
+    value: file:///config/cloud/secret_id
   - name: BIGIP_PASSWORD
     type: secret
     secretProvider:
       environment: aws
-      secretId: bigIpPassword
+      secretId: "{{{SECRET_ID}}}"
       type: SecretsManager
       version: AWSCURRENT
   - name: SELF_IP_EXTERNAL
