@@ -887,11 +887,11 @@ Parameters:
     Description: VPC Id for the deployment.
     Type: AWS::EC2::VPC::Id
 Resources:
-  NewKeyPair:
+  BigIpSshKeyPair:
     Condition: createKeyPair
     Type: 'AWS::EC2::KeyPair'
     Properties:
-      KeyName: MyKeyPair
+      KeyName: bigIpSshKeyPair
       Tags:
         - Key: application
           Value: !Ref 'application'
@@ -903,11 +903,11 @@ Resources:
           Value: !Ref 'group'
         - Key: owner
           Value: !Ref 'owner'
-  MySecret:
+  BigIpSecret:
     Condition: createSecret
     Type: 'AWS::SecretsManager::Secret'
     Properties:
-      Name: MySecret
+      Name: bigIpSecret
       Description: "This secret has a dynamically generated secret password."
       GenerateSecretString:
         PasswordLength: 10
@@ -938,7 +938,7 @@ Resources:
         group: !Ref group
         owner: !Ref owner
         s3Bucket: !Ref cfeS3Bucket
-        secretArn: !If [createSecret, !Ref MySecret, !Ref 'secretArn']
+        secretArn: !If [createSecret, !Ref BigIpSecret, !Ref 'secretArn']
         solutionType: failover
         uniqueString: !Ref uniqueString
   Dag:
@@ -1004,8 +1004,8 @@ Resources:
         mgmtSubnetId: !Ref privateSubnet1ID
         numSecondaryPrivateIpAddress: !If [usePublicIpVip, 1, 0]
         peerConfigSyncAddr: ''
-        secretArn: !If [createSecret, !Ref MySecret, !Ref 'secretArn']
-        sshKey: !If [createKeyPair, !Ref NewKeyPair, !Ref 'sshKey']
+        secretArn: !If [createSecret, !Ref BigIpSecret, !Ref 'secretArn']
+        sshKey: !If [createKeyPair, !Ref BigIpSshKeyPair, !Ref 'sshKey']
         uniqueString: !Ref uniqueString
   BigipInstance02:
     DependsOn: Access
@@ -1044,8 +1044,8 @@ Resources:
         mgmtSubnetId: !Ref privateSubnet2ID
         numSecondaryPrivateIpAddress: 0
         peerConfigSyncAddr: !Ref peerConfigSyncAddr
-        secretArn: !If [createSecret, !Ref MySecret, !Ref 'secretArn']
-        sshKey: !If [createKeyPair, !Ref NewKeyPair, !Ref 'sshKey']
+        secretArn: !If [createSecret, !Ref BigIpSecret, !Ref 'secretArn']
+        sshKey: !If [createKeyPair, !Ref BigIpSshKeyPair, !Ref 'sshKey']
         uniqueString: !Ref uniqueString
   Application01:
     Type: 'AWS::CloudFormation::Stack'
@@ -1064,7 +1064,7 @@ Resources:
         cost: !Ref 'cost'
         environment: !Ref 'environment'
         group: !Ref 'group'
-        sshKey: !If [createKeyPair, !Ref NewKeyPair, !Ref 'sshKey']
+        sshKey: !If [createKeyPair, !Ref BigIpSshKeyPair, !Ref 'sshKey']
         uniqueString: !Ref uniqueString
   Application02:
     Type: 'AWS::CloudFormation::Stack'
@@ -1083,7 +1083,7 @@ Resources:
         cost: !Ref 'cost'
         environment: !Ref 'environment'
         group: !Ref 'group'
-        sshKey: !If [createKeyPair, !Ref NewKeyPair, !Ref 'sshKey']
+        sshKey: !If [createKeyPair, !Ref BigIpSshKeyPair, !Ref 'sshKey']
         uniqueString: !Ref uniqueString
 Outputs:
   access:
@@ -1111,7 +1111,7 @@ Outputs:
   keyPairName:
     Condition: createKeyPair
     Description: SSH key pair name
-    Value: !Ref NewKeyPair
+    Value: !Ref BigIpSshKeyPair
   stackName:
     Description: workload nested stack name
     Value: !Ref "AWS::StackName"
