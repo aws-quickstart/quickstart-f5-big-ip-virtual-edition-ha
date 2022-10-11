@@ -445,7 +445,7 @@ Resources:
         EnableBanner: 'false'
         EnableTCPForwarding: 'true'
         EnableX11Forwarding: 'true'
-        KeyPairName: !If [createKeyPair, !GetAtt ['WorkLoadStack.Outputs.keyPairName'], !Ref 'keyPairName']
+        KeyPairName: !If [createKeyPair, !GetAtt 'WorkLoadStack.Outputs.keyPairName', !Ref 'keyPairName']
         NumBastionHosts: '1'
         PublicSubnet1ID: !GetAtt 'VPCStack.Outputs.PublicSubnet1ID'
         PublicSubnet2ID: !GetAtt 'VPCStack.Outputs.PublicSubnet2ID'
