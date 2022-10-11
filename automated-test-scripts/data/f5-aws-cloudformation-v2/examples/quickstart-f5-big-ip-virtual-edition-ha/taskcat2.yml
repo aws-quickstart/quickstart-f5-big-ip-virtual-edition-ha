@@ -11,7 +11,6 @@ project:
     delete: 'True'
 tests:
   f5ve-ha-prod:
-    lint_disable: true
     parameters:
       allowUsageAnalytics: 'false'
       availabilityZones: $[taskcat_genaz_2]

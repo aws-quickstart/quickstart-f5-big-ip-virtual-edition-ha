@@ -12,7 +12,6 @@ project:
 tests:
   f5ve-ha-prod:
     parameters:
-      lint_disable: true
       allowUsageAnalytics: 'false'
       availabilityZones: $[taskcat_genaz_2]
       bigIpImageName: AllTwoBootLocations
