@@ -25,7 +25,10 @@ run_cfn_lint:
     - git clone https://github.com/aws-quickstart/qs-cfn-lint-rules.git
     - cd qs-cfn-lint-rules
     # using this method due to bug with pip install -e
-    - python3 setup.py install
+    # - python3 setup.py install
+    - pip install -e .
+    # workaround for bad cfn-lint rules in 0.67.0
+    - pip install cfn-lint==0.66.1
     - cd $cwd
     - cfn-lint -a qs-cfn-lint-rules/qs_cfn_lint_rules/
     - rm -rf qs-cfn-lint-rules
@@ -123,6 +126,8 @@ dewdrop_test_run:
     # is run from the known location where test policies expect it to be
     # location: root of the cloud factory repository
     - pip install taskcat
+    # workaround for bad cfn-lint rules in 0.67.0
+    - pip install cfn-lint==0.66.1
     - if [ "$CLOUD_PROVIDER_ENVIRONMENT" == "aws_china" ]; then
     -   AWS_DEFAULT_REGION=$AWS_CHINA_DEFAULT_REGION
     -   AWS_ACCESS_KEY_ID=$AWS_CHINA_ACCESS_KEY_ID
