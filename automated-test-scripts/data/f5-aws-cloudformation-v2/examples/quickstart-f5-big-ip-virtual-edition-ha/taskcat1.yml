@@ -12,6 +12,7 @@ project:
 tests:
   f5ve-ha-defaults:
     parameters:
+      allowUsageAnalytics: 'false'
       availabilityZones: $[taskcat_genaz_2]
       bigIpInstanceType: m5.xlarge
       bigIpRuntimeInitConfig01: https://f5-cft.s3.amazonaws.com/quickstarts-v2/declarations/runtime-init-conf-2nic-payg-instance01.yaml

@@ -12,6 +12,7 @@ project:
 tests:
   f5ve-ha-defaults:
     parameters:
+      allowUsageAnalytics: 'false'
       availabilityZones: $[taskcat_genaz_2]
       bigIpImageName: AllTwoBootLocations
       bigIpInstanceType: m5.xlarge

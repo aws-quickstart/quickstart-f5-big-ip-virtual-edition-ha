@@ -8,6 +8,9 @@ Description: >-
   for demonstration purposes.  **WARNING** This template creates multiple AWS resources.
   You will be billed for the AWS resources used if you create a stack from this template.(qs-1p2474b65)
 Conditions:
+  createKeyPair: !Equals
+    - ''
+    - !Ref keyPairName
   useDefaultBucket: !Equals [!Ref qss3BucketName, 'aws-quickstart']
   usePublicIpVip: !Equals
     - 'true'
@@ -287,8 +290,9 @@ Parameters:
     Description: Group Tag.
     Type: String
   keyPairName:
+    Default: ''
     Description: EC2 KeyPair to enable SSH access to EC2 instances which include BIG-IP, Bastion, and demo application instances.
-    Type: 'AWS::EC2::KeyPair::KeyName'
+    Type: String
   owner:
     Default: f5owner
     Description: Owner Tag
@@ -441,7 +445,7 @@ Resources:
         EnableBanner: 'false'
         EnableTCPForwarding: 'true'
         EnableX11Forwarding: 'true'
-        KeyPairName: !Ref 'keyPairName'
+        KeyPairName: !If [createKeyPair, !GetAtt ['WorkLoadStack.Outputs.keyPairName'], !Ref 'keyPairName']
         NumBastionHosts: '1'
         PublicSubnet1ID: !GetAtt 'VPCStack.Outputs.PublicSubnet1ID'
         PublicSubnet2ID: !GetAtt 'VPCStack.Outputs.PublicSubnet2ID'
@@ -510,7 +514,6 @@ Resources:
           - ','
           - !Ref 'availabilityZones'
         CreateAdditionalPrivateSubnets: 'true'
-        KeyPairName: !Ref 'keyPairName'
         NumberOfAZs: '2'
         PrivateSubnet1ACIDR: !Ref 'privateSubnet1ACIDR'
         PrivateSubnet1BCIDR: !Ref 'privateSubnet1BCIDR'
@@ -548,6 +551,10 @@ Outputs:
   dag:
     Description: dag nested stack name
     Value: !GetAtt [WorkLoadStack, Outputs.dag]
+  keyPairName:
+    Condition: createKeyPair
+    Description: SSH key pair name
+    Value: !GetAtt [WorkLoadStack, Outputs.keyPairName]
   workLoadStack:
     Description: workload nested stack name
     Value: !GetAtt [WorkLoadStack, Outputs.stackName]

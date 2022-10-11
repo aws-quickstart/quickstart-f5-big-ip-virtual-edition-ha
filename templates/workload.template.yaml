@@ -494,6 +494,12 @@ Mappings:
       Best25Mbps: ami-00f3354c008c0818d
       Best5000Mbps: ami-01c54ae69d6bf7217
 Conditions:
+  createKeyPair: !Equals
+    - ''
+    - !Ref sshKey
+  createSecret: !Equals
+    - ''
+    - !Ref secretArn
   CustomConfig1: !Not [!Equals [!Ref CustomBigIPRuntimeInit01, ""]]
   CustomConfig2: !Not [!Equals [!Ref CustomBigIPRuntimeInit02, ""]]
   useDefaultBucket: !Equals [!Ref s3BucketName, 'aws-quickstart']
@@ -868,8 +874,9 @@ Parameters:
     Description: ARN of Secrets Manager secret
     Type: String
   sshKey:
+    Default: ''
     Description: EC2 KeyPair to enable SSH access to EC2 instances which include BIG-IP, Bastion, and demo application instances.
-    Type: 'AWS::EC2::KeyPair::KeyName'
+    Type: String
   uniqueString:
     AllowedPattern: ^[a-zA-Z][a-zA-Z0-9]{1,11}$
     ConstraintDescription: Must Contain between 1 and 12 alphanumeric characters with first character as a letter.
@@ -880,6 +887,42 @@ Parameters:
     Description: VPC Id for the deployment.
     Type: AWS::EC2::VPC::Id
 Resources:
+  NewKeyPair:
+    Condition: createKeyPair
+    Type: 'AWS::EC2::KeyPair'
+    Properties:
+      KeyName: MyKeyPair
+      Tags:
+        - Key: application
+          Value: !Ref 'application'
+        - Key: costcenter
+          Value: !Ref 'cost'
+        - Key: environment
+          Value: !Ref 'environment'
+        - Key: group
+          Value: !Ref 'group'
+        - Key: owner
+          Value: !Ref 'owner'
+  MySecret:
+    Condition: createSecret
+    Type: 'AWS::SecretsManager::Secret'
+    Properties:
+      Name: MySecret
+      Description: "This secret has a dynamically generated secret password."
+      GenerateSecretString:
+        PasswordLength: 10
+        ExcludePunctuation: true
+      Tags:
+        - Key: application
+          Value: !Ref 'application'
+        - Key: costcenter
+          Value: !Ref 'cost'
+        - Key: environment
+          Value: !Ref 'environment'
+        - Key: group
+          Value: !Ref 'group'
+        - Key: owner
+          Value: !Ref 'owner'
   Access:
     Type: 'AWS::CloudFormation::Stack'
     Properties:
@@ -895,7 +938,7 @@ Resources:
         group: !Ref group
         owner: !Ref owner
         s3Bucket: !Ref cfeS3Bucket
-        secretArn: !Ref secretArn
+        secretArn: !If [createSecret, !Ref MySecret, !Ref 'secretArn']
         solutionType: failover
         uniqueString: !Ref uniqueString
   Dag:
@@ -961,8 +1004,8 @@ Resources:
         mgmtSubnetId: !Ref privateSubnet1ID
         numSecondaryPrivateIpAddress: !If [usePublicIpVip, 1, 0]
         peerConfigSyncAddr: ''
-        secretArn: !Ref secretArn
-        sshKey: !Ref sshKey
+        secretArn: !If [createSecret, !Ref MySecret, !Ref 'secretArn']
+        sshKey: !If [createKeyPair, !Ref NewKeyPair, !Ref 'sshKey']
         uniqueString: !Ref uniqueString
   BigipInstance02:
     DependsOn: Access
@@ -1001,8 +1044,8 @@ Resources:
         mgmtSubnetId: !Ref privateSubnet2ID
         numSecondaryPrivateIpAddress: 0
         peerConfigSyncAddr: !Ref peerConfigSyncAddr
-        secretArn: !Ref secretArn
-        sshKey: !Ref sshKey
+        secretArn: !If [createSecret, !Ref MySecret, !Ref 'secretArn']
+        sshKey: !If [createKeyPair, !Ref NewKeyPair, !Ref 'sshKey']
         uniqueString: !Ref uniqueString
   Application01:
     Type: 'AWS::CloudFormation::Stack'
@@ -1021,7 +1064,7 @@ Resources:
         cost: !Ref 'cost'
         environment: !Ref 'environment'
         group: !Ref 'group'
-        sshKey: !Ref 'sshKey'
+        sshKey: !If [createKeyPair, !Ref NewKeyPair, !Ref 'sshKey']
         uniqueString: !Ref uniqueString
   Application02:
     Type: 'AWS::CloudFormation::Stack'
@@ -1040,7 +1083,7 @@ Resources:
         cost: !Ref 'cost'
         environment: !Ref 'environment'
         group: !Ref 'group'
-        sshKey: !Ref 'sshKey'
+        sshKey: !If [createKeyPair, !Ref NewKeyPair, !Ref 'sshKey']
         uniqueString: !Ref uniqueString
 Outputs:
   access:
@@ -1065,6 +1108,10 @@ Outputs:
   dag:
     Description: dag nested stack name
     Value: !GetAtt [Dag, Outputs.stackName]
+  keyPairName:
+    Condition: createKeyPair
+    Description: SSH key pair name
+    Value: !Ref NewKeyPair
   stackName:
     Description: workload nested stack name
     Value: !Ref "AWS::StackName"
