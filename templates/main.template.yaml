@@ -8,6 +8,9 @@ Description: >-
   for demonstration purposes.  **WARNING** This template creates multiple AWS resources.
   You will be billed for the AWS resources used if you create a stack from this template.(qs-1p2474b65)
 Conditions:
+  createKeyPair: !Equals
+    - ''
+    - !Ref keyPairName
   useDefaultBucket: !Equals [!Ref qss3BucketName, 'aws-quickstart']
   usePublicIpVip: !Equals
     - 'true'
@@ -47,6 +50,7 @@ Metadata:
       - Label:
           default: BIG-IP Configuration
         Parameters:
+          - allowUsageAnalytics
           - bigIpInstanceType
           - bigIpImageId
           - bigIpImageName
@@ -80,6 +84,8 @@ Metadata:
           - qss3BucketRegion
           - qss3KeyPrefix
     ParameterLabels:
+      allowUsageAnalytics:
+        default: Send anonymous statistics to F5
       appDockerImageName:
         default: Application Docker image name
       application:
@@ -164,6 +170,14 @@ Metadata:
         default: unique string value which gets append to cloud resources names
   Version: 1.0.0
 Parameters:
+  allowUsageAnalytics:
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Default: 'true'
+    Description: This deployment can send anonymous statistics to F5 to help us determine
+      how to improve our solutions. If you select **false** statistics are not sent.
+    Type: String
   appDockerImageName:
     Default: f5devcentral/f5-demo-httpd:latest
     Description: Application docker image name.
@@ -276,8 +290,9 @@ Parameters:
     Description: Group Tag.
     Type: String
   keyPairName:
-    Description: EC2 KeyPair to enable SSH access to EC2 instances which include BIG-IP, Bastion, and demo application instances.
-    Type: 'AWS::EC2::KeyPair::KeyName'
+    Default: ''
+    Description: Name of an existing EC2 KeyPair to enable SSH access to EC2 instances which include BIG-IP, Bastion, and demo application instances. If left empty, one will be created.
+    Type: String
   owner:
     Default: f5owner
     Description: Owner Tag
@@ -397,7 +412,7 @@ Parameters:
     Type: String
   secretArn:
     Default: ''
-    Description: ARN of Secrets Manager secret
+    Description: ARN of an existing AWS Secrets Manager secret. If left empty, a secret will be created.
     Type: String
   vpcCIDR:
     AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$'
@@ -430,7 +445,7 @@ Resources:
         EnableBanner: 'false'
         EnableTCPForwarding: 'true'
         EnableX11Forwarding: 'true'
-        KeyPairName: !Ref 'keyPairName'
+        KeyPairName: !If [createKeyPair, !GetAtt 'WorkLoadStack.Outputs.keyPairName', !Ref 'keyPairName']
         NumBastionHosts: '1'
         PublicSubnet1ID: !GetAtt 'VPCStack.Outputs.PublicSubnet1ID'
         PublicSubnet2ID: !GetAtt 'VPCStack.Outputs.PublicSubnet2ID'
@@ -447,6 +462,7 @@ Resources:
         - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref qss3BucketRegion]
           S3Bucket: !If [useDefaultBucket, !Sub '${qss3BucketName}-${AWS::Region}', !Ref qss3BucketName]
       Parameters:
+        allowUsageAnalytics: !Ref 'allowUsageAnalytics'
         appDockerImageName: !Ref appDockerImageName
         application: !Ref application
         bigIpImageId: !Ref bigIpImageId
@@ -498,7 +514,6 @@ Resources:
           - ','
           - !Ref 'availabilityZones'
         CreateAdditionalPrivateSubnets: 'true'
-        KeyPairName: !Ref 'keyPairName'
         NumberOfAZs: '2'
         PrivateSubnet1ACIDR: !Ref 'privateSubnet1ACIDR'
         PrivateSubnet1BCIDR: !Ref 'privateSubnet1BCIDR'
@@ -536,6 +551,10 @@ Outputs:
   dag:
     Description: dag nested stack name
     Value: !GetAtt [WorkLoadStack, Outputs.dag]
+  keyPairName:
+    Condition: createKeyPair
+    Description: SSH key pair name
+    Value: !GetAtt [WorkLoadStack, Outputs.keyPairName]
   workLoadStack:
     Description: workload nested stack name
     Value: !GetAtt [WorkLoadStack, Outputs.stackName]

@@ -12,6 +12,7 @@ project:
 tests:
   f5ve-ha-prod:
     parameters:
+      allowUsageAnalytics: 'false'
       availabilityZones: $[taskcat_genaz_2]
       bigIpImageName: AdvancedWaf
       bigIpInstanceType: m5.xlarge
