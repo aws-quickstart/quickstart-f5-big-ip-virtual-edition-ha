@@ -291,7 +291,7 @@ Parameters:
     Type: String
   keyPairName:
     Default: ''
-    Description: EC2 KeyPair to enable SSH access to EC2 instances which include BIG-IP, Bastion, and demo application instances.
+    Description: Name of an existing EC2 KeyPair to enable SSH access to EC2 instances which include BIG-IP, Bastion, and demo application instances. If left empty, one will be created.
     Type: String
   owner:
     Default: f5owner
@@ -412,7 +412,7 @@ Parameters:
     Type: String
   secretArn:
     Default: ''
-    Description: ARN of Secrets Manager secret
+    Description: ARN of an existing AWS Secrets Manager secret. If left empty, a secret will be created.
     Type: String
   vpcCIDR:
     AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$'

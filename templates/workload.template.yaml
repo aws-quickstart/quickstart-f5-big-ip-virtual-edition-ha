@@ -871,11 +871,11 @@ Parameters:
     Type: String
   secretArn:
     Default: ''
-    Description: ARN of Secrets Manager secret
+    Description: ARN of an existing AWS Secrets Manager secret. If left empty, a secret will be created.
     Type: String
   sshKey:
     Default: ''
-    Description: EC2 KeyPair to enable SSH access to EC2 instances which include BIG-IP, Bastion, and demo application instances.
+    Description: Name of an existing EC2 KeyPair to enable SSH access to EC2 instances which include BIG-IP, Bastion, and demo application instances. If left empty, one will be created.
     Type: String
   uniqueString:
     AllowedPattern: ^[a-zA-Z][a-zA-Z0-9]{1,11}$
