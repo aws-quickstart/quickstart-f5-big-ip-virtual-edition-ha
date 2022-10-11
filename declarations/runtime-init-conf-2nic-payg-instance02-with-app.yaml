@@ -147,7 +147,7 @@ extension_services:
               pool: /Tenant_1/Shared/Service_01_Pool
               profileHTTP:
                 use: /Tenant_1/Shared/Custom_HTTP_Profile
-              policyWAF: 
+              policyWAF:
                 use: /Tenant_1/Shared/Custom_WAF_Policy
           HTTP_Service_01_B:
             class: Application
@@ -160,7 +160,7 @@ extension_services:
               pool: /Tenant_1/Shared/Service_01_Pool
               profileHTTP:
                 use: /Tenant_1/Shared/Custom_HTTP_Profile
-              policyWAF: 
+              policyWAF:
                 use: /Tenant_1/Shared/Custom_WAF_Policy
           HTTPS_Service_01_A:
             class: Application
@@ -176,7 +176,7 @@ extension_services:
               redirect80: false
               profileHTTP:
                 use: /Tenant_1/Shared/Custom_HTTP_Profile
-              policyWAF: 
+              policyWAF:
                 use: /Tenant_1/Shared/Custom_WAF_Policy
           HTTPS_Service_01_B:
             class: Application
@@ -192,7 +192,7 @@ extension_services:
               redirect80: false
               profileHTTP:
                 use: /Tenant_1/Shared/Custom_HTTP_Profile
-              policyWAF: 
+              policyWAF:
                 use: /Tenant_1/Shared/Custom_WAF_Policy
     - extensionType: do
       type: inline
