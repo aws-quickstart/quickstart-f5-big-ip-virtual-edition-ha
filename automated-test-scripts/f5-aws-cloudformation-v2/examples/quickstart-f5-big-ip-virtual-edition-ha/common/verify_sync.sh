@@ -5,10 +5,13 @@
 
 FLAG='FAIL'
 
+stack_name=$(cat taskcat_outputs/tC* | grep  -m1 StackName: | cut -d":" -f2)
+echo "stack_name: ${stack_name}"
+
 private_key='/etc/ssl/private/dewpt_private.pem'
 if [[ "<CREATE NEW KEY PAIR>" == 'true' ]]; then
     private_key='/etc/ssl/private/new_key.pem'
-    key_pair_name=$(aws cloudformation describe-stacks --stack-name $stack_name --region <REGION> | jq -r '.Stacks[].Outputs[] | select (.OutputKey=="keyPairName") | .OutputValue')
+    key_pair_name=$(aws cloudformation describe-stacks --stack-name ${stack_name} --region <REGION> | jq -r '.Stacks[].Outputs[] | select (.OutputKey=="keyPairName") | .OutputValue')
     key_pair_id=$(aws ec2 describe-key-pairs --key-name ${key_pair_name} | jq -r .KeyPairs[0].KeyPairId)
     private_key_value=$(aws ssm get-parameter --name "/ec2/keypair/${key_pair_id}" --with-decryption | jq -r .Parameter.Value > ${private_key})
     chmod 0600 ${private_key}
@@ -18,18 +21,17 @@ echo "Private key: ${private_key}"
 
 PASSWORD='<SECRET VALUE>'
 if [[ "<CREATE NEW SECRET>" == 'true' ]]; then
-    unique_string=$(aws cloudformation describe-stacks --stack-name $stack_name --region <REGION> | jq -r '.Stacks[].Parameters[]| select (.ParameterKey=="uniqueString") | .ParameterValue')
+    unique_string=$(aws cloudformation describe-stacks --stack-name ${stack_name} --region <REGION> | jq -r '.Stacks[].Parameters[]| select (.ParameterKey=="uniqueString") | .ParameterValue')
     secret_name=${unique_string}-bigIpSecret
     secret_arn=$(aws secretsmanager list-secrets --region <REGION> --filters Key=name,Values=${secret_name} | jq -r .SecretList[0].ARN)
     PASSWORD=$(aws secretsmanager get-secret-value --secret-id ${secret_arn} | jq -r .SecretString)
 fi
 echo "PASSWORD: ${PASSWORD}"
 
-stack_name=$(cat taskcat_outputs/tC* | grep  -m1 StackName: | cut -d":" -f2)
-bastion=$(aws cloudformation describe-stacks --stack-name $stack_name --region <REGION> | jq -r '.Stacks[].Outputs[] | select (.OutputKey=="bastionHost") | .OutputValue')
-bigip1_stackname=$(aws cloudformation describe-stacks --stack-name $stack_name --region <REGION> | jq -r '.Stacks[].Outputs[] | select (.OutputKey=="bigipInstance01") | .OutputValue')
+bastion=$(aws cloudformation describe-stacks --stack-name ${stack_name} --region <REGION> | jq -r '.Stacks[].Outputs[] | select (.OutputKey=="bastionHost") | .OutputValue')
+bigip1_stackname=$(aws cloudformation describe-stacks --stack-name ${stack_name} --region <REGION> | jq -r '.Stacks[].Outputs[] | select (.OutputKey=="bigipInstance01") | .OutputValue')
 bigip1_instance_id=$(aws cloudformation describe-stacks --stack-name  ${bigip1_stackname} --region <REGION> | jq -r '.Stacks[].Outputs[]|select (.OutputKey=="bigIpInstanceId")| .OutputValue')
-bigip2_stackname=$(aws cloudformation describe-stacks --stack-name $stack_name --region <REGION> | jq -r '.Stacks[].Outputs[] | select (.OutputKey=="bigipInstance02") | .OutputValue')
+bigip2_stackname=$(aws cloudformation describe-stacks --stack-name ${stack_name} --region <REGION> | jq -r '.Stacks[].Outputs[] | select (.OutputKey=="bigipInstance02") | .OutputValue')
 bigip2_instance_id=$(aws cloudformation describe-stacks --stack-name  ${bigip2_stackname} --region <REGION> | jq -r '.Stacks[].Outputs[]|select (.OutputKey=="bigIpInstanceId")| .OutputValue')
 echo "BIGIP1 Instance Id: $bigip1_instance_id"
 echo "BIGIP2 Instance Id: $bigip2_instance_id"
