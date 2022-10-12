@@ -19,25 +19,22 @@ This Quick Start requires a subscription to the AMI for {partner-product-short-n
 
 This Quick Start requires:
 
-* An SSH key pair in AWS for management access to {partner-product-short-name}. For more information about creating and/or importing the key pair in AWS, refer to https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html[Amazon EC2 key pairs and Linux instances^].
-* An AWS secret stored in https://aws.amazon.com/secrets-manager/[AWS Secrets Manager^] containing the password used to access and cluster the HA pair. For example, to create a secret using the AWS Command Line Interface (AWS CLI), run the following command:
+* The appropriate permission in AWS to launch AWS CloudFormation templates. You must be an IAM user with the Administrator Access policy attached and have permission to create the objects contained in this Quick Start, including VPCs, Elastic IP addresses, EC2 instances, SSE-S3 encrypted S3 buckets, SSH SSH Key Pairs, AWS Secrets Manager secrets, etc.
 
-    aws secretsmanager create-secret --region us-east-1 --name bigIpPassword --secret-string 'YOUR_BIGIP_PASSWORD'
+* This solution requires an SSH key pair in AWS for management access to {partner-product-short-name}. For more information about creating and/or importing the key pair in AWS, refer to https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html[Amazon EC2 key pairs and Linux instances^]. If one is not specified, one will be created for you named `BigIpSshKeyPair`.
 
-*** By default, the secret name must be *bigIpPassword* and created in the Region where the template is deployed. Otherwise, refer to link:#_customizing_the_big_ip_configuration[Customizing the BIG-IP configuration] for more details.
-*** Obtain the secret Amazon Resource Name (ARN). The ARN format required for the input parameter looks similar to  `arn:aws:secretsmanager:us-east-1:111111111111:secret:bigIpPassword-xdg0kdf` Pass this value to the *secretArn* input parameter.
-*** In the example command above, the *--secret-string* value is in single quotes to avoid bash special character interpolation. For a more secure example using a file, refer to the https://docs.aws.amazon.com/cli/latest/reference/secretsmanager/index.html#cli-aws-secretsmanager[AWS CLI secretsmanager documentation^].
+* This solution requires AWS secret stored in https://aws.amazon.com/secrets-manager/[AWS Secrets Manager^] containing the password used to access and cluster the HA pair. If one is not specified, one will be created for you named `BigIpSecret`. To obtain the secret value, you can run the following https://docs.aws.amazon.com/cli/latest/reference/secretsmanager/get-secret-value.html[AWS cli command^], changing the region and secret name as needed:
 
-* Acceptance of the end-user license agreement for the F5 image in the AWS Marketplace. If you haven't deployed {partner-product-short-name} in your environment, search for F5 in the AWS Marketplace and then choose *Accept Software Terms*. This option appears only the first time you attempt to launch an F5 image. For more details, refer to the link:#_software_licenses[Costs and licenses] section.
-* The appropriate permission in AWS to launch AWS CloudFormation templates. You must be an IAM user with the Administrator Access policy attached and have permission to create the objects contained in this Quick Start, including VPCs, Elastic IP addresses, EC2 instances, etc.
+    aws secretsmanager get-secret-value --secret-id BigIpSecret --query "SecretString" --output text --region us-east-1
 
-
+*** For more information, refer to the https://aws.amazon.com/secrets-manager/[AWS CLI secretsmanager documentation^].
 
 //==== Prepare your {partner-company-name} account
 //_Describe any setup required in the partner portal/account prior to template launch_
 
 
 ==== Configuration notes ====
+
 
 The Quick Start template provides an initial deployment for an infrastructure use case, which means that it doesn't support managing the entire deployment exclusively via the template's update-stack feature.
 
