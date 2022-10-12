@@ -27,6 +27,8 @@ fi
 # Set CFE tag
 /usr/bin/yq e ".extension_services.service_operations.[1].value.externalStorage.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/<RUNTIME CONFIG FILE 01>
 /usr/bin/yq e ".extension_services.service_operations.[1].value.externalStorage.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/<RUNTIME CONFIG FILE 02>
+/usr/bin/yq e ".extension_services.service_operations.[1].value.failoverAddresses.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/<RUNTIME CONFIG FILE 01>
+/usr/bin/yq e ".extension_services.service_operations.[1].value.failoverAddresses.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/<RUNTIME CONFIG FILE 02>
 
 if [[ "<LICENSE TYPE>" == "byol" ]]; then
 # Add RegKey for BYOLs
@@ -44,19 +46,21 @@ fi
 /usr/bin/yq e ".tests.f5ve-ha-<STACK TYPE>.parameters.restrictedSrcAddressApp = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/<CONFIG FILE>
 /usr/bin/yq e ".tests.f5ve-ha-<STACK TYPE>.parameters.restrictedSrcAddressMgmt = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/<CONFIG FILE>
 
-echo "taskcat config <CONFIG FILE>"
+echo "RUNTIME CONFIG: <RUNTIME CONFIG FILE 01>"
+cat /tmp/<DEWPOINT JOB ID>/declarations/<RUNTIME CONFIG FILE 01>
+echo "RUNTIME CONFIG: <RUNTIME CONFIG FILE 02>"
+cat /tmp/<DEWPOINT JOB ID>/declarations/<RUNTIME CONFIG FILE 02>
+echo "TASKCAT CONFIG: <CONFIG FILE>"
 cat $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/<CONFIG FILE>
-
-# r=$(date +%s | sha256sum | base64 | head -c 32)
 
 aws s3 mb --region <REGION> s3://"$bucket_name"
 aws s3api put-bucket-tagging --bucket $bucket_name  --tagging 'TagSet=[{Key=delete,Value=True},{Key=creator,Value=dewdrop}]'
-#aws s3 cp /tmp/<TEMPLATE NAME> s3://"$bucket_name"
 OUTPUT=$(aws s3 cp --region <REGION> --recursive /tmp/<DEWPOINT JOB ID>/declarations s3://"$bucket_name" --recursive --acl public-read 2>&1)
 echo '------'
 echo "OUTPUT = $OUTPUT"
 echo "BIGIQ_OUTPUT = $BIGIQ_OUTPUT"
 echo '------'
+
 if grep -q failed <<< "$OUTPUT" ; then
     echo AUTO_FAILED
 elif grep -q failed <<< "$BIGIQ_OUTPUT" ; then

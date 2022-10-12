@@ -1,7 +1,7 @@
 #  expectValue = "SUCCESS"
 #  scriptTimeout = 3
 #  replayEnabled = true
-#  replayTimeout = 5
+#  replayTimeout = 60
 
 FLAG='FAIL'
 
@@ -13,7 +13,7 @@ if [[ "<CREATE NEW KEY PAIR>" == 'true' ]]; then
     private_key='/etc/ssl/private/new_key.pem'
     key_pair_name=$(aws cloudformation describe-stacks --stack-name ${stack_name} --region <REGION> | jq -r '.Stacks[].Outputs[] | select (.OutputKey=="keyPairName") | .OutputValue')
     key_pair_id=$(aws ec2 describe-key-pairs --key-name ${key_pair_name} --region <REGION> | jq -r .KeyPairs[0].KeyPairId)
-    private_key_value=$(aws ssm get-parameter --name "/ec2/keypair/${key_pair_id}" --with-decryption | jq -r .Parameter.Value > ${private_key})
+    private_key_value=$(aws ssm get-parameter --name /ec2/keypair/${key_pair_id} --with-decryption --region <REGION> | jq -r .Parameter.Value > ${private_key})
     chmod 0600 ${private_key}
     echo "Key pair name: ${key_pair_name}"
     echo "Key pair ID: ${key_pair_id}"
