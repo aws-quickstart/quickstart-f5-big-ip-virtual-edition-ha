@@ -10,7 +10,7 @@ project:
   tags:
     delete: 'True'
 tests:
-  f5ve-ha-prod:
+  f5ve-ha-full:
     parameters:
       allowUsageAnalytics: 'false'
       availabilityZones: $[taskcat_genaz_2]
