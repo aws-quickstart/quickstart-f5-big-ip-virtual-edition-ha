@@ -735,7 +735,7 @@ Parameters:
   bigIpRuntimeInitPackageUrl:
     Description: 'Supply a URL for the F5 BIG-IP Runtime Init Package install script.'
     Type: String
-    Default: 'https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.5.0/dist/f5-bigip-runtime-init-1.5.0-1.gz.run'
+    Default: 'https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.5.1/dist/f5-bigip-runtime-init-1.5.1-1.gz.run'
   bigIpVersion:
     AllowedValues:
       - 16-1-2-2-0028
@@ -891,7 +891,10 @@ Resources:
     Condition: createKeyPair
     Type: 'AWS::EC2::KeyPair'
     Properties:
-      KeyName: bigIpSshKeyPair
+      KeyName: !Join
+        - ''
+        - - !Ref uniqueString
+          - '-keyPair'
       Tags:
         - Key: application
           Value: !Ref 'application'
@@ -907,7 +910,10 @@ Resources:
     Condition: createSecret
     Type: 'AWS::SecretsManager::Secret'
     Properties:
-      Name: bigIpSecret
+      Name: !Join
+        - ''
+        - - !Ref uniqueString
+          - '-bigIpSecret'
       Description: "This secret has a dynamically generated secret password."
       GenerateSecretString:
         PasswordLength: 10

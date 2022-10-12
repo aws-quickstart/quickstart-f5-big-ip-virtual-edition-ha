@@ -8,3 +8,5 @@ aws-ha-quickstart-test:
         # BYOL
         - "automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/prepub_parameters3.yaml"
         - "automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/prepub_parameters4.yaml"
+        # Create new key pair/secret
+        - "automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/prepub_parameters5.yaml"

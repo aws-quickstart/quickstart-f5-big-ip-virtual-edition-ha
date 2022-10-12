@@ -1,7 +1,7 @@
 #  expectValue = "SUCCESS"
 #  scriptTimeout = 2
 #  replayEnabled = true
-#  replayTimeout = 10 
+#  replayTimeout = 30 
 
 
 if [[ "<PROVISION_WEB_APP>" == 'false' ]]; then

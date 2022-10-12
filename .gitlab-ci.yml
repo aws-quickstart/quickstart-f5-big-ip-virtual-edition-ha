@@ -48,7 +48,7 @@ quick_start_ha_test_job:
     - docker-executor
   only:
     refs:
-      - main
+      - branches
     changes:
       - declarations/**/*
       - submodules/**/*

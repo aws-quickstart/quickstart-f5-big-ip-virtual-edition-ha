@@ -2,6 +2,10 @@
 CONFIG FILE: taskcat2.yml
 REGION: us-west-1
 SECRET VALUE: StrongPassword12345+
-STACK TYPE: defaults
+STACK TYPE: full
 PROVISION_WEB_APP: 'true'
 LICENSE TYPE: payg
+CREATE NEW SECRET: 'false'
+CREATE NEW KEY PAIR: 'false'
+RUNTIME CONFIG FILE 01: runtime-init-conf-2nic-payg-instance01-with-app.yaml
+RUNTIME CONFIG FILE 02: runtime-init-conf-2nic-payg-instance02-with-app.yaml

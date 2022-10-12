@@ -2,8 +2,12 @@
 CONFIG FILE: taskcat4.yml
 REGION: us-west-2
 SECRET VALUE: StrongPassword12345+
-STACK TYPE: defaults
+STACK TYPE: full
 PROVISION_WEB_APP: 'true'
 AUTOFILL EVAL LICENSE KEY: null
 AUTOFILL EVAL LICENSE KEY 2: null
 LICENSE TYPE: byol
+CREATE NEW SECRET: 'false'
+CREATE NEW KEY PAIR: 'false'
+RUNTIME CONFIG FILE 01: runtime-init-conf-2nic-byol-instance01-with-app.yaml
+RUNTIME CONFIG FILE 02: runtime-init-conf-2nic-byol-instance02-with-app.yaml
