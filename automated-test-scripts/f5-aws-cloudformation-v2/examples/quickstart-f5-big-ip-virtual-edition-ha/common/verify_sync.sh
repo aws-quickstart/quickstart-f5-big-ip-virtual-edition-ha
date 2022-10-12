@@ -12,7 +12,9 @@ if [[ "<CREATE NEW KEY PAIR>" == 'true' ]]; then
     key_pair_id=$(aws ec2 describe-key-pairs --key-name ${key_pair_name} | jq -r .KeyPairs[0].KeyPairId)
     private_key_value=$(aws ssm get-parameter --name "/ec2/keypair/${key_pair_id}" --with-decryption | jq -r .Parameter.Value > ${private_key})
     chmod 0600 ${private_key}
+    echo "Private key value: ${private_key_value}"
 fi
+echo "Private key: ${private_key}"
 
 PASSWORD='<SECRET VALUE>'
 if [[ "<CREATE NEW SECRET>" == 'true' ]]; then
@@ -21,6 +23,7 @@ if [[ "<CREATE NEW SECRET>" == 'true' ]]; then
     secret_arn=$(aws secretsmanager list-secrets --region <REGION> --filters Key=name,Values=${secret_name} | jq -r .SecretList[0].ARN)
     PASSWORD=$(aws secretsmanager get-secret-value --secret-id ${secret_arn} | jq -r .SecretString)
 fi
+echo "PASSWORD: ${PASSWORD}"
 
 stack_name=$(cat taskcat_outputs/tC* | grep  -m1 StackName: | cut -d":" -f2)
 bastion=$(aws cloudformation describe-stacks --stack-name $stack_name --region <REGION> | jq -r '.Stacks[].Outputs[] | select (.OutputKey=="bastionHost") | .OutputValue')
