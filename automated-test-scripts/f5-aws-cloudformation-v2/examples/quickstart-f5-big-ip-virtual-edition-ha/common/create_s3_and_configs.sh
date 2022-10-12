@@ -25,13 +25,13 @@ if [[ "<CREATE NEW KEY PAIR>" == 'false' ]]; then
 fi
 
 # Set CFE tag
-/usr/bin/yq e ".extension_services.service_operations.[1].value.externalStorage.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/<RUNTIME INIT CONFIG FILE 01>
-/usr/bin/yq e ".extension_services.service_operations.[1].value.externalStorage.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/<RUNTIME INIT CONFIG FILE 02>
+/usr/bin/yq e ".extension_services.service_operations.[1].value.externalStorage.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/<RUNTIME CONFIG FILE 01>
+/usr/bin/yq e ".extension_services.service_operations.[1].value.externalStorage.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/<RUNTIME CONFIG FILE 02>
 
 if [[ "<LICENSE TYPE>" == "byol" ]]; then
 # Add RegKey for BYOLs
-    /usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_License.regKey = \"$regKey01\"" -i /tmp/<DEWPOINT JOB ID>/declarations/<RUNTIME INIT CONFIG FILE 01>
-    /usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_License.regKey = \"$regKey02\"" -i /tmp/<DEWPOINT JOB ID>/declarations/<RUNTIME INIT CONFIG FILE 02>
+    /usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_License.regKey = \"$regKey01\"" -i /tmp/<DEWPOINT JOB ID>/declarations/<RUNTIME CONFIG FILE 01>
+    /usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_License.regKey = \"$regKey02\"" -i /tmp/<DEWPOINT JOB ID>/declarations/<RUNTIME CONFIG FILE 02>
 fi
 
 # Update taskcat test configs with correct runtime url
