@@ -1,9 +1,9 @@
 ---
-CONFIG FILE: taskcat1.yml
+CONFIG FILE: taskcat5.yml
 REGION: us-east-1
 SECRET VALUE: StrongPassword12345+
 STACK TYPE: prod
 PROVISION_WEB_APP: 'false'
 LICENSE TYPE: payg
-CREATE NEW SECRET: 'false'
-CREATE NEW KEY PAIR: 'false'
+CREATE NEW SECRET: 'true'
+CREATE NEW KEY PAIR: 'true'

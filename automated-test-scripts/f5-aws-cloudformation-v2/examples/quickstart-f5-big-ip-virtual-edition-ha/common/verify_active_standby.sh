@@ -3,13 +3,24 @@
 #  replayEnabled = true
 #  replayTimeout = 20
 
-#  expectValue = "SUCCESS"
-#  scriptTimeout = 2
-#  replayEnabled = true
-#  replayTimeout = 20
-
 FLAG='FAIL'
+
+private_key='/etc/ssl/private/dewpt_private.pem'
+if [[ "<CREATE NEW KEY PAIR>" == 'true' ]]; then
+    private_key='/etc/ssl/private/new_key.pem'
+    key_pair_name=$(aws cloudformation describe-stacks --stack-name $stack_name --region <REGION> | jq -r '.Stacks[].Outputs[] | select (.OutputKey=="keyPairName") | .OutputValue')
+    key_pair_id=$(aws ec2 describe-key-pairs --key-name ${key_pair_name} | jq -r .KeyPairs[0].KeyPairId)
+    private_key_value=$(aws ssm get-parameter --name "/ec2/keypair/${key_pair_id}" --with-decryption | jq -r .Parameter.Value > ${private_key})
+    chmod 0600 ${private_key}
+fi
+
 PASSWORD='<SECRET VALUE>'
+if [[ "<CREATE NEW SECRET>" == 'true' ]]; then
+    unique_string=$(aws cloudformation describe-stacks --stack-name $stack_name --region <REGION> | jq -r '.Stacks[].Parameters[]| select (.ParameterKey=="uniqueString") | .ParameterValue')
+    secret_name=${unique_string}-bigIpSecret
+    secret_arn=$(aws secretsmanager list-secrets --region <REGION> --filters Key=name,Values=${secret_name} | jq -r .SecretList[0].ARN)
+    PASSWORD=$(aws secretsmanager get-secret-value --secret-id ${secret_arn} | jq -r .SecretString)
+fi
 
 stack_name=$(cat taskcat_outputs/tC* | grep  -m1 StackName: | cut -d":" -f2)
 bastion=$(aws cloudformation describe-stacks --stack-name $stack_name --region <REGION> | jq -r '.Stacks[].Outputs[] | select (.OutputKey=="bastionHost") | .OutputValue')
@@ -25,8 +36,8 @@ echo "BIGIP1 PRIVATE IP: $bigip1_private_ip"
 bigip2_private_ip=$(aws ec2 describe-instances --region  <REGION> --instance-ids $bigip2_instance_id | jq -r .Reservations[0].Instances[0].PrivateIpAddress)
 echo "BIGIP2 PRIVATE IP: $bigip2_private_ip"
 
-state=$(sshpass -p ${PASSWORD} ssh -o "StrictHostKeyChecking no" -o ProxyCommand="ssh -o 'StrictHostKeyChecking no' -i /etc/ssl/private/dewpt_private.pem -W %h:%p ec2-user@$bastion" admin@${bigip1_private_ip} "tmsh show sys failover")
-state2=$(sshpass -p ${PASSWORD} ssh -o "StrictHostKeyChecking no" -o ProxyCommand="ssh -o 'StrictHostKeyChecking no' -i /etc/ssl/private/dewpt_private.pem -W %h:%p ec2-user@$bastion" admin@${bigip2_private_ip} "tmsh show sys failover")
+state=$(sshpass -p ${PASSWORD} ssh -o "StrictHostKeyChecking no" -o ProxyCommand="ssh -o 'StrictHostKeyChecking no' -i ${private_key} -W %h:%p ec2-user@$bastion" admin@${bigip1_private_ip} "tmsh show sys failover")
+state2=$(sshpass -p ${PASSWORD} ssh -o "StrictHostKeyChecking no" -o ProxyCommand="ssh -o 'StrictHostKeyChecking no' -i ${private_key} -W %h:%p ec2-user@$bastion" admin@${bigip2_private_ip} "tmsh show sys failover")
 
 echo "State: $state"
 echo "State2: $state2"

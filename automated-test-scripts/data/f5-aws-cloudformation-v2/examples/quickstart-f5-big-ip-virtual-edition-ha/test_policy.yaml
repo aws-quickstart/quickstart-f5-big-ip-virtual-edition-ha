@@ -6,5 +6,7 @@ aws-ha-quickstart-test:
         - "automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/prepub_parameters1.yaml"
         - "automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/prepub_parameters2.yaml"
         # BYOL
-        - "automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/prepub_parameters3.yaml"
-        - "automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/prepub_parameters4.yaml"
+        # - "automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/prepub_parameters3.yaml"
+        # - "automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/prepub_parameters4.yaml"
+        # Create new key pair/secret
+        - "automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/prepub_parameters5.yaml"

@@ -891,7 +891,10 @@ Resources:
     Condition: createKeyPair
     Type: 'AWS::EC2::KeyPair'
     Properties:
-      KeyName: bigIpSshKeyPair
+      KeyName: !Join
+        - ''
+        - - !Ref uniqueString
+          - '-keyPair'
       Tags:
         - Key: application
           Value: !Ref 'application'
@@ -907,7 +910,10 @@ Resources:
     Condition: createSecret
     Type: 'AWS::SecretsManager::Secret'
     Properties:
-      Name: bigIpSecret
+      Name: !Join
+        - ''
+        - - !Ref uniqueString
+          - '-bigIpSecret'
       Description: "This secret has a dynamically generated secret password."
       GenerateSecretString:
         PasswordLength: 10

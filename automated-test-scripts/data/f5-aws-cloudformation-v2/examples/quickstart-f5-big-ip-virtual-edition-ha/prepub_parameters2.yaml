@@ -5,3 +5,5 @@ SECRET VALUE: StrongPassword12345+
 STACK TYPE: defaults
 PROVISION_WEB_APP: 'true'
 LICENSE TYPE: payg
+CREATE NEW SECRET: 'false'
+CREATE NEW KEY PAIR: 'false'

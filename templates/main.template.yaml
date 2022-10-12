@@ -11,6 +11,9 @@ Conditions:
   createKeyPair: !Equals
     - ''
     - !Ref keyPairName
+  createSecret: !Equals
+    - ''
+    - !Ref secretArn
   useDefaultBucket: !Equals [!Ref qss3BucketName, 'aws-quickstart']
   usePublicIpVip: !Equals
     - 'true'
