@@ -17,7 +17,6 @@ if [[ "<CREATE NEW KEY PAIR>" == 'true' ]]; then
     chmod 0600 ${private_key}
     echo "Key pair name: ${key_pair_name}"
     echo "Key pair ID: ${key_pair_id}"
-    echo "Private key value: ${private_key_value}"
 fi
 echo "Private key: ${private_key}"
 
