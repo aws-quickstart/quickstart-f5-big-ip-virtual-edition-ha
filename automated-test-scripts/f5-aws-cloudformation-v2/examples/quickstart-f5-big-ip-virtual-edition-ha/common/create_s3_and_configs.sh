@@ -35,8 +35,8 @@ if [[ "<LICENSE TYPE>" == "byol" ]]; then
 fi
 
 # Update taskcat test configs with correct runtime url
-/usr/bin/yq e ".tests.f5ve-ha-<STACK TYPE>.parameters.bigIpRuntimeInitConfig01 = \"https://${bucket_name}.s3.amazonaws.com/<RUNTIME INIT CONFIG FILE 01>\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/<CONFIG FILE>
-/usr/bin/yq e ".tests.f5ve-ha-<STACK TYPE>.parameters.bigIpRuntimeInitConfig02 = \"https://${bucket_name}.s3.amazonaws.com/<RUNTIME INIT CONFIG FILE 02>\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/<CONFIG FILE>
+/usr/bin/yq e ".tests.f5ve-ha-<STACK TYPE>.parameters.bigIpRuntimeInitConfig01 = \"https://${bucket_name}.s3.amazonaws.com/<RUNTIME CONFIG FILE 01>\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/<CONFIG FILE>
+/usr/bin/yq e ".tests.f5ve-ha-<STACK TYPE>.parameters.bigIpRuntimeInitConfig02 = \"https://${bucket_name}.s3.amazonaws.com/<RUNTIME CONFIG FILE 02>\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/<CONFIG FILE>
 /usr/bin/yq e ".tests.f5ve-ha-<STACK TYPE>.parameters.keyPairName = \"${ssh_key}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/<CONFIG FILE>
 /usr/bin/yq e ".tests.f5ve-ha-<STACK TYPE>.parameters.secretArn = \"${secret_arn}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/<CONFIG FILE>
 /usr/bin/yq e ".tests.f5ve-ha-<STACK TYPE>.parameters.cfeTag = \"<DEWPOINT JOB ID>\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/<CONFIG FILE>
