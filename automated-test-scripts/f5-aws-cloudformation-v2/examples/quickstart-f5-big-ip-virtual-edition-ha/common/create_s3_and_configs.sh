@@ -64,7 +64,7 @@ fi
 
 /usr/bin/yq e ".tests.f5ve-ha-prod.parameters.bigIpRuntimeInitConfig01 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-payg-instance01-with-app.yaml\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat2.yml
 /usr/bin/yq e ".tests.f5ve-ha-prod.parameters.bigIpRuntimeInitConfig02 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-payg-instance02-with-app.yaml\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat2.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.keyPairName = \"${ssh_key}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat2.yml
+/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.keyPairName = \"${ssh_key}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat2.yml
 /usr/bin/yq e ".tests.f5ve-ha-prod.parameters.secretArn = \"${secret_arn}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat2.yml
 /usr/bin/yq e ".tests.f5ve-ha-prod.parameters.cfeTag = \"<DEWPOINT JOB ID>\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat2.yml
 /usr/bin/yq e ".tests.f5ve-ha-prod.parameters.remoteAccessCIDR = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat2.yml
@@ -82,13 +82,21 @@ fi
 
 /usr/bin/yq e ".tests.f5ve-ha-prod.parameters.bigIpRuntimeInitConfig01 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-byol-instance01-with-app.yaml\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat4.yml
 /usr/bin/yq e ".tests.f5ve-ha-prod.parameters.bigIpRuntimeInitConfig02 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-byol-instance02-with-app.yaml\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat4.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.keyPairName = \"${ssh_key}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat4.yml
+/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.keyPairName = \"${ssh_key}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat4.yml
 /usr/bin/yq e ".tests.f5ve-ha-prod.parameters.secretArn = \"${secret_arn}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat4.yml
 /usr/bin/yq e ".tests.f5ve-ha-prod.parameters.cfeTag = \"<DEWPOINT JOB ID>\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat4.yml
 /usr/bin/yq e ".tests.f5ve-ha-prod.parameters.remoteAccessCIDR = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat4.yml
 /usr/bin/yq e ".tests.f5ve-ha-prod.parameters.restrictedSrcAddressApp = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat4.yml
 /usr/bin/yq e ".tests.f5ve-ha-prod.parameters.restrictedSrcAddressMgmt = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat4.yml
 
+/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.bigIpRuntimeInitConfig01 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-payg-instance01.yaml\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat5.yml
+/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.bigIpRuntimeInitConfig02 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-payg-instance02.yaml\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat5.yml
+/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.keyPairName = \"${ssh_key}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat5.yml
+/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.secretArn = \"${secret_arn}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat5.yml
+/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.cfeTag = \"<DEWPOINT JOB ID>\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat5.yml
+/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.remoteAccessCIDR = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat5.yml
+/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.restrictedSrcAddressApp = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat5.yml
+/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.restrictedSrcAddressMgmt = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat5.yml
 
 echo "taskcat1"
 cat $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat1.yml
@@ -98,6 +106,8 @@ echo "taskcat3"
 cat $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat3.yml
 echo "taskcat4"
 cat $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat4.yml
+echo "taskcat5"
+cat $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat5.yml
 
 
 # r=$(date +%s | sha256sum | base64 | head -c 32)
