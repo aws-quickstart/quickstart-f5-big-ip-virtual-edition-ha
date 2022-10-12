@@ -4,7 +4,7 @@
 #  replayTimeout = 10
 
 
-if [[ <PROVISION_WEB_APP> == 'false' ]]; then
+if [[ "<PROVISION_WEB_APP>" == 'false' ]]; then
     echo "SUCCESS"
 else
     stack_name=$(cat taskcat_outputs/tC* | grep  -m1 StackName: | cut -d":" -f2)
