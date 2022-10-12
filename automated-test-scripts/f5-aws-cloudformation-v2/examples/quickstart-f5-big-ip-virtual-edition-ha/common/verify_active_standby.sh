@@ -10,12 +10,8 @@ echo "stack_name: ${stack_name}"
 
 private_key='/etc/ssl/private/dewpt_private.pem'
 if [[ "<CREATE NEW KEY PAIR>" == 'true' ]]; then
+    # created by verify_login.sh
     private_key='/etc/ssl/private/new_key.pem'
-    key_pair_name=$(aws cloudformation describe-stacks --stack-name ${stack_name} --region <REGION> | jq -r '.Stacks[].Outputs[] | select (.OutputKey=="keyPairName") | .OutputValue')
-    key_pair_id=$(aws ec2 describe-key-pairs --key-name ${key_pair_name} | jq -r .KeyPairs[0].KeyPairId)
-    private_key_value=$(aws ssm get-parameter --name "/ec2/keypair/${key_pair_id}" --with-decryption | jq -r .Parameter.Value > ${private_key})
-    chmod 0600 ${private_key}
-    echo "Private key value: ${private_key_value}"
 fi
 echo "Private key: ${private_key}"
 

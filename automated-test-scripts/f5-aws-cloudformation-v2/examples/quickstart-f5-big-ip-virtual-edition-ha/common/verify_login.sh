@@ -26,7 +26,10 @@ if [[ "<CREATE NEW SECRET>" == 'true' ]]; then
     unique_string=$(aws cloudformation describe-stacks --stack-name ${stack_name} --region <REGION> | jq -r '.Stacks[].Parameters[]| select (.ParameterKey=="uniqueString") | .ParameterValue')
     secret_name=${unique_string}-bigIpSecret
     secret_arn=$(aws secretsmanager list-secrets --region <REGION> --filters Key=name,Values=${secret_name} | jq -r .SecretList[0].ARN)
-    PASSWORD=$(aws secretsmanager get-secret-value --secret-id ${secret_arn} | jq -r .SecretString)
+    PASSWORD=$(aws secretsmanager get-secret-value --secret-id ${secret_name} --region <REGION> | jq -r .SecretString)
+    echo "Unique string: ${unique_string}"
+    echo "Secret name: ${secret_name}"
+    echo "Secret ARN: ${secret_arn}"
 fi
 echo "PASSWORD: ${PASSWORD}"
 
