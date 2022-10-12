@@ -25,90 +25,27 @@ if [[ "<CREATE NEW KEY PAIR>" == 'false' ]]; then
 fi
 
 # Set CFE tag
-/usr/bin/yq e ".extension_services.service_operations.[1].value.externalStorage.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance01.yaml
-/usr/bin/yq e ".extension_services.service_operations.[1].value.externalStorage.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance02.yaml
-/usr/bin/yq e ".extension_services.service_operations.[1].value.externalStorage.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance01-with-app.yaml
-/usr/bin/yq e ".extension_services.service_operations.[1].value.externalStorage.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance02-with-app.yaml
-/usr/bin/yq e ".extension_services.service_operations.[1].value.externalStorage.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance01.yaml
-/usr/bin/yq e ".extension_services.service_operations.[1].value.externalStorage.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance02.yaml
-/usr/bin/yq e ".extension_services.service_operations.[1].value.externalStorage.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance01-with-app.yaml
-/usr/bin/yq e ".extension_services.service_operations.[1].value.externalStorage.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance02-with-app.yaml
-
-/usr/bin/yq e ".extension_services.service_operations.[1].value.failoverAddresses.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance01.yaml
-/usr/bin/yq e ".extension_services.service_operations.[1].value.failoverAddresses.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance02.yaml
-/usr/bin/yq e ".extension_services.service_operations.[1].value.failoverAddresses.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance01-with-app.yaml
-/usr/bin/yq e ".extension_services.service_operations.[1].value.failoverAddresses.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-payg-instance02-with-app.yaml
-/usr/bin/yq e ".extension_services.service_operations.[1].value.failoverAddresses.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance01.yaml
-/usr/bin/yq e ".extension_services.service_operations.[1].value.failoverAddresses.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance02.yaml
-/usr/bin/yq e ".extension_services.service_operations.[1].value.failoverAddresses.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance01-with-app.yaml
-/usr/bin/yq e ".extension_services.service_operations.[1].value.failoverAddresses.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance02-with-app.yaml
+/usr/bin/yq e ".extension_services.service_operations.[1].value.externalStorage.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/<RUNTIME INIT CONFIG FILE 01>
+/usr/bin/yq e ".extension_services.service_operations.[1].value.externalStorage.scopingTags.f5_cloud_failover_label = \"<DEWPOINT JOB ID>\"" -i /tmp/<DEWPOINT JOB ID>/declarations/<RUNTIME INIT CONFIG FILE 02>
 
 if [[ "<LICENSE TYPE>" == "byol" ]]; then
 # Add RegKey for BYOLs
-    /usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_License.regKey = \"$regKey01\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance01.yaml
-    /usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_License.regKey = \"$regKey02\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance02.yaml
-
-    /usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_License.regKey = \"$regKey01\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance01-with-app.yaml
-    /usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_License.regKey = \"$regKey02\"" -i /tmp/<DEWPOINT JOB ID>/declarations/runtime-init-conf-2nic-byol-instance02-with-app.yaml
+    /usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_License.regKey = \"$regKey01\"" -i /tmp/<DEWPOINT JOB ID>/declarations/<RUNTIME INIT CONFIG FILE 01>
+    /usr/bin/yq e ".extension_services.service_operations.[0].value.Common.My_License.regKey = \"$regKey02\"" -i /tmp/<DEWPOINT JOB ID>/declarations/<RUNTIME INIT CONFIG FILE 02>
 fi
 
 # Update taskcat test configs with correct runtime url
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.bigIpRuntimeInitConfig01 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-payg-instance01.yaml\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat1.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.bigIpRuntimeInitConfig02 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-payg-instance02.yaml\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat1.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.keyPairName = \"${ssh_key}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat1.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.secretArn = \"${secret_arn}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat1.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.cfeTag = \"<DEWPOINT JOB ID>\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat1.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.remoteAccessCIDR = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat1.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.restrictedSrcAddressApp = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat1.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.restrictedSrcAddressMgmt = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat1.yml
+/usr/bin/yq e ".tests.f5ve-ha-<STACK TYPE>.parameters.bigIpRuntimeInitConfig01 = \"https://${bucket_name}.s3.amazonaws.com/<RUNTIME INIT CONFIG FILE 01>\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/<CONFIG FILE>
+/usr/bin/yq e ".tests.f5ve-ha-<STACK TYPE>.parameters.bigIpRuntimeInitConfig02 = \"https://${bucket_name}.s3.amazonaws.com/<RUNTIME INIT CONFIG FILE 02>\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/<CONFIG FILE>
+/usr/bin/yq e ".tests.f5ve-ha-<STACK TYPE>.parameters.keyPairName = \"${ssh_key}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/<CONFIG FILE>
+/usr/bin/yq e ".tests.f5ve-ha-<STACK TYPE>.parameters.secretArn = \"${secret_arn}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/<CONFIG FILE>
+/usr/bin/yq e ".tests.f5ve-ha-<STACK TYPE>.parameters.cfeTag = \"<DEWPOINT JOB ID>\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/<CONFIG FILE>
+/usr/bin/yq e ".tests.f5ve-ha-<STACK TYPE>.parameters.remoteAccessCIDR = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/<CONFIG FILE>
+/usr/bin/yq e ".tests.f5ve-ha-<STACK TYPE>.parameters.restrictedSrcAddressApp = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/<CONFIG FILE>
+/usr/bin/yq e ".tests.f5ve-ha-<STACK TYPE>.parameters.restrictedSrcAddressMgmt = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/<CONFIG FILE>
 
-/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.bigIpRuntimeInitConfig01 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-payg-instance01-with-app.yaml\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat2.yml
-/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.bigIpRuntimeInitConfig02 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-payg-instance02-with-app.yaml\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat2.yml
-/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.keyPairName = \"${ssh_key}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat2.yml
-/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.secretArn = \"${secret_arn}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat2.yml
-/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.cfeTag = \"<DEWPOINT JOB ID>\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat2.yml
-/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.remoteAccessCIDR = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat2.yml
-/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.restrictedSrcAddressApp = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat2.yml
-/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.restrictedSrcAddressMgmt = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat2.yml
-
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.bigIpRuntimeInitConfig01 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-byol-instance01.yaml\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat3.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.bigIpRuntimeInitConfig02 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-byol-instance02.yaml\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat3.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.keyPairName = \"${ssh_key}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat3.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.secretArn = \"${secret_arn}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat3.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.cfeTag = \"<DEWPOINT JOB ID>\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat3.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.remoteAccessCIDR = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat3.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.restrictedSrcAddressApp = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat3.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.restrictedSrcAddressMgmt = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat3.yml
-
-/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.bigIpRuntimeInitConfig01 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-byol-instance01-with-app.yaml\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat4.yml
-/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.bigIpRuntimeInitConfig02 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-byol-instance02-with-app.yaml\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat4.yml
-/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.keyPairName = \"${ssh_key}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat4.yml
-/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.secretArn = \"${secret_arn}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat4.yml
-/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.cfeTag = \"<DEWPOINT JOB ID>\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat4.yml
-/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.remoteAccessCIDR = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat4.yml
-/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.restrictedSrcAddressApp = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat4.yml
-/usr/bin/yq e ".tests.f5ve-ha-prod.parameters.restrictedSrcAddressMgmt = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat4.yml
-
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.bigIpRuntimeInitConfig01 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-payg-instance01.yaml\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat5.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.bigIpRuntimeInitConfig02 = \"https://${bucket_name}.s3.amazonaws.com/runtime-init-conf-2nic-payg-instance02.yaml\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat5.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.keyPairName = \"${ssh_key}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat5.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.secretArn = \"${secret_arn}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat5.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.cfeTag = \"<DEWPOINT JOB ID>\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat5.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.remoteAccessCIDR = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat5.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.restrictedSrcAddressApp = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat5.yml
-/usr/bin/yq e ".tests.f5ve-ha-defaults.parameters.restrictedSrcAddressMgmt = \"${src_ip}\"" -i $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat5.yml
-
-echo "taskcat1"
-cat $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat1.yml
-echo "taskcat2"
-cat $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat2.yml
-echo "taskcat3"
-cat $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat3.yml
-echo "taskcat4"
-cat $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat4.yml
-echo "taskcat5"
-cat $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/taskcat5.yml
-
+echo "taskcat config <CONFIG FILE>"
+cat $PWD/automated-test-scripts/data/f5-aws-cloudformation-v2/examples/quickstart-f5-big-ip-virtual-edition-ha/<CONFIG FILE>
 
 # r=$(date +%s | sha256sum | base64 | head -c 32)
 

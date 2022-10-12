@@ -7,3 +7,5 @@ PROVISION_WEB_APP: 'false'
 LICENSE TYPE: payg
 CREATE NEW SECRET: 'true'
 CREATE NEW KEY PAIR: 'true'
+RUNTIME CONFIG FILE 01: runtime-init-conf-2nic-payg-instance01.yaml
+RUNTIME CONFIG FILE 02: runtime-init-conf-2nic-payg-instance01.yaml
