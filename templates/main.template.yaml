@@ -249,7 +249,7 @@ Parameters:
   bigIpRuntimeInitPackageUrl:
     Description: 'Supply a URL for the F5 BIG-IP Runtime Init Package install script.'
     Type: String
-    Default: 'https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.5.0/dist/f5-bigip-runtime-init-1.5.0-1.gz.run'
+    Default: 'https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.5.1/dist/f5-bigip-runtime-init-1.5.1-1.gz.run'
   provisionExampleApp:
     AllowedValues:
       - 'true'
@@ -506,7 +506,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub
-        - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${qss3KeyPrefix}submodules/quickstart-aws-vpc/templates/aws-vpc.template
+        - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${qss3KeyPrefix}submodules/quickstart-aws-vpc/templates/aws-vpc.template.yaml
         - S3Region: !If [useDefaultBucket, !Ref AWS::Region, !Ref qss3BucketRegion]
           S3Bucket: !If [useDefaultBucket, !Sub '${qss3BucketName}-${AWS::Region}', !Ref qss3BucketName]
       Parameters:
