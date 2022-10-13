@@ -30,7 +30,7 @@ Shell (SSH) access to EC2 instances in public and private subnets.*
 ** An elastic network interface that represents the public-facing network interface card (NIC) of a clustered pair of BIG-IP VE instances.
 
 * AWS Identity and Access Management (IAM) for a role and EC2 instance profile.
-* An Amazon S3 bucket used to provide failover state.
+* An Amazon S3 SSE-S3 encrypted bucket used to provide failover state.
 
 *The template that deploys the Quick Start into an existing VPC skips
 the components marked by asterisks and prompts you for your existing VPC
