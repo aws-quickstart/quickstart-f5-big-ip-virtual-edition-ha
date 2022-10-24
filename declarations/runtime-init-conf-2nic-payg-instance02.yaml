@@ -6,14 +6,14 @@ controls:
 extension_packages:
   install_operations:
     - extensionType: do
-      extensionVersion: 1.28.0
-      extensionHash: fef1f81c259d1ead19c256a67b8dad492f2d70b1019ff520e16172a93e8c17c9
+      extensionVersion: 1.33.0
+      extensionHash: 4ac7b7c6eb93320df20f964f32ce7bc6e0454858a36440761f774a8a42a01020
     - extensionType: as3
-      extensionVersion: 3.36.1
-      extensionHash: 48876a92d3d8fe7da70310882dc9fd1499d209579d798394715e18c12138daf3
+      extensionVersion: 3.40.0
+      extensionHash: 708533815cb8e608b4d28fbb730f0ed34617ce5def53c5462c0ab98bd54730fc
     - extensionType: cf
-      extensionVersion: 1.11.0
-      extensionHash: f3c7aca8a19d0dc01e529d38aa0d235b4dfad34beec2584f8402aa9a92c34699
+      extensionVersion: 1.13.0
+      extensionHash: 93be496d250838697d8a9aca8bd0e6fe7480549ecd43280279f0a63fc741ab50
 extension_services:
   service_operations:
     - extensionType: do
@@ -83,6 +83,10 @@ extension_services:
           class: Controls
           logLevel: silly
         externalStorage:
+          encryption:
+            serverSide:
+              enabled: true
+              algorithm: AES256
           scopingTags:
             f5_cloud_failover_label: aws_quickstart
         failoverAddresses:
@@ -175,11 +179,14 @@ extension_services:
 post_onboard_enabled: []
 pre_onboard_enabled: []
 runtime_parameters:
+  - name: SECRET_ID
+    type: url
+    value: file:///config/cloud/secret_id
   - name: BIGIP_PASSWORD
     type: secret
     secretProvider:
       environment: aws
-      secretId: bigIpPassword
+      secretId: "{{{SECRET_ID}}}"
       type: SecretsManager
       version: AWSCURRENT
   - name: SELF_IP_EXTERNAL
