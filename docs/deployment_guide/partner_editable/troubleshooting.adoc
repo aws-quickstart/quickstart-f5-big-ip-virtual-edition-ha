@@ -30,7 +30,7 @@ If all stacks were created successfully, but the {partner-product-short-name} or
     ** */var/log/cloud-init-output.log*
   * runtime-init logs:
     ** */var/log/cloud/startup-script.log*: Contains events that happen prior to running `f5-bigip-runtime-init`. For example, if the files required by the deployment fail to download, those events are logged here.
-    ** */var/log/cloud/bigipRuntimeInit.log*: Contains events logged by the `f5-bigip-runtime-init` onboarding utility. If the configuration is invalid, causing onboarding to fail, those events are logged here. If deployment is successful, you will see an "All operations completed successfully" event.
+    ** */var/log/cloud/bigIpRuntimeInit.log*: Contains events logged by the `f5-bigip-runtime-init` onboarding utility. If the configuration is invalid, causing onboarding to fail, those events are logged here. If deployment is successful, you will see an "All operations completed successfully" event.
   * Automation tool chain logs:
     ** */var/log/restnoded/restnoded.log*: Contains events logged by the F5 Automation Toolchain components. If an Automation Toolchain declaration fails to deploy, the details of those events are logged here.
 

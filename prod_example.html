@@ -862,12 +862,12 @@ p.footer-text a{color:#d7d8d8}
 <ul class="sectlevel2">
 <li><a href="#_subscribe_to_the_big_ip_ve_ami">Subscribe to the BIG-IP VE AMI</a></li>
 <li><a href="#_prepare_your_aws_account">Prepare your AWS account</a></li>
+<li><a href="#_customize_the_big_ip_ve_configuration">Customize the BIG-IP VE configuration</a></li>
 </ul>
 </li>
 <li><a href="#_deployment_steps">Deployment steps</a></li>
 <li><a href="#_postdeployment_steps">Postdeployment steps</a>
 <ul class="sectlevel2">
-<li><a href="#_customize_the_big_ip_ve_configuration">Customize the BIG-IP VE configuration</a></li>
 <li><a href="#_access_the_big_ip_ve_ip_address">Access the BIG-IP VE IP address</a></li>
 <li><a href="#_test_the_waf_service">Test the WAF service</a></li>
 <li><a href="#_test_the_failover">Test the failover</a></li>
@@ -1068,7 +1068,7 @@ Shell (SSH) access to EC2 instances in public and private subnets.*</p>
 <p>AWS Identity and Access Management (IAM) for a role and EC2 instance profile.</p>
 </li>
 <li>
-<p>An Amazon S3 bucket used to provide failover state.</p>
+<p>An Amazon S3 SSE-S3 encrypted bucket used to provide failover state.</p>
 </li>
 </ul>
 </div>
@@ -1133,110 +1133,75 @@ configuration.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>An SSH key pair in AWS for management access to BIG-IP VE. For more information about creating and/or importing the key pair in AWS, refer to <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html" target="_blank" rel="noopener">Amazon EC2 key pairs and Linux instances</a>.</p>
+<p>The appropriate permission in AWS to launch AWS CloudFormation templates. You must be an IAM user with the Administrator Access policy attached and have permission to create the objects contained in this Quick Start, including VPCs, Elastic IP addresses, EC2 instances, IAM roles and Instance Profiles, SSE-S3 encrypted S3 buckets, SSH Key Pairs, AWS Secrets Manager secrets, etc.</p>
 </li>
 <li>
-<p>An AWS secret stored in <a href="https://aws.amazon.com/secrets-manager/" target="_blank" rel="noopener">AWS Secrets Manager</a> containing the password used to access and cluster the HA pair. For example, to create a secret using the AWS Command Line Interface (AWS CLI), run the following command:</p>
+<p>This solution requires an SSH key pair in AWS for management access to BIG-IP VE. For more information about creating and/or importing the key pair in AWS, refer to <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html" target="_blank" rel="noopener">Amazon EC2 key pairs and Linux instances</a>. If one is not specified, one will be created for you named <code>BigIpSshKeyPair</code>.</p>
+</li>
+<li>
+<p>This solution requires AWS secret stored in <a href="https://aws.amazon.com/secrets-manager/" target="_blank" rel="noopener">AWS Secrets Manager</a> containing the password used to access and cluster the HA pair. If one is not specified, one will be created for you named <code>BigIpSecret</code> with an auto-generated password. To obtain the secret value, you can run the following <a href="https://docs.aws.amazon.com/cli/latest/reference/secretsmanager/get-secret-value.html" target="_blank" rel="noopener">AWS cli command</a>, changing the region and secret name as needed:</p>
 <div class="literalblock">
 <div class="content">
-<pre>aws secretsmanager create-secret --region us-east-1 --name bigIpPassword --secret-string 'YOUR_BIGIP_PASSWORD'</pre>
+<pre>aws secretsmanager get-secret-value --secret-id BigIpSecret --query "SecretString" --output text --region us-east-1</pre>
 </div>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>By default, the secret name must be <strong>bigIpPassword</strong> and created in the Region where the template is deployed. Otherwise, refer to <a href="#_customizing_the_big_ip_configuration">Customizing the BIG-IP configuration</a> for more details.</p>
+<p>For more information, refer to the <a href="https://aws.amazon.com/secrets-manager/" target="_blank" rel="noopener">AWS CLI secretsmanager documentation</a>.</p>
 </li>
 <li>
-<p>Obtain the secret Amazon Resource Name (ARN). The ARN format required for the input parameter looks similar to  <code>arn:aws:secretsmanager:us-east-1:111111111111:secret:bigIpPassword-xdg0kdf</code> Pass this value to the <strong>secretArn</strong> input parameter.</p>
+<p>To update the password to your organization&#8217;s policy or requirements, see:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://support.f5.com/csp/article/K13121" target="_blank" rel="noopener">K13121: Changing system maintenance account passwords</a></p>
 </li>
 <li>
-<p>In the example command above, the <strong>--secret-string</strong> value is in single quotes to avoid bash special character interpolation. For a more secure example using a file, refer to the <a href="https://docs.aws.amazon.com/cli/latest/reference/secretsmanager/index.html#cli-aws-secretsmanager" target="_blank" rel="noopener">AWS CLI secretsmanager documentation</a>.</p>
+<p><a href="https://support.f5.com/csp/article/K15497" target="_blank" rel="noopener">K15497: Configuring a secure password policy for the BIG-IP system</a></p>
 </li>
 </ul>
 </div>
 </li>
-<li>
-<p>Acceptance of the end-user license agreement for the F5 image in the AWS Marketplace. If you haven&#8217;t deployed BIG-IP VE in your environment, search for F5 in the AWS Marketplace and then choose <strong>Accept Software Terms</strong>. This option appears only the first time you attempt to launch an F5 image. For more details, refer to the <a href="#_software_licenses">Costs and licenses</a> section.</p>
-</li>
-<li>
-<p>The appropriate permission in AWS to launch AWS CloudFormation templates. You must be an IAM user with the Administrator Access policy attached and have permission to create the objects contained in this Quick Start, including VPCs, Elastic IP addresses, EC2 instances, etc.</p>
+</ul>
+</div>
 </li>
 </ul>
 </div>
 <div class="sect3">
 <h4 id="_configuration_notes">Configuration notes</h4>
-<div class="paragraph">
+<div class="ulist">
+<ul>
+<li>
 <p>The Quick Start template provides an initial deployment for an infrastructure use case, which means that it doesn&#8217;t support managing the entire deployment exclusively via the template&#8217;s update-stack feature.</p>
-</div>
 <div class="paragraph">
 <p>This Quick Start uses the <code>cloud-init</code> package to send the instance user data, which is only used to provide an initial BIG-IP VE configuration and not as the primary configuration API for a long-running platform. You can use the update-stack feature to update certain cloud resources, however the BIG-IP VE configuration needs to align with cloud resources, such as IPs and NICs. Therefore, updating one resource without the other can result in inconsistent states, while updating other resources, like the <strong>bigIpImageId</strong> or <strong>bigIpInstanceType</strong> parameters, can trigger an entire instance re-deloyment.</p>
 </div>
 <div class="paragraph">
 <p>For example, to upgrade software versions, traditional in-place upgrades and configuration management are required. For details, refer to the <a href="#_support">Support</a> section.</p>
 </div>
+</li>
+<li>
+<p>This solution requires the BIG-IPs to have Internet access to download the required software packages. If you are deploying this solution in a private subnet, you will need to configure a NAT gateway or NAT instance to allow the BIG-IPs to access the internet. See the
+<a href="#_security">Security</a> section for additional information.</p>
+</li>
+<li>
+<p>This solution uses <a href="https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/" target="_blank" rel="noopener">Cloud Failover Extension (CFE)</a> to provide failover functionality. By default, this solution creates an S3 bucket for use by the F5 Cloud Failover Extension (CFE). The bucket is configured with AWS SSE-S3 encryption enabled and the IAM role is set to enforce AES256 encryption. See <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingServerSideEncryption.html" target="_blank" rel="noopener">Protecting data using server-side encryption with Amazon S3-managed encryption keys (SSE-S3)</a> for more information. See Cloud Failover Extension <a href="https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/userguide/aws.html#aws-define-storage" target="_blank" rel="noopener">documentation</a> for more information.</p>
+</li>
+<li>
+<p>This template can send non-identifiable statistical information to F5 Networks to help us improve our templates. You can disable this functionality for this deployment only by supplying <strong>false</strong> for the value of the <strong>allowUsageAnalytics</strong> input parameter, or you can disable it system-wide by setting the <strong>autoPhonehome</strong> system class property value to false in the F5 Declarative Onboarding declaration. See the <a href="#_customize_the_big_ip_ve_configuration">Customizing the BIG-IP Configuration</a> section below and <a href="#_security">Security</a> section for additional information.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_deployment_steps">Deployment steps</h2>
-<div class="sectionbody">
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Sign in to your AWS account, and launch this Quick Start, as described under <a href="#_deployment_options">Deployment options</a>. The AWS CloudFormation console opens with a prepopulated template. Deployment takes about 30 minutes to complete.</p>
-</li>
-<li>
-<p>Choose the correct AWS Region, and then choose <strong>Next</strong>.</p>
-</li>
-<li>
-<p>On the <strong>Create stack</strong> page, keep the default setting for the template URL, and then choose <strong>Next</strong>.</p>
-</li>
-<li>
-<p>On the <strong>Specify stack details</strong> page, change the stack name if needed. Review the parameters for the template. Provide values for the parameters that require input. For all other parameters, review the default settings and customize them as necessary. When you finish reviewing and customizing the parameters, choose <strong>Next</strong>.</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Unless you are customizing the Quick Start templates for your own projects, don&#8217;t change the default settings for the following Amazon Simple Storage Service (Amazon S3) parameters: <strong>Quick Start S3 bucket name</strong>, <strong>Quick Start S3 bucket Region</strong>, and <strong>Quick Start S3 key prefix</strong>. Changing these settings automatically updates code references to point to a new Quick Start location. For more information, refer to the <a href="https://fwd.aws/NwqYA?" target="_blank" rel="noopener">AWS Quick Start Contributor&#8217;s Guide</a>.
-</td>
-</tr>
-</table>
-</div>
-</li>
-<li>
-<p>On the <strong>Configure stack options</strong> page, you can <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html" target="_blank" rel="noopener">specify tags</a> (key-value pairs) for resources in your stack and <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-console-add-tags.html" target="_blank" rel="noopener">set advanced options</a>. When you finish, choose <strong>Next</strong>.</p>
-</li>
-<li>
-<p>On the <strong>Review</strong> page, review and confirm the template settings. Under <strong>Capabilities</strong>, select the two check boxes to acknowledge that the template creates IAM resources that might require the ability to automatically expand macros.</p>
-</li>
-<li>
-<p>Choose <strong>Create stack</strong> to deploy the stack.</p>
-</li>
-<li>
-<p>Monitor the stack&#8217;s status, and when the status is <strong>CREATE_COMPLETE</strong>, the F5 BIG-IP Virtual Edition deployment is ready.</p>
-</li>
-<li>
-<p>To view the created resources, choose the <strong>Outputs</strong> tab.</p>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_postdeployment_steps">Postdeployment steps</h2>
-<div class="sectionbody">
 <div class="sect2">
 <h3 id="_customize_the_big_ip_ve_configuration">Customize the BIG-IP VE configuration</h3>
 <div class="paragraph">
 <p>If needed, customize the BIG-IP VE configuration. The initial BIG-IP VE configurations are passed through the <a href="https://github.com/f5networks/f5-bigip-runtime-init" target="_blank" rel="noopener">F5 BIG-IP Runtime Init</a> configuration files. These files are the primary mechanisms to customize the initial BIG-IP VE configurations for your deployment. They also allow for large amounts of BIG-IP VE customizations. Customizing the BIG-IP VE configurations generally involves updating and rehosting these files and passing their location through the <strong>bigIpRuntimeInitConfig</strong> template parameters.</p>
 </div>
 <div class="paragraph">
-<p>By default, the Quick Start deploys a minimal 2NIC PAYG configuration into the default Quick Start network topology using the following configuration files in the <code>/declarations</code> folder:</p>
+<p>By default, the Quick Start deploys a minimal 2NIC PAYG configuration into the default Quick Start network topology using the following configuration files in this repo&#8217;s <a href="https://github.com/aws-quickstart/quickstart-f5-big-ip-virtual-edition-ha/tree/main/declarations" target="_blank" rel="noopener">/declarations</a> folder:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1435,6 +1400,59 @@ For additional information and examples, refer to the <a href="https://github.co
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_deployment_steps">Deployment steps</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Sign in to your AWS account, and launch this Quick Start, as described under <a href="#_deployment_options">Deployment options</a>. The AWS CloudFormation console opens with a prepopulated template. Deployment takes about 30 minutes to complete.</p>
+</li>
+<li>
+<p>Choose the correct AWS Region, and then choose <strong>Next</strong>.</p>
+</li>
+<li>
+<p>On the <strong>Create stack</strong> page, keep the default setting for the template URL, and then choose <strong>Next</strong>.</p>
+</li>
+<li>
+<p>On the <strong>Specify stack details</strong> page, change the stack name if needed. Review the parameters for the template. Provide values for the parameters that require input. For all other parameters, review the default settings and customize them as necessary. When you finish reviewing and customizing the parameters, choose <strong>Next</strong>.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Unless you are customizing the Quick Start templates for your own projects, don&#8217;t change the default settings for the following Amazon Simple Storage Service (Amazon S3) parameters: <strong>Quick Start S3 bucket name</strong>, <strong>Quick Start S3 bucket Region</strong>, and <strong>Quick Start S3 key prefix</strong>. Changing these settings automatically updates code references to point to a new Quick Start location. For more information, refer to the <a href="https://fwd.aws/NwqYA?" target="_blank" rel="noopener">AWS Quick Start Contributor&#8217;s Guide</a>.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>On the <strong>Configure stack options</strong> page, you can <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html" target="_blank" rel="noopener">specify tags</a> (key-value pairs) for resources in your stack and <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-console-add-tags.html" target="_blank" rel="noopener">set advanced options</a>. When you finish, choose <strong>Next</strong>.</p>
+</li>
+<li>
+<p>On the <strong>Review</strong> page, review and confirm the template settings. Under <strong>Capabilities</strong>, select the two check boxes to acknowledge that the template creates IAM resources that might require the ability to automatically expand macros.</p>
+</li>
+<li>
+<p>Choose <strong>Create stack</strong> to deploy the stack.</p>
+</li>
+<li>
+<p>Monitor the stack&#8217;s status, and when the status is <strong>CREATE_COMPLETE</strong>, the F5 BIG-IP Virtual Edition deployment is ready.</p>
+</li>
+<li>
+<p>To view the created resources, choose the <strong>Outputs</strong> tab.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_postdeployment_steps">Postdeployment steps</h2>
+<div class="sectionbody">
 <div class="sect2">
 <h3 id="_access_the_big_ip_ve_ip_address">Access the BIG-IP VE IP address</h3>
 <div class="paragraph">
@@ -2042,7 +2060,7 @@ extension_services:
 <p>For more information about F5 BIG-IP Runtime Init and additional examples, refer to the <a href="https://github.com/F5Networks/f5-bigip-runtime-init/blob/main/README.md" target="_blank" rel="noopener">GitHub repository</a>.</p>
 </div>
 <div class="paragraph">
-<p>This template can send non-identifiable statistical information to F5 to help improve templates. You can disable this functionality by setting the <strong>autoPhonehome</strong> system class property value to false in the F5 DO declaration. See information about customizing the BIG-IP VE configuration earlier in this guide.</p>
+<p>This template can send non-identifiable statistical information to F5 Networks to help us improve our templates. You can disable this functionality for this deployment only by supplying <strong>false</strong> for the value of the <strong>allowUsageAnalytics</strong> input parameter, or you can disable it system-wide by setting the <strong>autoPhonehome</strong> system class property value to false in the F5 Declarative Onboarding declaration. See the <a href="#_customize_the_big_ip_ve_configuration">Customizing the BIG-IP Configuration</a> section for more information.</p>
 </div>
 <div class="paragraph">
 <p>BIG-IP VE may contact the following list of endpoints during onboarding:</p>
@@ -2202,7 +2220,7 @@ When creating a GitHub issue for a failed template, include as much information 
 <p><strong>/var/log/cloud/startup-script.log</strong>: Contains events that happen prior to running <code>f5-bigip-runtime-init</code>. For example, if the files required by the deployment fail to download, those events are logged here.</p>
 </li>
 <li>
-<p><strong>/var/log/cloud/bigipRuntimeInit.log</strong>: Contains events logged by the <code>f5-bigip-runtime-init</code> onboarding utility. If the configuration is invalid, causing onboarding to fail, those events are logged here. If deployment is successful, you will see an "All operations completed successfully" event.</p>
+<p><strong>/var/log/cloud/bigIpRuntimeInit.log</strong>: Contains events logged by the <code>f5-bigip-runtime-init</code> onboarding utility. If the configuration is invalid, causing onboarding to fail, those events are logged here. If deployment is successful, you will see an "All operations completed successfully" event.</p>
 </li>
 </ul>
 </div>
