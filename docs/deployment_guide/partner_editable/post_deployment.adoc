@@ -5,28 +5,28 @@
 
 === Access the {partner-product-short-name} IP address
 
-
 After the stacks show a *CREATE_COMPLETE* status, you can access the {partner-product-short-name} instances through the bastion host. If you've provisioned the example application, optionally test the WAF service:
 
 
-* To access the parent template outputs, perform one of the following steps:
-** If using the AWS Management Console, navigate to *CloudFormation > _<STACK_NAME>_ > Outputs*.
-** If using the AWS Command Line Interface (AWS CLI), run this command:
+To access the parent template outputs, perform one of the following steps:
+* If using the AWS Management Console, navigate to *CloudFormation > <stack name> > Outputs*.
+* If using the AWS Command Line Interface (AWS CLI), run this command:
 +
 ----
 aws --region ${REGION} cloudformation describe-stacks --stack-name ${STACK_NAME}  --query  "Stacks[0].Outputs"
 ----
-** To obtain the private IP address of the {partner-product-short-name} management port, perform one of the following steps:
-*** If using the AWS Management Console, navigate to *CloudFormation > _STACK_NAME_ > Outputs >
-_bigipInstance01MgmtPrivateIp_*.
-*** If using the AWS CLI, run this command:
+
+To obtain the private IP address of the {partner-product-short-name} management port, perform one of the following steps:
+* If using the AWS Management Console, navigate to *CloudFormation > <stack name> > Outputs > bigipInstance01MgmtPrivateIp*.
+* If using the AWS CLI, run this command:
 +
 ----
 aws --region ${REGION} cloudformation describe-stacks --stack-name ${STACK_NAME} --query  "Stacks[0].Outputs[ OutputKey=='bigipInstance01MgmtPrivateIp'].OutputValue" --output text
 ----
-** To obtain the public IP address of the bastion host, perform one of the following steps:
-*** If using the AWS Management Console, navigate to *CloudFormation > _<STACK_NAME>_ > Outputs > _<bastionHost>_*.
-*** If using the AWS CLI, run this command:
+
+To obtain the public IP address of the bastion host, perform one of the following steps:
+* If using the AWS Management Console, navigate to *CloudFormation > <stack name> > Outputs > <bastion host>*.
+* If using the AWS CLI, run this command:
 +
 ----
 aws --region ${REGION} cloudformation describe-stacks --stack-name ${STACK_NAME} --query  "Stacks[0].Outputs[ OutputKey=='bastionHost'].OutputValue" --output text
@@ -72,20 +72,23 @@ NOTE: By default, the {partner-product-short-name} system’s WebUI starts with 
 certificate. Follow your browser’s instructions for accepting self-signed certificates
 For example, if using Firefox, select *Advanced > Accept Risk and Continue*. If using Chrome, click inside the page and type *thisisunsafe*.
 
-Login credentials
-* username: admin
-* password: _<YOUR_AWS_SECRET>_
+Login credentials:
+* User name: admin
+* Password: <your-AWS-secret>
 
 ==== SSH
 
-* From TMOS Shell (tmsh), type *bash* and then press the Enter key to access the bash shell.
-** Examine the {partner-product-short-name} configuration file downloaded:
+From TMOS Shell (tmsh), type *bash* and then press the Enter key to access the bash shell.
+
+Examine the downloaded {partner-product-short-name} configuration file:
 +
 ----
 cat /config/cloud/runtime-init.conf
 ----
-** Examine the running {partner-product-short-name} configurations:
-*** https://www.f5.com/pdf/products/automation-toolchain-overview.pdf[F5
+
+Examine the running {partner-product-short-name} configurations:
+
+* https://www.f5.com/pdf/products/automation-toolchain-overview.pdf[F5
 Automation Toolchain^] declarations include:
 +
 [source,bash]
@@ -93,7 +96,8 @@ Automation Toolchain^] declarations include:
 curl -su admin: http://localhost:8100/mgmt/shared/declarative-onboarding | jq .
 curl -su admin: http://localhost:8100/mgmt/shared/appsvcs/declare | jq .
 ----
-*** https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/[Cloud
+
+* https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/[Cloud
 Failover Extension^] declaration includes:
 +
 [source,bash]
@@ -106,7 +110,7 @@ curl -su admin: http://localhost:8100/mgmt/shared/cloud-failover/declare | jq .
 . If you provisioned the example application, navigate to *Virtual Services*.
 . From the *Partition* menu in the upper-right corner of the screen, select *Partition =
 `Tenant_1`*.
-. Navigate to *Local Traffic > Virtual Servers*. You should see the virtual services for HTTP and HTTPS, with both appearing as green. Select them to look at the configuration that is declared in the
+. Navigate to *Local Traffic > Virtual Servers*. You should see the virtual services for HTTP and HTTPS, with both appearing as green. Select them to look at the configuration that's declared in the
 AS3 declaration.
 
 . Navigate to *Security > Application Security*, and select the *CustomWAFPolicy* policy so you can inspect it.
@@ -117,9 +121,9 @@ AS3 declaration.
 If you've provisioned the example application, perform the following steps to test the WAF service:
 
 [arabic]
-. T obtain the address of the WAF service, perform one of the following steps:
+. To obtain the address of the WAF service, perform one of the following steps:
 
-* If using the AWS Management Console, navigate to *CloudFormation > _<STACK_NAME>_ > Outputs > _applicationPublicIp_*.
+* If using the AWS Management Console, navigate to *CloudFormation > _<STACK_NAME>_ > Outputs > applicationPublicIp*.
 * If using the AWS CLI, run this command:
 +
 ----
@@ -127,9 +131,7 @@ aws --region ${REGION}  cloudformation describe-stacks --stack-name ${STACK_NAME
 ----
 
 [arabic, start=2]
-. To verify that the application is responding:
-
-* Paste the IP address in a browser: `https://${IP_ADDRESS_FROM_OUTPUT}`
+. To verify that the application is responding, paste the IP address in a browser: `https://${IP_ADDRESS_FROM_OUTPUT}`
 
 NOTE: By default, the virtual service starts with a self-signed
 certificate. Follow your browser’s instructions for accepting self-signed certificates
@@ -162,11 +164,11 @@ Please consult with your administrator.<br><br>Your support ID is:
 
 === Test the failover
 
-If you have deployed the example application, perform the following steps to test the failover:
+If you deployed the example application, perform the following steps to test the failover:
 
 [arabic]
 . Log in to the {partner-product-short-name} instances.
-. Perform on the following steps:
+. Perform the following steps:
 
 * If using the AWS Management Console, navigate to *Device Management of Active Instance > Traffic-Groups*, and select the box next to *traffic-group-1*. Then select *Force to Standby*.
 * If using the {partner-product-short-name} command line, run this command:
@@ -209,8 +211,8 @@ NOTE: In this example, traffic uses Source Network Address Translation (SNAT). A
 
 // _Add any best practices for using the software._
 
-For illustration purposes, this Quick Start provides an option to pre-provision additional cloud resources (IP addresses)
-needed for an example virtual service. However, in practice, it's designed solely to facilitate the initial deployment as cloud-init runs once. It's  typically used for initial provisioning, not as the primary configuration API for a
+For illustration purposes, this Partner Solution provides an option to pre-provision additional cloud resources (IP addresses)
+needed for an example virtual service. However, in practice, it's designed solely to facilitate the initial deployment as cloud-init runs once. It's typically used for initial provisioning, not as the primary configuration API for a
 long-running platform. More typically in an infrastructure use case,
 virtual services are added after initial deployment, outside the lifecycle of this Cloudformation template.
 
@@ -221,7 +223,7 @@ Provision additional IP addresses on the desired network interfaces. Refer to th
 - https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html#using-instance-addressing-eips-associating[Associate an Elastic IP address with an instance or network interface^]
 
 === Add services via {partner-product-short-name}
-Create virtual services that match the secondary IP addresses. Also update the AS3 declaration with additional virtual services. Refer to https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/userguide/composing-a-declaration.html[Composing an AS3 Declaration] for more information.
+Create virtual services that match the secondary IP addresses. Also update the AS3 declaration with additional virtual services. Refer to https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/userguide/composing-a-declaration.html[Composing an AS3 Declaration^] for more information.
 
 
 NOTE: For cloud resources, templates can be created or customized to pre-provision
@@ -243,41 +245,39 @@ For more information, refer to https://docs.aws.amazon.com/AWSCloudFormation/lat
 // Provide post-deployment best practices for using the technology on AWS, including considerations such as migrating data, backups, ensuring high performance, high availability, etc. Link to software documentation for detailed information.
 
 
-This solution requires internet access for:
-
 [arabic]
-. Downloading additional F5 software components used for onboarding and
-configuring the {partner-product-short-name} instance (via GitHub.com). Internet access is required via
+This solution requires internet access for downloading additional F5 software components used for onboarding and configuring the {partner-product-short-name} instance (via GitHub.com). Internet access is required via
 the management interface and then via a dataplane interface (for
 example, external Self-IP) once a default route is configured. Refer to
 https://support.f5.com/csp/article/K13284[Overview of management interface routing^] for
-more details. By default, as a convenience, this Quick Start provisions
+more details. By default, as a convenience, this Partner Solution provisions
 public IP addresses to enable this, but in a production environment, outbound
 access should be provided by a `routed` SNAT service (for example, NAT
 gateway, custom firewall, etc).
 
 NOTE: Access via web proxy is not
-currently supported. Other options include either:
-* Hosting the file locally
+currently supported. Other options include either (1) hosting the file locally
 and modifying the runtime-init package URL and configuration files to
-point to local URLs instead.
-* Baking them into a custom image, using
+point to local URLs instead or (2) Baking them into a custom image, using
 the https://clouddocs.f5.com/cloud/public/v1/ve-image-gen_index.html[F5 BIG-IP Image Generation Tool^].
 
-. Contacting native cloud services (for example, s3.amazonaws.com,
-ec2.amazonaws.com, etc.) for various cloud integrations, including:
+Internet access is also required for contacting native cloud services (for example, s3.amazonaws.com, ec2.amazonaws.com, etc.) for various cloud integrations.
 
 === Onboarding
-** https://github.com/f5networks/f5-bigip-runtime-init[F5 BIG-IP Runtime
-Init] to fetch secrets from native vault services
+Use https://github.com/f5networks/f5-bigip-runtime-init[F5 BIG-IP Runtime
+Init^] to fetch secrets from native vault services.
 
 === Operation
-** https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/[F5 Application Services 3^] for features like Service Discovery
-** https://clouddocs.f5.com/products/extensions/f5-telemetry-streaming/latest/[F5 Telemetry Streaming^] for logging and reporting
-** https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/[Cloud Failover Extension^] for updating IP addresses and route mappings
-** You can use additional cloud services like https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints.html[VPC endpoints^] to address calls to native services traversing the Internet. See the link:#_security[Security] section for more details.
 
-The Quick Start's CloudFormation template downloads helper code to configure the
+Use the following resources:
+
+* https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/[F5 Application Services 3^] for features like Service Discovery
+* https://clouddocs.f5.com/products/extensions/f5-telemetry-streaming/latest/[F5 Telemetry Streaming^] for logging and reporting
+* https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/[Cloud Failover Extension^] for updating IP addresses and route mappings
+
+You can use additional cloud services like https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints.html[VPC endpoints^] to address calls to native services traversing the internet. See the link:#_security[Security] section for more details.
+
+The Partner Solution's CloudFormation template downloads the following helper code to configure the
 {partner-product-short-name} system:
 
 * f5-bigip-runtime-init.gz.run: The self-extracting installer for the F5
@@ -290,8 +290,8 @@ verifies, and installs the F5 BIG-IP Runtime Init RPM package. Package
 files are signed by F5 and automatically verified using GPG.
 * F5 Automation Toolchain components: F5 BIG-IP Runtime Init downloads,
 installs, and configures the F5 Automation Toolchain components.
-Although optional, F5 recommends adding the extensionHash field to
-each extension install operation in the configuration file. This field triggers verification of the downloaded component package
+Although optional, F5 recommends adding the *extensionHash* field to
+each extension installation operation in the configuration file. This field triggers verification of the downloaded component package
 checksum against the provided value. The checksum values are published
 as release assets on each extension’s public GitHub repository, for
 example:
@@ -322,7 +322,7 @@ extension_services:
 For more information about F5 BIG-IP Runtime Init and additional examples, refer to the https://github.com/F5Networks/f5-bigip-runtime-init/blob/main/README.md[GitHub repository^].
 
 
-This template can send non-identifiable statistical information to F5 Networks to help us improve our templates. You can disable this functionality for this deployment only by supplying **false** for the value of the **allowUsageAnalytics** input parameter, or you can disable it system-wide by setting the **autoPhonehome** system class property value to false in the F5 Declarative Onboarding declaration. See the link:#_customize_the_big_ip_ve_configuration[Customizing the BIG-IP Configuration] section for more information.
+This template can send non-identifiable statistical information to F5 Networks to help improve templates. You can disable this functionality for this deployment by setting the value of the **allowUsageAnalytics** input parameter to *false*, or you can disable it system-wide by setting the **autoPhonehome** system class property value to *false* in the F5 Declarative Onboarding declaration. Refer to the link:#_customize_the_big_ip_ve_configuration[Customizing the BIG-IP Configuration] section for more information.
 
 
 {partner-product-short-name} may contact the following list of endpoints during onboarding:
