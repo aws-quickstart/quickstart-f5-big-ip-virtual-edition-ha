@@ -128,31 +128,31 @@ Metadata:
       peerConfigSyncAddr:
         default: Static self IP address for peer device.
       privateSubnet1ACIDR:
-        default: CIDR block for private subnet 1 in AZ1
+        default: CIDR block for private subnet 1 in AZ1.
       privateSubnet1ASelfAddress:
         default: Static self IP address for private subnet 1 in AZ1.
       privateSubnet1BCIDR:
-        default: CIDR block for private subnet 1 in AZ2
+        default: CIDR block for private subnet 1 in AZ1.
       privateSubnet2ACIDR:
-        default: CIDR block for private subnet 2 in AZ1
+        default: CIDR block for private subnet 2 in AZ2.
       privateSubnet2ASelfAddress:
-        default: Static self IP address for private subnet 2 in AZ1.
+        default: Static self IP address for private subnet 2 in AZ2.
       privateSubnet2BCIDR:
-        default: CIDR block for private subnet 2 in AZ2
+        default: CIDR block for private subnet 2 in AZ2.
       provisionExampleApp:
         default: Provision Example App
       publicSubnet1CIDR:
-        default: CIDR block for public subnet 1 in AZ1
+        default: CIDR block for public subnet 1 in AZ1.
       publicSubnet1SelfAddress:
         default: Static self IP address for public subnet 1 in AZ1.
       publicSubnet1VipAddress:
         default: Static VIP IP address for public subnet 1 in AZ1.
       publicSubnet2CIDR:
-        default: CIDR block for public subnet 2 in AZ2
+        default: CIDR block for public subnet 2 in AZ2.
       publicSubnet2SelfAddress:
-        default: Static self IP address for public subnet 2 in AZ1.
+        default: Static self IP address for public subnet 2 in AZ2.
       publicSubnet2VipAddress:
-        default: Static VIP IP address for public subnet 2 in AZ1.
+        default: Static VIP IP address for public subnet 2 in AZ2.
       qss3BucketName:
         default: S3 bucket where templates are located
       qss3BucketRegion:
