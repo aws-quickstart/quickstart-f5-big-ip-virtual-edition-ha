@@ -603,7 +603,7 @@ Metadata:
       bigIpVersion:
         default: BIG-IP VE version.
       cfeS3Bucket:
-        default: CFE S3 bucket
+        default: Unique name for S3 bucket to create for Cloud Failover Extension
       cfeTag:
         default: CFE Deployment tag value
       cfeVipTag:
@@ -617,27 +617,39 @@ Metadata:
       owner:
         default: Owner
       peerConfigSyncAddr:
-        default: Static self IP address for peer device.
+        default: Static Self IP address for peer device.
       provisionExampleApp:
         default: Provision Example App
+      publicSubnet1ID:
+        default: Subnet ID for public subnet in AZ1
       publicSubnet1SelfAddress:
-        default: BIG-IP address for public subnet in AZ1
+        default: Static Self IP address for public subnet in AZ1
+      publicSubnet2ID:
+        default: Subnet ID for public subnet in AZ2
       publicSubnet2SelfAddress:
-        default: BIG-IP address for public subnet in AZ2
+        default: Static Self IP address for public subnet in AZ2
       privateSubnet1ID:
-        default: Private Subnet AZ1
+        default: Subnet ID for private subnet 1 in AZ1
+      privateSubnet1SelfAddress: 
+        default: Static Management IP address for private subnet in AZ1
       privateSubnet2ID:
-        default: Private Subnet AZ2
+        default: Subnet ID for private subnet 1 in AZ2
+      privateSubnet2SelfAddress: 
+        default: Static Management IP address for private subnet in AZ2          
       privateSubnet3ID:
-        default: Private Subnet AZ1
+        default: Subnet ID for private subnet 2 in AZ1
       privateSubnet4ID:
-        default: Private Subnet AZ2
+        default: Subnet ID for private subnet 2 in AZ2
+      publicSubnet1VipAddress:
+        default: Virtual Service IP Address in public subnet in AZ2
+      publicSubnet2VipAddress:
+        default: Virtual Service IP Address in public subnet in AZ2
       restrictedSrcAddressMgmt:
         default: Restricted source address to BIG-IP management
       restrictedSrcAddressApp:
         default: Restricted source address to application
       s3BucketName:
-        default: S3 bucket where Templates are Located
+        default: S3 bucket where templates are Located
       s3BucketRegion:
         default: Region where S3 bucket is located
       s3KeyPrefix:
@@ -649,7 +661,7 @@ Metadata:
       vpc:
         default: VPC ID
       uniqueString:
-        default: unique string value which gets append to cloud resources names
+        default: Unique String used when creating object names or tags
   Version: 1.0.0
 Parameters:
   allowUsageAnalytics:
@@ -671,7 +683,7 @@ Parameters:
   bigIpImageId:
     ConstraintDescription: Must be a valid AMI Id.
     Default: ''
-    Description: 'If you would like to deploy using a custom BIG-IP image, provide the AMI Id.  **Note**: Unless specifically required, leave the default of **OPTIONAL**'
+    Description: 'If you would like to deploy using a custom BIG-IP image, provide the AMI Id.  **Note**: Unless specifically required, leave the default of empty string.'
     MaxLength: 255
     MinLength: 0
     Type: String
@@ -720,16 +732,16 @@ Parameters:
       - 10000Mbps
     ConstraintDescription: Select the BIG-IP throughput you want to use
     Default: 1000Mbps
-    Description: Maximum amount of throughput for BIG-IP VE
+    Description: 'Maximum amount of throughput for BIG-IP VE'
     Type: String
   CustomBigIPRuntimeInit01:
-    Description: '(Optional) Supply an alternate URL to the bigip-runtime-init configuration file in YAML
-     or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.'
+    Description: 'OPTIONAL - Supply an alternate URL to the bigip-runtime-init configuration file in YAML
+     or JSON format to use for f5-bigip-runtime-init configuration.'
     Type: String
     Default: ""
   CustomBigIPRuntimeInit02:
-    Description: '(Optional) Supply an alternate URL to the bigip-runtime-init configuration file in YAML
-     or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration.'
+    Description: 'OPTIONAL - Supply an alternate URL to the bigip-runtime-init configuration file in YAML
+     or JSON format to use for f5-bigip-runtime-init configuration.'
     Type: String
     Default: ""
   bigIpRuntimeInitPackageUrl:
@@ -741,19 +753,19 @@ Parameters:
       - 16-1-3-2-004
       - 14-1-5-2-003
     Default: 16-1-3-2-004
-    Description: Select version of BIG-IP you wish to deploy.
+    Description: 'Select version of BIG-IP you wish to deploy.'
     Type: String
   cfeS3Bucket:
     ConstraintDescription: 'S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).'
     Default: ""
-    Description: 'S3 bucket name used by Cloud Failover Extension.'
+    Description: 'REQUIRED - Provide a unique name for an S3 Bucket to create for Cloud Failover Extension storage.'
     Type: String
   cfeTag:
-    Description: Cloud Failover deployment tag value.
+    Description: 'Cloud Failover deployment tag value.'
     Type: String
     Default: aws_quickstart
   cfeVipTag:
-    Description: Cloud Failover VIP tag value; provides private ip addresses to be assigned to VIP public ip.
+    Description: 'Cloud Failover VIP tag value; provides private ip addresses to be assigned to VIP public ip.'
     Type: String
     Default: '10.0.20.101,10.0.10.101'
   cost:
@@ -774,30 +786,30 @@ Parameters:
     Type: String
   peerConfigSyncAddr:
     Default: 10.0.10.11
-    Description: Type the static self IP address of the remote host here. Leave empty if not configuring peering with a remote host on this device.
+    Description: 'Provide the static address of the remote peer used for clustering. In this failover solution, clustering is initiated from the second instance (02) to the first instance (01) so you would provide the first instances Self IP address. Customize to match your network.'
     Type: String
   privateSubnet1ID:
-    Description: Private Subnet1 ID.
+    Description: 'REQUIRED - Subnet ID for private subnet 1 in Availability Zone 1.'
     Type: AWS::EC2::Subnet::Id
   privateSubnet1SelfAddress:
     AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
     ConstraintDescription: IP address parameter must be in the form x.x.x.x
-    Description: Private Subnet1 IP Address.
+    Description: 'Static Management IP Address for private subnet 1 in Availability Zone 1. Customize to match your network.'
     Default: 10.0.11.11
     Type: String
   privateSubnet2ID:
-    Description: Private Subnet2 ID.
+    Description: 'REQUIRED - Subnet ID for private subnet 1 in Availability Zone 2.'
     Type: AWS::EC2::Subnet::Id
   privateSubnet3ID:
-    Description: Private Subnet2 ID.
+    Description: 'Subnet ID for private subnet 2 in Availability Zone 1. REQUIRED - if deploying example application.'
     Type: AWS::EC2::Subnet::Id
   privateSubnet4ID:
-    Description: Private Subnet2 ID.
+    Description: 'Subnet ID for private subnet 2 in Availability Zone 2. REQUIRED - if deploying example application.'
     Type: AWS::EC2::Subnet::Id
   privateSubnet2SelfAddress:
     AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
     ConstraintDescription: IP address parameter must be in the form x.x.x.x
-    Description: Private Subnet2 IP Address.
+    Description: 'Static Management IP Address for private subnet 1 in Availability Zone 2. Customize to match your network.'
     Default: 10.0.21.11
     Type: String
   provisionExampleApp:
@@ -808,40 +820,40 @@ Parameters:
     Description: Flag to deploy the demo web application.
     Type: String
   publicSubnet1ID:
-    Description: Public Subnet1 ID.
+    Description: 'REQUIRED - Subnet ID for public subnet in Availability Zone 1.'
     Type: AWS::EC2::Subnet::Id
   publicSubnet1SelfAddress:
     AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
     ConstraintDescription: IP address parameter must be in the form x.x.x.x
-    Description: Public Subnet1 IP Address.
+    Description: 'Static Self IP Address in public subnet in Availability Zone 1. Customize to match your network.'
     Default: 10.0.10.11
     Type: String
   publicSubnet1VipAddress:
     AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
     ConstraintDescription: IP address parameter must be in the form x.x.x.x
-    Description: Public Subnet1 External Service IP Address.
+    Description: 'Virtual Service IP Address in public subnet in Availability Zone 2. Customize to match your network.'
     Default: 10.0.10.101
     Type: String
   publicSubnet2ID:
-    Description: Public Subnet2 ID.
+    Description: 'REQUIRED - Subnet ID for public subnet in Availability Zone 2. Customize to match your network.'
     Type: AWS::EC2::Subnet::Id
   publicSubnet2SelfAddress:
     AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
     ConstraintDescription: IP address parameter must be in the form x.x.x.x
-    Description: Private Subnet2 IP Address.
+    Description: 'Static Self IP Address in public subnet in Availability Zone 2. Customize to match your network.'
     Default: 10.0.20.11
     Type: String
   publicSubnet2VipAddress:
     AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
     ConstraintDescription: IP address parameter must be in the form x.x.x.x
-    Description: Public Subnet2 External Service IP Address.
+    Description: 'Virtual Service IP Address in public subnet in Availability Zone 2. Customize to match your network.'
     Default: 10.0.20.101
     Type: String
   restrictedSrcAddressMgmt:
     AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})'
     ConstraintDescription: Must be a valid IP CIDR range of the form x.x.x.x/x.
     Description: 'REQUIRED - The IP address range used to SSH and access BIG-IP management port.
-      Restrict to your client IP. Ex. X.X.X.X/32. WARNING - For eval purposes only. Production should never have Management interface exposed to Internet.'
+      Restrict to your client IP or trusted network. Ex. X.X.X.X/32 or 10.0.0.0/8. WARNING - For eval purposes only. Production should never have Management interface exposed to Internet.'
     MaxLength: '18'
     MinLength: '9'
     Type: String
@@ -849,7 +861,7 @@ Parameters:
     AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})'
     ConstraintDescription: Must be a valid IP CIDR range of the form x.x.x.x/x.
     Description: 'REQUIRED - The IP address range that can be used to access web traffic
-      (80/443) to the EC2 instances.'
+      (80/443) to the EC2 instances. Ex. 0.0.0.0/0 for public access. 10.0.0.0/8 for private access.'
     MaxLength: '18'
     MinLength: '9'
     Type: String
@@ -871,20 +883,20 @@ Parameters:
     Type: String
   secretArn:
     Default: ''
-    Description: ARN of an existing AWS Secrets Manager secret. If left empty, a secret will be created.
+    Description: 'ARN of an existing AWS Secrets Manager secret. If left empty, a secret will be created.'
     Type: String
   sshKey:
     Default: ''
-    Description: Name of an existing EC2 KeyPair to enable SSH access to EC2 instances which include BIG-IP, Bastion, and demo application instances. If left empty, one will be created.
+    Description: 'Name of an existing EC2 KeyPair to enable SSH access to EC2 instances which include BIG-IP, Bastion, and demo application instances. If left empty, one will be created.'
     Type: String
   uniqueString:
     AllowedPattern: ^[a-zA-Z][a-zA-Z0-9]{1,11}$
     ConstraintDescription: Must Contain between 1 and 12 alphanumeric characters with first character as a letter.
     Default: myUniqStr
-    Description: Unique String used when creating object names or Tags.
+    Description: 'Unique String used when creating object names or tags.'
     Type: String
   vpc:
-    Description: VPC Id for the deployment.
+    Description: 'REQUIRED - VPC Id for the deployment.'
     Type: AWS::EC2::VPC::Id
 Resources:
   BigIpSshKeyPair:
