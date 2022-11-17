@@ -7,26 +7,25 @@
 
 After the stacks show a *CREATE_COMPLETE* status, you can access the {partner-product-short-name} instances through the bastion host. If you've provisioned the example application, optionally test the WAF service:
 
-
-To access the parent template outputs, perform one of the following steps:
-* If using the AWS Management Console, navigate to *CloudFormation > <stack name> > Outputs*.
-* If using the AWS Command Line Interface (AWS CLI), run this command:
+* To access the parent template outputs, perform one of the following steps:
+** If using the AWS Management Console, navigate to *CloudFormation > <stack name> > Outputs*.
+** If using the AWS Command Line Interface (AWS CLI), run this command (replacing Region and stack name as appropriate):
 +
 ----
 aws --region ${REGION} cloudformation describe-stacks --stack-name ${STACK_NAME}  --query  "Stacks[0].Outputs"
 ----
 
-To obtain the private IP address of the {partner-product-short-name} management port, perform one of the following steps:
-* If using the AWS Management Console, navigate to *CloudFormation > <stack name> > Outputs > bigipInstance01MgmtPrivateIp*.
-* If using the AWS CLI, run this command:
+* To obtain the private IP address of the {partner-product-short-name} management port, perform one of the following steps:
+** If using the AWS Management Console, navigate to *CloudFormation > <stack name> > Outputs > bigipInstance01MgmtPrivateIp*.
+** If using the AWS CLI, run this command (replacing Region and stack name as appropriate):
 +
 ----
 aws --region ${REGION} cloudformation describe-stacks --stack-name ${STACK_NAME} --query  "Stacks[0].Outputs[ OutputKey=='bigipInstance01MgmtPrivateIp'].OutputValue" --output text
 ----
 
-To obtain the public IP address of the bastion host, perform one of the following steps:
-* If using the AWS Management Console, navigate to *CloudFormation > <stack name> > Outputs > <bastion host>*.
-* If using the AWS CLI, run this command:
+* To obtain the public IP address of the bastion host, perform one of the following steps:
+** If using the AWS Management Console, navigate to *CloudFormation > <stack name> > Outputs > <bastion host>*.
+** If using the AWS CLI, run this command:
 +
 ----
 aws --region ${REGION} cloudformation describe-stacks --stack-name ${STACK_NAME} --query  "Stacks[0].Outputs[ OutputKey=='bastionHost'].OutputValue" --output text
@@ -37,12 +36,12 @@ aws --region ${REGION} cloudformation describe-stacks --stack-name ${STACK_NAME}
 
 From your desktop client/shell, run this command to create an SSH tunnel. Replace the variables in brackets before running the command.
 ----
-ssh -i [keyname-passed-to-template.pem] -o ProxyCommand='ssh -i [keyname-passed-to-template.pem] -W %h:%p ec2-user@[BASTION-HOST-PUBLIC-IP]' admin@[BIG-IP-MGMT-PRIVATE-IP]
+ssh -i [keyname-passed-to-template.pem] -o ProxyCommand="ssh -i [keyname-passed-to-template.pem] -W %h:%p ec2-user@[BASTION-HOST-PUBLIC-IP]" admin@[BIG-IP-MGMT-PRIVATE-IP]
 ----
 
 Example:
 ----
-ssh -i ~/.ssh/mykey.pem -o ProxyCommand=`ssh -i ~/.ssh/mykey.pem -W %h:%p ec2-user@34.82.102.190' admin@10.0.1.11
+ssh -i ~/.ssh/mykey.pem -o ProxyCommand="ssh -i ~/.ssh/mykey.pem -W %h:%p ec2-user@34.82.102.190" admin@10.0.1.11
 ----
 
 ==== SSH and Configuration Utility (WebUI)

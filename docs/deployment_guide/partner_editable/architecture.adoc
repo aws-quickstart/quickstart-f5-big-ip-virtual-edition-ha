@@ -5,7 +5,7 @@ default parameters builds the following {partner-product-short-name} environment
 AWS Cloud.
 
 // Replace this example diagram with your own. Send us your source PowerPoint file. Be sure to follow our guidelines here : http://(we should include these points on our contributors giude)
-image::f5-big-ip-virtual-edition-architecture-diagram.png[image,width=648,height=439]
+image::f5-big-ip-virtual-edition-architecture-diagram.png[image,width=720,height=480]
 
 Figure 1: Partner Solution architecture for {partner-product-short-name} on AWS
 
