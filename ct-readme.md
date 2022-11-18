@@ -1,6 +1,6 @@
 __F5 BIG-IP Account Factory Customization__
  
-This solution deploys the following
+This solution deploys the following:
  
 - A highly available architecture that spans two Availability Zones.*
 - BIG-IP Virtual Edition (VE) instances deployed to Amazon Elastic Compute Cloud (Amazon EC2).
@@ -22,7 +22,7 @@ As well as:
 
 ***\* = Optional***: *Depending on deploying a full or existing network stack as well as various parameters.* 
 
-This solution is for infrastructure engineers, platform engineers and security engineers and provides a validated configuration point for BIG-IP usecases in AWS. For more detail of the template, options and other F5 related information please see below:
+This solution is for infrastructure engineers, platform engineers and security engineers and provides a validated configuration point for BIG-IP usecases in AWS. For more detail of the template, options and other F5 related information please see below.
  
 
 __Architecture__
