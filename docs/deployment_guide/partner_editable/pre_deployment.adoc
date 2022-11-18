@@ -21,17 +21,50 @@ This Partner Solution requires:
 
 * The appropriate permission in AWS to launch AWS CloudFormation templates. You must be an IAM user with the Administrator Access policy attached and have permission to create the objects contained in this Partner Solution, including VPCs, Elastic IP addresses, EC2 instances, IAM roles and Instance Profiles, SSE-S3 encrypted S3 buckets, SSH Key Pairs, AWS Secrets Manager secrets, etc.
 
-* An SSH key pair in AWS for management access to {partner-product-short-name}. For more information about creating and/or importing the key pair in AWS, refer to https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html[Amazon EC2 key pairs and Linux instances^]. If one is not specified, one will be created for you named `BigIpSshKeyPair`.
+* An SSH key pair in AWS for management access to {partner-product-short-name}. For more information about creating and/or importing the key pair in AWS, refer to https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html[Amazon EC2 key pairs and Linux instances^]. If one is not specified, one will be created for you named `uniqueString-keyPair` where uniqueString is the value you provided in the *uniqueString* parameter. To obtain the private key, refer to AWS section https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-keypair.html[To retrieve the private key in plain text^]. 
+** For example, you first obtain the key pair ID.
+*** If using the AWS Management Console, navigate to *EC2 > Key Pairs > uniqueString-keyPair > ID column*.
+*** If using the AWS CLI, run this command, replacing uniqueString and region with your values:
++
+----
+aws ec2 describe-key-pairs --key-name ${UNIQUE_STRING}-keyPair --query KeyPairs[*].KeyPairId --output text --region ${REGION}
+----
 
-* An AWS secret stored in https://aws.amazon.com/secrets-manager/[AWS Secrets Manager^] with the password used to access and cluster the HA pair. If you don't specify a secret, the solution creates one named `BigIpSecret` with an auto-generated password. To obtain the secret value, run the https://docs.aws.amazon.com/cli/latest/reference/secretsmanager/get-secret-value.html[get-secret-value^] AWS Command Line Interface (AWS CLI) command, changing the Region and secret name as needed:
+** Then you can use the key pair ID to obtain the private key:
+**** If using the AWS Management Console, navigate to *Systems Manager > Parameter Store > click on your /ec2/keypair/${KEY_ID} -> click Show*
+**** If using the AWS CLI, run this command, replacing the key id and region with your values:
++
+----
+aws ssm get-parameter --name "/ec2/keypair/${KEY_ID}" --with-decryption --query Parameter.Value --output text --region ${REGION}
+----
+*** For example, on Linux or macOS, run these commands:
++
+----
+UNIQUE_STRING=myUniqStr
+REGION=us-east-1
 
-    aws secretsmanager get-secret-value --secret-id BigIpSecret --query "SecretString" --output text --region us-east-1
+# Retrieve the key pair ID
+KEY_ID=$(aws ec2 describe-key-pairs --key-name ${UNIQUE_STRING}-keyPair --query KeyPairs[*].KeyPairId --output text --region ${REGION})
 
-For more information, refer to the https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html[AWS Secrets Manager documentation^].
+# Uses key Pair ID to retrieve the private key and save to a file for SSH client
+aws ssm get-parameter --name "/ec2/keypair/${KEY_ID}" --with-decryption --query Parameter.Value --output text --region ${REGION} > ${UNIQUE_STRING}-private-key.pem
 
-To update the password to your organization's policy or requirements, refer to:
-* https://support.f5.com/csp/article/K13121[K13121: Changing system maintenance account passwords^].
-* https://support.f5.com/csp/article/K15497[K15497: Configuring a secure password policy for the BIG-IP system^].
+# Set the permissions on the private key file for SSH client
+chmod 400 ${UNIQUE_STRING}-private-key.pem
+# Key is now ready to use for SSH client
+ssh -i ${UNIQUE_STRING}-private-key.pem ec2-user@[ec2-instance-ip]
+----
+
+* An AWS secret stored in https://aws.amazon.com/secrets-manager/[AWS Secrets Manager^] with the password used to access and cluster the HA pair. If you don't specify a secret, the solution creates one named `BigIpSecret` with an auto-generated password. To obtain the secret value, run the https://docs.aws.amazon.com/cli/latest/reference/secretsmanager/get-secret-value.html[get-secret-value^] AWS Command Line Interface (AWS CLI) command, changing the region and secret-id as needed:
+
+    aws secretsmanager get-secret-value --secret-id BigIpSecret --query "SecretString" --output text --region ${REGION}
+
+** For more information, refer to the https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html[AWS Secrets Manager documentation^].
+
+** To update the password to your organization's policy or requirements, refer to:
+
+*** https://support.f5.com/csp/article/K13121[K13121: Changing system maintenance account passwords^].
+*** https://support.f5.com/csp/article/K15497[K15497: Configuring a secure password policy for the BIG-IP system^].
 
 
 
