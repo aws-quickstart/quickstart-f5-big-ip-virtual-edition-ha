@@ -3,22 +3,26 @@ __F5 BIG-IP Account Factory Customization__
 This solution deploys the following
  
 - A highly available architecture that spans two Availability Zones.*
+- BIG-IP Virtual Edition (VE) instances deployed to Amazon Elastic Compute Cloud (Amazon EC2).
 - A VPC configured with public and private subnets, according to AWS best practices, to provide you with your own virtual network on AWS.*
- 
+
 In the public subnets:
 - Managed NAT gateways to allow outbound internet access for resources in the private subnets.*
 - A Linux bastion host in an Auto Scaling group to allow inbound Secure Shell (SSH) access to EC2 instances in public and private subnets.*
-- BIG-IP VE deployed to Amazon Elastic Compute Cloud (Amazon EC2) instances.
+- NICs for BIG-IP's data plane traffic
  
 In the private subnets:
-- An example application to help demonstrate BIG-IP VE functionality.
+- NICs for BIG-IP's management access
+- An example application to help demonstrate BIG-IP VE functionality.*
 
 As well as:
 
 - An Amazon S3 SSE-S3 encrypted bucket used to provide failover state.
 - AWS Identity and Access Management (IAM) Instance Profile to allow BIG-IP to remap Network resources and access the S3 Bucket for failover state.
 
-This solution is for infrastructure engineers, platform engineers and security engineers and provides a validated configuration point for BIG-IP usecases in AWS. For more detail of the template, options and other F5 related information please see:
+***\* = Optional***: *Depending on deploying a full or existing network stack as well as various parameters.* 
+
+This solution is for infrastructure engineers, platform engineers and security engineers and provides a validated configuration point for BIG-IP usecases in AWS. For more detail of the template, options and other F5 related information please see below:
  
 
 __Architecture__
