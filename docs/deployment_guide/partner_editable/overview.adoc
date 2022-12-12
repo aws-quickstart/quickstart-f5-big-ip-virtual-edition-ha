@@ -15,9 +15,9 @@ This Partner Solution deploys a highly available cluster of two {partner-product
 ** *Web app and API attacks* - New attack surfaces and threats due to the rapid adoption of APIs.
 ** *Targeted attack campaigns* - Active attack campaigns are difficult to detect from singular attacks.
 
-// For advanced information about the product that this Quick Start deploys, refer to the https://{quickstart-github-org}.github.io/{quickstart-project-name}/operational/index.html[Operational Guide^].
+// For advanced information about the product that this Partner Solution deploys, refer to the https://{quickstart-github-org}.github.io/{quickstart-project-name}/operational/index.html[Operational Guide^].
 
-// For information about using this Quick Start for migrations, refer to the https://{quickstart-github-org}.github.io/{quickstart-project-name}/migration/index.html[Migration Guide^].
+// For information about using this Partner Solution for migrations, refer to the https://{quickstart-github-org}.github.io/{quickstart-project-name}/migration/index.html[Migration Guide^].
 
 
 //Use this for the landing page.
