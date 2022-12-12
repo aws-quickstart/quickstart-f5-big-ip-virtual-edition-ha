@@ -6,11 +6,11 @@ speed, availability, and security for business-critical applications and network
 //{empty} +
 === Product Description
 
-This Quick Start reference deployment guide discusses architectural considerations and configuration steps for deploying a failover cluster of F5 BIG-IP instances on the Amazon Web Services (AWS) Cloud. It also provides links for viewing and launching AWS CloudFormation templates that automate the deployment.
+This Partner Solution reference deployment guide discusses architectural considerations and configuration steps for deploying a failover cluster of F5 BIG-IP instances on the Amazon Web Services (AWS) Cloud. It also provides links for viewing and launching AWS CloudFormation templates that automate the deployment.
 
 The guide is for IT infrastructure architects, administrators, and NetOps professionals who are planning to implement or extend their web application proxy and firewall workloads on the AWS Cloud.
 
-This Quick Start deploys a highly available cluster of two BIG-IP VE instances provisioned with:
+This Partner Solution deploys a highly available cluster of two BIG-IP VE instances provisioned with:
 
 * *https://www.f5.com/products/big-ip-services/local-traffic-manager[Local Traffic Manager (LTM)]* - which performs uniform resource identifier (URI)
 routing, Secure Sockets Layer (SSL) encryption, TCP optimization and automatic discovery of automatically
@@ -23,5 +23,5 @@ scaled web applications
 ** *Web app and API attacks* - New attack surfaces and threats due to the rapid adoption of APIs.
 ** *Targeted attack campaigns* - Active attack campaigns are difficult to detect from singular attacks.
 
-You can customize this Quick Start by changing the configuration parameters. The Quick
+You can customize this Partner Solution by changing the configuration parameters. The Quick
 Start deploys either a full working stack (network, bastion host and BIG-IP solution) or just the BIG-IP solution into an existing network that you can inspect and use as a reference.
